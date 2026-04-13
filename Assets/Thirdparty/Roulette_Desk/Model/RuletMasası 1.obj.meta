@@ -1,0 +1,255 @@
+fileFormatVersion: 2
+guid: e4111816497f89642be800f7eb38dee7
+ModelImporter:
+  serializedVersion: 24200
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: G_bekkasa_Rulet_Rulet_RuletMasas_Mat
+    second: {fileID: 2100000, guid: 26dada00ddaedb34ea2e1e85b934185b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RuletMasas__Alt1_pCylinder10Mat
+    second: {fileID: 2100000, guid: 1d0eb19ddd85de040a1a92113d82a9ec, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RuletMasas__Alt1_pCylinder11Mat
+    second: {fileID: 2100000, guid: f48f3a400a401b94997a7d6d88d8b222, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RuletMasas__Alt1_pCylinder7Mat
+    second: {fileID: 2100000, guid: 31bf52ca7d142bc45b4af7bf5a85ac97, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RuletMasas__Alt1_pCylinder8Mat
+    second: {fileID: 2100000, guid: 1bc363533a4ab174aab060424d833e35, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RuletMasas__Alt1_pCylinder9Mat
+    second: {fileID: 2100000, guid: 5dbfd2c1196eaae41a90e9ca781bb26d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RuletMasas__Alt1_sweep1Mat
+    second: {fileID: 2100000, guid: a2cc6292c5984214f8446b46543fd44d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RuletMasas__G_bek1Mat
+    second: {fileID: 2100000, guid: 44762d65b29dce346b3ae255f1c6251e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RuletMasas__Masa2Mat
+    second: {fileID: 2100000, guid: eba39e0c35e4e394db91d64384930b92, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RuletMasas__Masa_Masa_evre1Mat
+    second: {fileID: 2100000, guid: bd5ecae806897ee44a55b13c28433fd4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RuletMasas__Masaalt_MasaMat
+    second: {fileID: 2100000, guid: f3f63940d720d14438135bf7492ae130, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RuletMasas__pCylinder12_Alt1Mat
+    second: {fileID: 2100000, guid: 21e610a0202617242a75696645a8ba3c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__Kol_pCylinder3Mat
+    second: {fileID: 2100000, guid: 7b29acd246b47cb41a32c125cb014fee, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__Kol_pCylinder4Mat
+    second: {fileID: 2100000, guid: f7a546ef3610d434aad6764b35ca2f56, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__Kol_pCylinder5Mat
+    second: {fileID: 2100000, guid: d7d7229aa3537004f8bd36d2edf3ee93, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__Kol_pCylinder6Mat
+    second: {fileID: 2100000, guid: 079d5768b9913e542bc0e36064850a26, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__Kol_pSphere1Mat
+    second: {fileID: 2100000, guid: 246b298f63cfd8e469eca8ffe2550fee, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__Kol_pSphere2Mat
+    second: {fileID: 2100000, guid: a68c1f24b5802db40bbbf27e37e82be0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__Kol_pSphere3Mat
+    second: {fileID: 2100000, guid: e0339605c7732f84c9d5175a2c997d45, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__Kol_pSphere4Mat
+    second: {fileID: 2100000, guid: c2f60779cc386b244801a3a0cae61ce2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__S_s_pSuperShape1Mat
+    second: {fileID: 2100000, guid: 3e7539c420489424aad75e7dda1736e3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__S_s_pSuperShape3Mat
+    second: {fileID: 2100000, guid: 924747304398bcc449bd02d7432f83b3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__S_s_pSuperShape4Mat
+    second: {fileID: 2100000, guid: 79a8cd2a69a07b14ab530ffe6b031ea4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__S_s_pSuperShape5Mat
+    second: {fileID: 2100000, guid: 20ca6d955fadf834bbc99239e14ea80e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__S_s_pSuperShape6Mat
+    second: {fileID: 2100000, guid: 30b71fbcc24a3014b8fdea5b13af0e7f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__S_s_pSuperShape7Mat
+    second: {fileID: 2100000, guid: 0d3ea49dae85c114c9fa6b39cc2641cf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__S_s_pSuperShape8Mat
+    second: {fileID: 2100000, guid: 59ad2b9387ca3274a99b82f61f56f464, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__pCylinder2_KolMat
+    second: {fileID: 2100000, guid: a3e991fa14f0b7745a9bd1393995256e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Rulet_RuletMasas__pSuperShape9_S_sMat
+    second: {fileID: 2100000, guid: ccc423faee87ba447a9dd36905863863, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 1
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 1
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
