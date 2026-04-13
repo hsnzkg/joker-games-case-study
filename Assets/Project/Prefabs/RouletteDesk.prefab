@@ -62,7 +62,7 @@ GameObject:
   - component: {fileID: 2471239286563171308}
   - component: {fileID: 3445762503841349617}
   - component: {fileID: 2600432658457026918}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Rulet_RuletMasas__pCylinder2_Kol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 445903802061890945}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 72b07e6608416a44aa37dc74e52c82d9, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -433,6 +433,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1079975266540943029
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 600062969979200774}
+  m_Layer: 0
+  m_Name: Ball_Launcher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &600062969979200774
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079975266540943029}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.125, y: 4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5400251553607736116}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1628795153156153037
 GameObject:
   m_ObjectHideFlags: 0
@@ -1165,7 +1196,7 @@ GameObject:
   - component: {fileID: 818349500135283063}
   - component: {fileID: 9146464232486749283}
   - component: {fileID: 5284161614287956064}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: G_bekkasa_Rulet_Rulet_RuletMasas_
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1251,7 +1282,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3927415875509705591}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 72b07e6608416a44aa37dc74e52c82d9, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1946,6 +1977,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5400251553607736116}
+  - component: {fileID: 7121211515567644994}
   m_Layer: 0
   m_Name: RouletteDesk
   m_TagString: Untagged
@@ -1968,8 +2000,23 @@ Transform:
   m_Children:
   - {fileID: 2968192366529812197}
   - {fileID: 359464717884333726}
+  - {fileID: 600062969979200774}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7121211515567644994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6822620880273568917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36406bd6539c4fa999408289d0a6beda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Project::Project.Scripts.RouletteDesk.Desk
+  m_spinTransform: {fileID: 2968192366529812197}
+  m_drag: 1
 --- !u!1 &7114710309881143094
 GameObject:
   m_ObjectHideFlags: 0
@@ -2162,7 +2209,7 @@ GameObject:
   - component: {fileID: 5321661397942486199}
   - component: {fileID: 4362974668513497626}
   - component: {fileID: 1630342698419286838}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RuletMasas__G_bek1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2248,7 +2295,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7634086252871236254}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 72b07e6608416a44aa37dc74e52c82d9, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
