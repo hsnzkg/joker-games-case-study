@@ -2015,6 +2015,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36406bd6539c4fa999408289d0a6beda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Project::Project.Scripts.RouletteDesk.Desk
+  m_deskPhysicSettings: {fileID: 11400000, guid: 32c9a1f7b5739684ca9271ab80b8129b, type: 2}
   m_spinTransform: {fileID: 2968192366529812197}
   m_launchTransform: {fileID: 600062969979200774}
 --- !u!1 &7114710309881143094

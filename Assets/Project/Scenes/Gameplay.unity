@@ -422,12 +422,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 477024675}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aeffc22a7ed246e88cf59cb57761ad38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Project::Project.Scripts.RouletteGame
-  m_ballDir: {x: 0, y: 0.25, z: 0}
+  m_ballDir: {x: 3, y: 0.25, z: 0}
   m_ballForce: 5
   m_rotateSpeed: 100
   m_drag: 10
@@ -485,10 +485,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: RouletteDesk
       objectReference: {fileID: 0}
-    - target: {fileID: 6822620880273568917, guid: 586597b0b8b8f4b4f9b45b5cfa0cae52, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -539,7 +535,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Project::Project.Scripts.Physic.PhysicSimulator
   m_ballForce: 5
-  m_ballForceDirection: {x: 0, y: 0.25, z: 0}
+  m_ballForceDirection: {x: 3, y: 0.25, z: 0}
   m_deskRotationSpeed: 100
   m_deskDrag: 10
   m_ballPrefab: {fileID: 6289613284532919235, guid: fb40ce8609f13ec449d2d8bbfecf9646, type: 3}
@@ -664,18 +660,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3895595610488644077, guid: fb40ce8609f13ec449d2d8bbfecf9646, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 3895595610488644077, guid: fb40ce8609f13ec449d2d8bbfecf9646, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 3895595610488644077, guid: fb40ce8609f13ec449d2d8bbfecf9646, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 3895595610488644077, guid: fb40ce8609f13ec449d2d8bbfecf9646, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.213
       objectReference: {fileID: 0}
@@ -718,10 +702,6 @@ PrefabInstance:
     - target: {fileID: 3898017505172060292, guid: fb40ce8609f13ec449d2d8bbfecf9646, type: 3}
       propertyPath: m_Name
       value: Ball
-      objectReference: {fileID: 0}
-    - target: {fileID: 3898017505172060292, guid: fb40ce8609f13ec449d2d8bbfecf9646, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

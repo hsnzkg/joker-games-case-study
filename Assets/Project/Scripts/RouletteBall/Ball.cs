@@ -7,7 +7,13 @@ namespace Project.Scripts.RouletteBall
     {
         public BallVisualSystem BallVisualSystem;
         public BallPhysicSystem BallPhysicSystem;
-        private SimulationMode m_simulationMode;
+        private SimulationMode SimulationMode { get; set; }
+
+        SimulationMode ISimulationObject.SimulationMode
+        {
+            get => SimulationMode;
+            set => ChangeSimulationMode(value);
+        }
 
         #region Unity Callbacks
 
@@ -17,17 +23,11 @@ namespace Project.Scripts.RouletteBall
         }
 
         #endregion
-        
+
         private void Initialize()
         {
             BallVisualSystem = new BallVisualSystem(gameObject);
             BallPhysicSystem = new BallPhysicSystem(gameObject);
-        }
-
-        public SimulationMode SimulationMode
-        {
-            get => m_simulationMode;
-            set => m_simulationMode = value;
         }
 
         public void ChangeSimulationMode(SimulationMode mode)
@@ -36,7 +36,7 @@ namespace Project.Scripts.RouletteBall
             {
                 BallVisualSystem.ChangeVisualState(mode == SimulationMode.FixedUpdate);
             }
-            m_simulationMode = mode;
+            SimulationMode = mode;
         }
     }
 }

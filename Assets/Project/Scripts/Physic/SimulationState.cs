@@ -1,11 +1,16 @@
-﻿using System;
-
-namespace Project.Scripts.Physic
+﻿namespace Project.Scripts.Physic
 {
-    [Serializable]
     public struct SimulationState
     {
-        public BallState[] BallStates;
-        public DeskState[] DeskStates;
+        public readonly int Buffer;
+        public readonly SimulationObjectState[] BallStates;
+        public readonly SimulationObjectState[] DeskStates;
+
+        public SimulationState(int buffer)
+        {
+            Buffer = buffer;
+            BallStates = new SimulationObjectState[Buffer];
+            DeskStates = new SimulationObjectState[Buffer];
+        }
     }
 }
