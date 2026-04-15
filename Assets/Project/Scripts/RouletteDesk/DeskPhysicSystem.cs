@@ -4,19 +4,18 @@ using UnityEngine;
 namespace Project.Scripts.RouletteDesk
 {
     [Serializable]
-    public class DeskRotationSystem
+    public class DeskPhysicSystem
     {
         private readonly Transform m_spinTransform;
         private float m_spinInitialSpeed;
         private float m_remainingSpeed;
-        private readonly float m_drag;
+        private float m_drag;
         private readonly float m_tick;
         public bool IsEnabled { get; private set; }
 
-        public DeskRotationSystem(Transform spinTransform, float drag)
+        public DeskPhysicSystem(Transform spinTransform)
         {
             m_spinTransform = spinTransform;
-            m_drag = drag;
             m_tick = Time.fixedDeltaTime;
         }
 
@@ -42,11 +41,12 @@ namespace Project.Scripts.RouletteDesk
             IsEnabled = false;
         }
 
-        public void StartSpin(float initialSpeed)
+        public void StartSpin(float speed,float drag)
         {
-            m_spinInitialSpeed = initialSpeed;
-            m_remainingSpeed = m_spinInitialSpeed;
             Enable();
+            m_spinInitialSpeed = speed;
+            m_remainingSpeed = speed;
+            m_drag = drag;
         }
 
         public void Reset()

@@ -5,8 +5,9 @@ namespace Project.Scripts.RouletteDesk
     public class Desk : MonoBehaviour
     {
         [SerializeField] private Transform m_spinTransform;
-        [SerializeField] private float m_drag;
-        public DeskRotationSystem DeskRotationSystem { get; private set; }
+        [SerializeField] private Transform m_launchTransform;
+        public DeskPhysicSystem DeskPhysicSystem { get; private set; }
+        public Transform LaunchTransform => m_launchTransform;
 
         #region Unity Callbacks
 
@@ -17,14 +18,14 @@ namespace Project.Scripts.RouletteDesk
 
         private void FixedUpdate()
         {
-            DeskRotationSystem.Tick();
+            DeskPhysicSystem.Tick();
         }
 
         #endregion
 
         private void Initialize()
         {
-            DeskRotationSystem = new DeskRotationSystem(m_spinTransform,m_drag);
+            DeskPhysicSystem = new DeskPhysicSystem(m_spinTransform);
         }
     }
 }

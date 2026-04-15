@@ -5,7 +5,7 @@ namespace Project.Scripts.RouletteBall
 {
     [Serializable]
     public class BallPhysicSystem
-    {
+    { 
         private readonly Rigidbody m_rigidbody;
         
         public BallPhysicSystem(GameObject instance)
@@ -26,6 +26,12 @@ namespace Project.Scripts.RouletteBall
             m_rigidbody.linearVelocity = Vector3.zero;
             m_rigidbody.angularVelocity = Vector3.zero;
             m_rigidbody.isKinematic = true;
+        }
+        
+        public void Launch(Vector3 dir, float force)
+        {
+            Enable();
+            m_rigidbody.AddForce(dir * force,ForceMode.Impulse);
         }
     }
 }

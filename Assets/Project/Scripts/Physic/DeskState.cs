@@ -1,7 +1,14 @@
-﻿namespace Project.Scripts.Physic
+﻿using UnityEngine;
+
+namespace Project.Scripts.Physic
 {
-    public class DeskState
+    public struct DeskState
     {
+        public Quaternion Rotation;
         
+        public DeskState(Quaternion rotation)
+        {
+            Rotation = rotation;
+        }
     }
 }

@@ -1,12 +1,13 @@
-﻿using UnityEngine;
+﻿using Project.Scripts.Physic;
+using UnityEngine;
 
 namespace Project.Scripts.RouletteBall
 {
-    public class Ball : MonoBehaviour
+    public class Ball : MonoBehaviour, ISimulationObject
     {
-        [SerializeField] private Rigidbody m_rb;
-        public BallVisualSystem BallVisualSystem { get; private set; }
-        public BallPhysicSystem BallPhysicSystem { get; private set; }
+        public BallVisualSystem BallVisualSystem;
+        public BallPhysicSystem BallPhysicSystem;
+        private SimulationMode m_simulationMode;
 
         #region Unity Callbacks
 
@@ -21,6 +22,21 @@ namespace Project.Scripts.RouletteBall
         {
             BallVisualSystem = new BallVisualSystem(gameObject);
             BallPhysicSystem = new BallPhysicSystem(gameObject);
+        }
+
+        public SimulationMode SimulationMode
+        {
+            get => m_simulationMode;
+            set => m_simulationMode = value;
+        }
+
+        public void ChangeSimulationMode(SimulationMode mode)
+        {
+            if (mode == SimulationMode.Script)
+            {
+                BallVisualSystem.ChangeVisualState(mode == SimulationMode.FixedUpdate);
+            }
+            m_simulationMode = mode;
         }
     }
 }

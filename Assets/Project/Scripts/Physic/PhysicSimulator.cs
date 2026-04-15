@@ -8,14 +8,15 @@ namespace Project.Scripts.Physic
 {
     public class PhysicSimulator : MonoBehaviour
     {
-        [SerializeField] private float m_force;
+        [SerializeField] private float m_ballForce;
+        [SerializeField] private Vector3 m_ballForceDirection;
         [SerializeField] private float m_deskRotationSpeed;
-        [SerializeField] private Vector3 m_forceDirection;
-        [SerializeField] private LayerMask m_simulationLayer;
-        [SerializeField] private int m_maxIterations = 100;
-        [SerializeField] private Transform m_ballLaunchTransform;
+        [SerializeField] private float m_deskDrag;
         [SerializeField] private Ball m_ballPrefab;
         [SerializeField] private Desk m_deskPrefab;
+        [SerializeField] private int m_maxIterations = 100;
+
+
         private BallState[] m_states;
         private Scene m_simulationScene;
         private PhysicsScene m_physicsScene;
@@ -34,10 +35,11 @@ namespace Project.Scripts.Physic
         {
             Initialize();
             CreatePhysicsScene();
-            CreateDesk();
-            CreateBall();
+
+            LaunchBall();
             SpinDesk();
-            LaunchBall(m_forceDirection, m_force);
+
+            SimulateUntilStop();
         }
 
         private void OnDrawGizmos()
@@ -66,6 +68,9 @@ namespace Project.Scripts.Physic
             CreateSceneParameters parameters = new(LocalPhysicsMode.Physics3D);
             m_simulationScene = SceneManager.CreateScene("Gameplay_Simulation", parameters);
             m_physicsScene = m_simulationScene.GetPhysicsScene();
+            
+            CreateDesk();
+            CreateBall();
         }
 
         private void CopyCollidersToSimulation(GameObject obj)
@@ -124,40 +129,35 @@ namespace Project.Scripts.Physic
             m_ballInstance = Instantiate(m_ballPrefab);
             m_ballCollider = m_ballInstance.GetComponent<SphereCollider>();
             m_ballRb = m_ballInstance.GetComponent<Rigidbody>();
-            m_ballInstance.BallVisualSystem.SetType(BallInstanceType.Simulation);
+            m_ballInstance.ChangeSimulationMode(SimulationMode.Script);
             SceneManager.MoveGameObjectToScene(m_ballInstance.gameObject, m_simulationScene);
         }
 
-        public void LaunchBall(Vector3 initialDirection, float force)
+        public void LaunchBall()
         {
-            m_ballRb.position = m_ballLaunchTransform.position;
+            m_ballRb.position = m_deskInstance.LaunchTransform.position;
             m_ballRb.rotation = Quaternion.identity;
-            m_deskInstance.DeskRotationSystem.Reset();
+            
+            m_deskInstance.DeskPhysicSystem.Reset();
             Array.Clear(m_states, 0, m_states.Length);
             m_currentIteration = 0;
-
-            initialDirection.Normalize();
+            
             RecordState();
-            
-            m_ballInstance.BallPhysicSystem.Enable();
-            m_ballRb.AddForce(initialDirection * force, ForceMode.Impulse);
-            m_deskInstance.DeskRotationSystem.StartSpin(m_deskRotationSpeed);
-            
-            SimulateUntilStop();
+            m_ballInstance.BallPhysicSystem.Launch(m_ballForceDirection,m_ballForce);
         }
 
         private void SpinDesk()
         {
-            m_deskInstance.DeskRotationSystem.Reset();
-            m_deskInstance.DeskRotationSystem.StartSpin(m_deskRotationSpeed);
+            m_deskInstance.DeskPhysicSystem.StartSpin(m_deskRotationSpeed,m_deskDrag);
         }
 
         private void SimulateUntilStop()
         {
             for (int i = 0; i < m_maxIterations - 1; i++)
             {
+                m_deskInstance.DeskPhysicSystem.Tick();
+                Physics.SyncTransforms();
                 m_physicsScene.Simulate(m_tick);
-                m_deskInstance.DeskRotationSystem.Tick();
                 RecordState();
 
                 if (!IsBallStopped() || !IsDeskStopped()) continue;
@@ -174,13 +174,14 @@ namespace Project.Scripts.Physic
 
         private bool IsDeskStopped()
         {
-            return !m_deskInstance.DeskRotationSystem.IsEnabled;
+            return !m_deskInstance.DeskPhysicSystem.IsEnabled;
         }
 
         private void Stop()
         {
             m_ballInstance.BallPhysicSystem.Disable();
-            m_deskInstance.DeskRotationSystem.Disable();
+            m_deskInstance.DeskPhysicSystem.Disable();
+            Physics.simulationMode = SimulationMode.FixedUpdate;
         }
 
         private void RecordState()

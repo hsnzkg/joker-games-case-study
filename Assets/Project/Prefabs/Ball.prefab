@@ -153,4 +153,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfd21978ee7a483abae7e60a647f638c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Project::Project.Scripts.RouletteBall.Ball
-  m_rb: {fileID: 0}
