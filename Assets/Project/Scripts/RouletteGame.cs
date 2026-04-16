@@ -140,7 +140,9 @@ namespace Project.Scripts
         private bool TrySimulate(Vector3 ballDir, float ballForce, float spinSpeed, float spinDrag, float spinStartAngle, out SimulationState simulationState, int? desiredSlotIndex = null)
         {
             simulationState = default;
-            simulationState = desiredSlotIndex.HasValue ? m_simulator.Simulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, desiredSlotIndex.Value) : m_simulator.Simulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle);
+            simulationState = desiredSlotIndex.HasValue 
+                ? m_simulator.Simulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, desiredSlotIndex.Value) 
+                : m_simulator.Simulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle);
             return simulationState is { BallStates: not null, FrameCount: > 0 };
         }
 
