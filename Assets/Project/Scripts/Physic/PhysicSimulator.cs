@@ -1,11 +1,9 @@
 using System;
-using System.IO;
 using Project.Scripts.Physic.State;
 using Project.Scripts.RouletteBall;
 using Project.Scripts.RouletteDesk;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Unity.Plastic.Newtonsoft.Json;
 
 namespace Project.Scripts.Physic
 {
@@ -52,69 +50,32 @@ namespace Project.Scripts.Physic
                 return RunSimulation(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, deskStartAngle);
             }
 
-            SimulationState initialState = RunSimulation(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, deskStartAngle);
-            SettledSlotInfo initialSettledSlotInfo = AnalyzeSettledSlot(initialState);
+            SimulationState physicalState = RunSimulation(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, deskStartAngle);
+            SettledSlotInfo settledSlotInfo = AnalyzeSettledSlot(physicalState);
 
-            if (!initialSettledSlotInfo.HasSettledSlot)
+            if (!settledSlotInfo.HasSettledSlot)
             {
-                LogDeterministicFailure("Initial simulation did not finish inside any slot, so a deterministic correction could not be derived.", initialSettledSlotInfo.FinalSlotIndex, desiredSlotIndex, deskStartAngle, 0f, initialSettledSlotInfo.ContinuousStartFrame);
-                return initialState;
+                LogVisualRemapFailed("Physical simulation did not settle inside any slot. Replay stays unchanged.", settledSlotInfo.FinalSlotIndex, desiredSlotIndex, deskStartAngle, deskStartAngle, 0f, settledSlotInfo.ContinuousStartFrame);
+                return physicalState;
             }
 
-            if (initialSettledSlotInfo.FinalSlotIndex == desiredSlotIndex)
+            int sourceSlotIndex = physicalState.BallStates[settledSlotInfo.ContinuousStartFrame].SlotIndex;
+            if (sourceSlotIndex == desiredSlotIndex)
             {
-                LogDeterministicSuccess("Initial simulation already matched the desired slot.", initialSettledSlotInfo.FinalSlotIndex, desiredSlotIndex, deskStartAngle, 0f, initialSettledSlotInfo.ContinuousStartFrame);
-                return initialState;
+                LogVisualRemapSkipped(sourceSlotIndex, desiredSlotIndex, deskStartAngle, settledSlotInfo.ContinuousStartFrame);
+                return physicalState;
             }
 
-            float appliedOffset = GetSlotStartAngleCorrection(initialSettledSlotInfo, desiredSlotIndex);
-            float correctedStartAngle = Mathf.Repeat(deskStartAngle + appliedOffset, 360f);
+            int slotIndexDifference = desiredSlotIndex - sourceSlotIndex;
+            float slotAngle = GetSlotAngle();
+            float visualDeskOffset = GetVisualDeskAngleOffset(sourceSlotIndex, desiredSlotIndex);
+            float visualStartAngle = Mathf.Repeat(deskStartAngle + visualDeskOffset, 360f);
 
-            Debug.Log(
-                $"Deterministic simulate applying a single-pass rotation offset of [{appliedOffset:F3}] degrees " +
-                $"from settled slot [{initialSettledSlotInfo.FinalSlotIndex}] at frame [{initialSettledSlotInfo.ContinuousStartFrame}].");
+            LogVisualRemapInitial(sourceSlotIndex, desiredSlotIndex, slotIndexDifference, slotAngle, visualDeskOffset, settledSlotInfo.ContinuousStartFrame, deskStartAngle, visualStartAngle);
 
-            SimulationState correctedState = RunSimulation(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, correctedStartAngle);
-            SettledSlotInfo correctedSettledSlotInfo = AnalyzeSettledSlot(correctedState);
-
-            if (correctedSettledSlotInfo.HasSettledSlot && correctedSettledSlotInfo.FinalSlotIndex == desiredSlotIndex)
-            {
-                LogDeterministicSuccess("Single-pass angle correction matched the desired slot.", correctedSettledSlotInfo.FinalSlotIndex, desiredSlotIndex, correctedStartAngle, appliedOffset, correctedSettledSlotInfo.ContinuousStartFrame);
-                return correctedState;
-            }
-            
-            SaveDebugState(initialState);
-            int correctedFinalSlotIndex = correctedSettledSlotInfo.HasSettledSlot ? correctedSettledSlotInfo.FinalSlotIndex : GetFinalSlotIndex(correctedState);
-            
-            LogDeterministicFailure("Single-pass angle correction did not reach the desired slot.", correctedFinalSlotIndex, desiredSlotIndex, correctedStartAngle, appliedOffset, correctedSettledSlotInfo.ContinuousStartFrame);
-            return correctedState;
-        }
-        
-        public void SaveDebugState(object initialState)
-        {
-            try
-            {
-                var settings = new JsonSerializerSettings
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-                };
-
-                string json = JsonConvert.SerializeObject(initialState, Formatting.Indented, settings);
-
-                string path = Path.Combine(Application.dataPath, "debugState.json");
-
-                File.WriteAllText(path, json);
-
-                Debug.Log($"Saved JSON to: {path}");
-
-#if UNITY_EDITOR
-                UnityEditor.AssetDatabase.Refresh();
-#endif
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"JSON save failed: {e}");
-            }
+            SimulationState visualReplayState = CreateVisualReplayState(physicalState, slotIndexDifference, visualDeskOffset);
+            LogVisualRemapApplied(sourceSlotIndex, desiredSlotIndex, deskStartAngle, visualStartAngle, visualDeskOffset, settledSlotInfo.ContinuousStartFrame);
+            return visualReplayState;
         }
 
         public void Dispose()
@@ -151,13 +112,6 @@ namespace Project.Scripts.Physic
             {
                 Physics.simulationMode = UnityEngine.SimulationMode.Script;
                 EnsureSimulationSceneCreated();
-
-                if (m_ballRb == null)
-                {
-                    Debug.LogError("PhysicSimulator requires a Rigidbody on the ball prefab.");
-                    return simulationData;
-                }
-
                 ResetBall(ref simulationData);
                 ResetDesk();
 
@@ -213,43 +167,10 @@ namespace Project.Scripts.Physic
             return Time.fixedDeltaTime;
         }
 
-        private float GetSlotStartAngleCorrection(in SettledSlotInfo settledSlotInfo, int desiredSlotIndex)
+        private float GetVisualDeskAngleOffset(int sourceSlotIndex, int desiredSlotIndex)
         {
-            Vector3 currentReferenceDirection = GetSlotReferenceDirection(settledSlotInfo.FinalSlotIndex, settledSlotInfo.SlotLocalBallPosition);
-            Vector3 desiredReferenceDirection = GetSlotReferenceDirection(desiredSlotIndex, settledSlotInfo.SlotLocalBallPosition);
-
-            if (currentReferenceDirection.sqrMagnitude < 0.0001f || desiredReferenceDirection.sqrMagnitude < 0.0001f)
-            {
-                return GetSlotStartAngleCorrection(settledSlotInfo.FinalSlotIndex, desiredSlotIndex);
-            }
-
-            return Vector3.SignedAngle(desiredReferenceDirection, currentReferenceDirection, Vector3.up);
-        }
-
-        private float GetSlotStartAngleCorrection(int currentSlotIndex, int desiredSlotIndex)
-        {
-            float currentSlotAngle = currentSlotIndex * GetSlotAngle();
-            float desiredSlotAngle = desiredSlotIndex * GetSlotAngle();
-            return Mathf.DeltaAngle(desiredSlotAngle, currentSlotAngle);
-        }
-
-        private Vector3 GetSlotReferenceDirection(int slotIndex, Vector3 slotLocalBallPosition)
-        {
-            Vector3 slotReference = Vector3.forward * m_deskPhysicSettings.DistanceFromOrigin + slotLocalBallPosition;
-            slotReference.y = 0f;
-
-            if (slotReference.sqrMagnitude < 0.0001f)
-            {
-                slotReference = Vector3.forward;
-            }
-
-            return GetSlotLocalRotation(slotIndex) * slotReference;
-        }
-
-        private Quaternion GetSlotLocalRotation(int slotIndex)
-        {
-            float slotAngle = slotIndex * GetSlotAngle();
-            return Quaternion.Euler(0f, slotAngle, 0f) * Quaternion.Euler(m_deskPhysicSettings.SlotRotationOffset);
+            int slotIndexDifference = desiredSlotIndex - sourceSlotIndex;
+            return -slotIndexDifference * GetSlotAngle();
         }
 
         private void EnsureSimulationSceneCreated()
@@ -344,8 +265,6 @@ namespace Project.Scripts.Physic
         private int CheckSlots()
         {
             Vector3 deskCenter = GetDeskSlotOrigin(m_deskInstance.SpinTransform.position);
-            int bestSlotIndex = -1;
-            float bestSlotScore = float.PositiveInfinity;
 
             for (int slotIndex = 0; slotIndex < m_deskPhysicSettings.SlotCount; slotIndex++)
             {
@@ -358,15 +277,10 @@ namespace Project.Scripts.Physic
                     continue;
                 }
 
-                float slotScore = GetSlotMatchScore(m_ballRb.position, slotCenter, slotRotation);
-                if (slotScore < bestSlotScore)
-                {
-                    bestSlotScore = slotScore;
-                    bestSlotIndex = slotIndex;
-                }
+                return slotIndex;
             }
 
-            return bestSlotIndex;
+            return -1;
         }
 
         private static int GetFinalSlotIndex(in SimulationState simulationState)
@@ -399,18 +313,45 @@ namespace Project.Scripts.Physic
             {
                 continuousStartFrame--;
             }
-
-            Vector3 slotLocalBallPosition = GetSlotLocalBallPosition(simulationState.BallStates[continuousStartFrame].Position, simulationState.DeskStates[continuousStartFrame], finalSlotIndex);
-
-            return new SettledSlotInfo(true, finalSlotIndex, continuousStartFrame, slotLocalBallPosition);
+            
+            if (finalSlotIndex != simulationState.BallStates[continuousStartFrame].SlotIndex)
+            {
+                return new SettledSlotInfo(false, finalSlotIndex, -1, Vector3.zero);
+            }
+            
+            return new SettledSlotInfo(true, finalSlotIndex, continuousStartFrame, Vector3.zero);
         }
 
-        private Vector3 GetSlotLocalBallPosition(Vector3 ballWorldPosition, in DeskState deskState, int slotIndex)
+        private SimulationState CreateVisualReplayState(in SimulationState physicalState, int slotIndexDifference, float visualDeskOffset)
         {
-            Vector3 deskCenter = GetDeskSlotOrigin(deskState.Position);
-            Quaternion slotWorldRotation = GetSlotWorldRotation(slotIndex, deskState.Rotation);
-            Vector3 slotCenter = GetSlotCenter(deskCenter, slotWorldRotation);
-            return Quaternion.Inverse(slotWorldRotation) * (ballWorldPosition - slotCenter);
+            SimulationState visualReplayState = new(physicalState.Buffer, physicalState.TickDuration)
+            {
+                FrameCount = physicalState.FrameCount
+            };
+
+            Quaternion deskRotationOffset = Quaternion.Euler(0f, visualDeskOffset, 0f);
+
+            for (int frame = 0; frame < physicalState.FrameCount; frame++)
+            {
+                BallState ballState = physicalState.BallStates[frame];
+                DeskState deskState = physicalState.DeskStates[frame];
+
+                visualReplayState.BallStates[frame] = new BallState(ballState.Position, ballState.Rotation, RemapSlotIndex(ballState.SlotIndex, slotIndexDifference));
+                visualReplayState.DeskStates[frame] = new DeskState(deskState.Position, deskRotationOffset * deskState.Rotation);
+            }
+
+            return visualReplayState;
+        }
+
+        private int RemapSlotIndex(int sourceSlotIndex, int slotIndexDifference)
+        {
+            if (sourceSlotIndex < 0)
+            {
+                return -1;
+            }
+
+            int remappedSlotIndex = (sourceSlotIndex + slotIndexDifference) % m_deskPhysicSettings.SlotCount;
+            return remappedSlotIndex < 0 ? remappedSlotIndex + m_deskPhysicSettings.SlotCount : remappedSlotIndex;
         }
 
         private Vector3 GetDeskSlotOrigin(Vector3 deskPosition)
@@ -434,27 +375,37 @@ namespace Project.Scripts.Physic
             return 360f / m_deskPhysicSettings.SlotCount;
         }
 
-        private float GetSlotMatchScore(Vector3 ballWorldPosition, Vector3 slotCenter, Quaternion slotWorldRotation)
+        private static void LogVisualRemapInitial(int physicalSlotIndex, int desiredSlotIndex, int slotIndexDifference, float slotAngle, float visualDeskOffset, int sourceFrame, float physicalStartAngle, float visualStartAngle)
         {
-            Vector3 localBallPosition = Quaternion.Inverse(slotWorldRotation) * (ballWorldPosition - slotCenter);
-            Vector3 halfExtents = m_deskPhysicSettings.SlotBoxSize / 2f;
-
-            float x = halfExtents.x > Mathf.Epsilon ? localBallPosition.x / halfExtents.x : localBallPosition.x;
-            float y = halfExtents.y > Mathf.Epsilon ? localBallPosition.y / halfExtents.y : localBallPosition.y;
-            float z = halfExtents.z > Mathf.Epsilon ? localBallPosition.z / halfExtents.z : localBallPosition.z;
-
-            return x * x + y * y + z * z;
+            Debug.Log("Visual deterministic INITIAL: " +
+                      $"physical settled slot [{physicalSlotIndex}], desired visual slot [{desiredSlotIndex}], " +
+                      $"slot difference [{slotIndexDifference}], slot angle [{slotAngle:F3}], " +
+                      $"visual desk offset [{visualDeskOffset:F3}], source frame [{sourceFrame}], " +
+                      $"physical start angle [{physicalStartAngle:F3}], visual start angle [{visualStartAngle:F3}].");
         }
 
-        private static void LogDeterministicSuccess(string reason, int finalSlotIndex, int desiredSlotIndex, float startAngle, float appliedOffset, int settledStartFrame)
+        private static void LogVisualRemapApplied(int physicalSlotIndex, int desiredSlotIndex, float physicalStartAngle, float visualStartAngle, float visualDeskOffset, int sourceFrame)
         {
-            Debug.Log($"Deterministic simulate <color=green>SUCCEEDED</color>: {reason} " + $"Final slot [{finalSlotIndex}], desired slot [{desiredSlotIndex}], start angle [{startAngle:F3}], " + $"applied offset [{appliedOffset:F3}], continuous slot start frame [{settledStartFrame}].");
+            Debug.Log("Visual deterministic <color=green>APPLIED</color>: " +
+                      $"physics was not rerun. Replay keeps the same ball trajectory and rotates the desk by [{visualDeskOffset:F3}] " +
+                      $"from start angle [{physicalStartAngle:F3}] to [{visualStartAngle:F3}], remapping physical slot [{physicalSlotIndex}] " +
+                      $"to visual slot [{desiredSlotIndex}] from source frame [{sourceFrame}].");
         }
 
-        private static void LogDeterministicFailure(string reason, int finalSlotIndex, int desiredSlotIndex, float startAngle, float appliedOffset, int settledStartFrame)
+        private static void LogVisualRemapSkipped(int physicalSlotIndex, int desiredSlotIndex, float startAngle, int sourceFrame)
         {
-            string settledStartFrameText = settledStartFrame >= 0 ? settledStartFrame.ToString() : "n/a";
-            Debug.Log($"Deterministic simulate <color=red>FAILED</color>: {reason} " + $"Final slot [{finalSlotIndex}], desired slot [{desiredSlotIndex}], start angle [{startAngle:F3}], " + $"applied offset [{appliedOffset:F3}], continuous slot start frame [{settledStartFrameText}].");
+            Debug.Log("Visual deterministic <color=green>SKIPPED</color>: " +
+                      $"physical settled slot [{physicalSlotIndex}] already matches desired visual slot [{desiredSlotIndex}]. " +
+                      $"Replay stays unchanged at start angle [{startAngle:F3}] from source frame [{sourceFrame}].");
+        }
+
+        private static void LogVisualRemapFailed(string reason, int physicalSlotIndex, int desiredSlotIndex, float physicalStartAngle, float visualStartAngle, float visualDeskOffset, int sourceFrame)
+        {
+            string sourceFrameText = sourceFrame >= 0 ? sourceFrame.ToString() : "n/a";
+            Debug.Log("Visual deterministic <color=red>FAILED</color>: " +
+                      $"{reason} Physical slot [{physicalSlotIndex}], desired visual slot [{desiredSlotIndex}], " +
+                      $"visual desk offset [{visualDeskOffset:F3}], physical start angle [{physicalStartAngle:F3}], " +
+                      $"visual start angle [{visualStartAngle:F3}], source frame [{sourceFrameText}].");
         }
     }
 }
