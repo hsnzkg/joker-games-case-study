@@ -1,19 +1,20 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+using SimulationMode = Project.Scripts.Physic.SimulationMode;
 
 namespace Project.Scripts.RouletteDesk
 {
-    [Serializable]
     public class DeskPhysicSystem
     {
+        private readonly Desk m_desk;
         private readonly Transform m_spinTransform;
         private float m_remainingSpeed;
         private float m_drag;
-        private DeskPhysicSettings m_settings;
+        private readonly DeskPhysicSettings m_settings;
         public bool IsEnabled { get; private set; }
 
-        public DeskPhysicSystem(DeskPhysicSettings deskPhysicSettings, Transform spinTransform)
+        public DeskPhysicSystem(Desk desk, DeskPhysicSettings deskPhysicSettings, Transform spinTransform)
         {
+            m_desk = desk;
             m_settings = deskPhysicSettings;
             m_spinTransform = spinTransform;
         }
@@ -55,9 +56,10 @@ namespace Project.Scripts.RouletteDesk
 
         public void DrawGizmos()
         {
-            if(!m_spinTransform)return;
+            if (m_desk.SimulationMode == SimulationMode.Simulation) return;
+            if (!m_spinTransform) return;
             Gizmos.color = Color.green;
-            
+
             Vector3 center = m_spinTransform.position + m_settings.SlotOriginOffset;
 
             Matrix4x4 oldMatrix = Gizmos.matrix;

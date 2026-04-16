@@ -9,6 +9,11 @@ namespace Project.Scripts.Physic
 {
     public sealed class PhysicSimulator : IDisposable
     {
+        private const int k_deterministicRecenterPassCount = 4;
+        private const int k_deterministicNeighborhoodSubdivisionsPerSlot = 12;
+        private const int k_deterministicNeighborhoodStepsPerSide = 12;
+        private const float k_settledFramePenalty = 0.0001f;
+
         private static int s_simulationIndex;
 
         private readonly DeskPhysicSettings m_deskPhysicSettings;
@@ -33,6 +38,8 @@ namespace Project.Scripts.Physic
 
             m_overlapResults = new Collider[1];
             m_ballLayerMask = ballPrefab != null ? 1 << ballPrefab.gameObject.layer : 0;
+
+            EnsureSimulationSceneCreated();
         }
 
         public SimulationState Simulate(Vector3 ballForceDirection, float ballForce, float deskRotationSpeed, float deskDrag, float deskStartAngle)
@@ -49,40 +56,41 @@ namespace Project.Scripts.Physic
             }
 
             SimulationState initialState = RunSimulation(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, deskStartAngle);
-            
-            if (!TryGetSettledSlotInfo(initialState, out int finalSlotIndex, out int settledStartFrame))
+            SettledSlotInfo initialSettledSlotInfo = AnalyzeSettledSlot(initialState);
+
+            if (!initialSettledSlotInfo.HasSettledSlot)
             {
-                Debug.LogWarning("Deterministic simulate could not find a settled final slot from the initial simulation. Returning initial state.");
+                LogDeterministicFailure("Initial simulation did not finish inside any slot, so a deterministic correction could not be derived.", initialSettledSlotInfo.FinalSlotIndex, desiredSlotIndex, deskStartAngle, 0f, initialSettledSlotInfo.ContinuousStartFrame);
                 return initialState;
             }
 
-            if (finalSlotIndex == desiredSlotIndex)
+            if (initialSettledSlotInfo.FinalSlotIndex == desiredSlotIndex)
             {
-                Debug.Log($"Deterministic simulate already matched desired slot [{desiredSlotIndex}] in the initial run. Settled from frame [{settledStartFrame}].");
+                LogDeterministicSuccess("Initial simulation already matched the desired slot.", initialSettledSlotInfo.FinalSlotIndex, desiredSlotIndex, deskStartAngle, 0f, initialSettledSlotInfo.ContinuousStartFrame);
                 return initialState;
             }
 
-            float slotAngle = GetSlotAngle();
-            float currentSlotAngle = finalSlotIndex * slotAngle;
-            float desiredSlotAngle = desiredSlotIndex * slotAngle;
-            float startAngleCorrection = Mathf.DeltaAngle(desiredSlotAngle, currentSlotAngle);
-            float correctedStartAngle = Mathf.Repeat(deskStartAngle + startAngleCorrection, 360f);
+            float predictedOffset = GetSlotStartAngleCorrection(initialSettledSlotInfo.FinalSlotIndex, desiredSlotIndex);
+            float predictedStartAngle = Mathf.Repeat(deskStartAngle + predictedOffset, 360f);
 
-            Debug.Log($"Deterministic simulate adjusting start angle. Desired slot: [{desiredSlotIndex}], initial final slot: [{finalSlotIndex}], " + $"settled from frame: [{settledStartFrame}], angle correction: [{startAngleCorrection:F3}], corrected start angle: [{correctedStartAngle:F3}].");
+            Debug.Log($"Deterministic simulate predicted an initial rotation offset of [{predictedOffset:F3}] degrees " + $"from settled slot [{initialSettledSlotInfo.FinalSlotIndex}] at frame [{initialSettledSlotInfo.ContinuousStartFrame}].");
 
-            SimulationState correctedState = RunSimulation(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, correctedStartAngle);
-            int correctedFinalSlotIndex = GetFinalSlotIndex(correctedState);
-
-            if (correctedFinalSlotIndex == desiredSlotIndex)
+            if (TryFindDeterministicMatch(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, desiredSlotIndex, deskStartAngle, predictedStartAngle, initialSettledSlotInfo, out DeterministicCandidate bestDesiredCandidate, out DeterministicCandidate bestObservedCandidate))
             {
-                Debug.Log($"Deterministic simulate succeeded. Final slot [{correctedFinalSlotIndex}] matched desired slot [{desiredSlotIndex}].");
-            }
-            else
-            {
-                Debug.LogWarning($"Deterministic simulate recalculated start angle but final slot [{correctedFinalSlotIndex}] did not match desired slot [{desiredSlotIndex}]. Returning recalculated state.");
+                float appliedOffset = Mathf.DeltaAngle(deskStartAngle, bestDesiredCandidate.StartAngle);
+                LogDeterministicSuccess("Deterministic search matched the desired slot using the settled-contact interval.", bestDesiredCandidate.SettledSlotInfo.FinalSlotIndex, desiredSlotIndex, bestDesiredCandidate.StartAngle, appliedOffset, bestDesiredCandidate.SettledSlotInfo.ContinuousStartFrame);
+                return bestDesiredCandidate.State;
             }
 
-            return correctedState;
+            if (bestObservedCandidate.HasValue)
+            {
+                float appliedOffset = Mathf.DeltaAngle(deskStartAngle, bestObservedCandidate.StartAngle);
+                LogDeterministicFailure("Deterministic search could not land in the desired slot after recentering and local offset refinement.", bestObservedCandidate.SettledSlotInfo.FinalSlotIndex, desiredSlotIndex, bestObservedCandidate.StartAngle, appliedOffset, bestObservedCandidate.SettledSlotInfo.ContinuousStartFrame);
+                return bestObservedCandidate.State;
+            }
+
+            LogDeterministicFailure("Deterministic search could not derive a settled slot candidate during correction.", -1, desiredSlotIndex, predictedStartAngle, predictedOffset, -1);
+            return initialState;
         }
 
         public void Dispose()
@@ -113,12 +121,11 @@ namespace Project.Scripts.Physic
         {
             float tick = GetTickDuration();
             SimulationState simulationData = new(m_maxIterations, tick);
-            
+
             UnityEngine.SimulationMode previousMode = Physics.simulationMode;
             try
             {
                 Physics.simulationMode = UnityEngine.SimulationMode.Script;
-                CreatePhysicsScene();
 
                 if (m_ballRb == null)
                 {
@@ -131,7 +138,7 @@ namespace Project.Scripts.Physic
 
                 Transform launchTransform = m_deskInstance.LaunchTransform;
                 m_deskInstance.StartSpin(deskRotationSpeed, deskDrag, deskStartAngle);
-                m_ballInstance.Launch(launchTransform.position,launchTransform.rotation,ballForceDirection, ballForce);
+                m_ballInstance.Launch(launchTransform.position, launchTransform.rotation, ballForceDirection, ballForce);
 
                 int slotIndex = CheckSlots();
                 RecordState(ref simulationData, 0, slotIndex);
@@ -157,8 +164,17 @@ namespace Project.Scripts.Physic
             }
             finally
             {
+                if (m_ballInstance != null)
+                {
+                    m_ballInstance.Disable();
+                }
+
+                if (m_deskInstance != null)
+                {
+                    m_deskInstance.Disable();
+                }
+
                 Physics.simulationMode = previousMode;
-                Dispose();
             }
         }
 
@@ -177,15 +193,37 @@ namespace Project.Scripts.Physic
             return 360f / m_deskPhysicSettings.SlotCount;
         }
 
-        private void CreatePhysicsScene()
+        private float GetSlotStartAngleCorrection(int currentSlotIndex, int desiredSlotIndex)
         {
-            CreateSceneParameters parameters = new(LocalPhysicsMode.Physics3D);
-            string sceneName = $"Gameplay_Simulation_{++s_simulationIndex}";
-            m_simulationScene = SceneManager.CreateScene(sceneName, parameters);
-            m_physicsScene = m_simulationScene.GetPhysicsScene();
+            float currentSlotAngle = currentSlotIndex * GetSlotAngle();
+            float desiredSlotAngle = desiredSlotIndex * GetSlotAngle();
+            return Mathf.DeltaAngle(desiredSlotAngle, currentSlotAngle);
+        }
 
-            CreateDesk();
-            CreateBall();
+        private void EnsureSimulationSceneCreated()
+        {
+            if (!m_simulationScene.IsValid())
+            {
+                CreateSceneParameters parameters = new(LocalPhysicsMode.Physics3D);
+                string sceneName = $"Gameplay_Simulation_{++s_simulationIndex}";
+                m_simulationScene = SceneManager.CreateScene(sceneName, parameters);
+                m_physicsScene = m_simulationScene.GetPhysicsScene();
+            }
+
+            if (m_deskInstance == null && m_deskPrefab != null)
+            {
+                CreateDesk();
+            }
+
+            if (m_ballInstance == null && m_ballPrefab != null)
+            {
+                CreateBall();
+            }
+
+            if (m_ballInstance != null && m_ballRb == null)
+            {
+                m_ballRb = m_ballInstance.GetComponent<Rigidbody>();
+            }
         }
 
         private void CreateDesk()
@@ -253,24 +291,30 @@ namespace Project.Scripts.Physic
 
         private int CheckSlots()
         {
-            Vector3 center = m_deskInstance.SpinTransform.position + m_deskPhysicSettings.SlotOriginOffset;
-            float slotPerAngle = GetSlotAngle();
+            Vector3 deskCenter = GetDeskSlotOrigin(m_deskInstance.SpinTransform.position);
+            int bestSlotIndex = -1;
+            float bestSlotScore = float.PositiveInfinity;
 
             for (int slotIndex = 0; slotIndex < m_deskPhysicSettings.SlotCount; slotIndex++)
             {
-                Quaternion rot = Quaternion.Euler(0f, slotIndex * slotPerAngle, 0f) * Quaternion.Euler(m_deskPhysicSettings.SlotRotationOffset) * m_deskInstance.SpinTransform.rotation;
+                Quaternion slotRotation = GetSlotWorldRotation(slotIndex, m_deskInstance.SpinTransform.rotation);
+                Vector3 slotCenter = GetSlotCenter(deskCenter, slotRotation);
+                int hitCount = m_physicsScene.OverlapBox(slotCenter, m_deskPhysicSettings.SlotBoxSize / 2f, m_overlapResults, slotRotation, m_ballLayerMask);
 
-                Vector3 dir = rot * Vector3.forward;
-                Vector3 pointB = center + dir * m_deskPhysicSettings.DistanceFromOrigin;
-
-                int hitCount = m_physicsScene.OverlapBox(pointB, m_deskPhysicSettings.SlotBoxSize / 2f, m_overlapResults, rot, m_ballLayerMask);
-                if (hitCount > 0)
+                if (hitCount <= 0)
                 {
-                    return slotIndex;
+                    continue;
+                }
+
+                float slotScore = GetSlotMatchScore(m_ballRb.position, slotCenter, slotRotation);
+                if (slotScore < bestSlotScore)
+                {
+                    bestSlotScore = slotScore;
+                    bestSlotIndex = slotIndex;
                 }
             }
 
-            return -1;
+            return bestSlotIndex;
         }
 
         private static int GetFinalSlotIndex(in SimulationState simulationState)
@@ -283,23 +327,203 @@ namespace Project.Scripts.Physic
             return simulationState.BallStates[simulationState.FrameCount - 1].SlotIndex;
         }
 
-        private static bool TryGetSettledSlotInfo(in SimulationState simulationState, out int finalSlotIndex, out int settledStartFrame)
+        private SettledSlotInfo AnalyzeSettledSlot(in SimulationState simulationState)
         {
-            finalSlotIndex = GetFinalSlotIndex(simulationState);
-            settledStartFrame = -1;
-
-            if (finalSlotIndex < 0 || simulationState.FrameCount <= 0)
+            //If simulation not valid
+            if (simulationState.FrameCount <= 0 || simulationState.BallStates == null || simulationState.DeskStates == null)
             {
-                return false;
+                return new SettledSlotInfo(false, -1, -1, Vector3.zero);
             }
 
-            settledStartFrame = simulationState.FrameCount - 1;
-            while (settledStartFrame > 0 && simulationState.BallStates[settledStartFrame - 1].SlotIndex == finalSlotIndex)
+            //If ball not slotted any slot due to an error collider geometry problem etc. visual models is not stable
+            int finalSlotIndex = GetFinalSlotIndex(simulationState);
+            if (finalSlotIndex < 0)
             {
-                settledStartFrame--;
+                return new SettledSlotInfo(false, finalSlotIndex, -1, Vector3.zero);
             }
 
-            return true;
+            int continuousStartFrame = simulationState.FrameCount - 1;
+            while (continuousStartFrame > 0 && simulationState.BallStates[continuousStartFrame - 1].SlotIndex == finalSlotIndex)
+            {
+                continuousStartFrame--;
+            }
+
+            Vector3 slotLocalBallPosition = GetSlotLocalBallPosition(simulationState.BallStates[continuousStartFrame].Position, simulationState.DeskStates[continuousStartFrame], finalSlotIndex);
+
+            return new SettledSlotInfo(true, finalSlotIndex, continuousStartFrame, slotLocalBallPosition);
+        }
+
+        private bool TryFindDeterministicMatch(Vector3 ballForceDirection, float ballForce, float deskRotationSpeed, float deskDrag, int desiredSlotIndex, float originalDeskStartAngle, float predictedStartAngle, in SettledSlotInfo referenceSettledSlotInfo, out DeterministicCandidate bestDesiredCandidate, out DeterministicCandidate bestObservedCandidate)
+        {
+            bestDesiredCandidate = default;
+            bestObservedCandidate = default;
+            float currentCenterAngle = predictedStartAngle;
+
+            for (int passIndex = 0; passIndex < k_deterministicRecenterPassCount; passIndex++)
+            {
+                SimulationState centeredState = RunSimulation(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, currentCenterAngle);
+                SettledSlotInfo centeredSettledSlotInfo = AnalyzeSettledSlot(centeredState);
+
+                if (TrySearchDesiredNeighborhood(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, desiredSlotIndex, currentCenterAngle, centeredState, centeredSettledSlotInfo, referenceSettledSlotInfo, ref bestDesiredCandidate, ref bestObservedCandidate))
+                {
+                    return true;
+                }
+
+                if (!centeredSettledSlotInfo.HasSettledSlot)
+                {
+                    Debug.Log($"Deterministic simulate pass [{passIndex + 1}] ended without a settled slot. " + $"Center start angle [{currentCenterAngle:F3}], desired slot [{desiredSlotIndex}].");
+                    break;
+                }
+
+                float recenterOffset = GetSlotStartAngleCorrection(centeredSettledSlotInfo.FinalSlotIndex, desiredSlotIndex);
+                if (Mathf.Abs(recenterOffset) <= Mathf.Epsilon)
+                {
+                    break;
+                }
+
+                currentCenterAngle = Mathf.Repeat(currentCenterAngle + recenterOffset, 360f);
+                Debug.Log($"Deterministic simulate recenter pass [{passIndex + 1}] observed slot [{centeredSettledSlotInfo.FinalSlotIndex}] " + $"and applied additional offset [{recenterOffset:F3}] to reach desired slot [{desiredSlotIndex}].");
+            }
+
+            if (bestDesiredCandidate.HasValue)
+            {
+                return bestDesiredCandidate.SettledSlotInfo.FinalSlotIndex == desiredSlotIndex;
+            }
+
+            float appliedOffset = Mathf.DeltaAngle(originalDeskStartAngle, predictedStartAngle);
+            Debug.Log($"Deterministic simulate did not find any settled candidate around predicted start angle [{predictedStartAngle:F3}] " + $"with initial offset [{appliedOffset:F3}] toward desired slot [{desiredSlotIndex}].");
+            return false;
+        }
+
+        private bool TrySearchDesiredNeighborhood(Vector3 ballForceDirection, float ballForce, float deskRotationSpeed, float deskDrag, int desiredSlotIndex, float centerStartAngle, in SimulationState centeredState, in SettledSlotInfo centeredSettledSlotInfo, in SettledSlotInfo referenceSettledSlotInfo, ref DeterministicCandidate bestDesiredCandidate, ref DeterministicCandidate bestObservedCandidate)
+        {
+            EvaluateDeterministicCandidate(centerStartAngle, centeredState, centeredSettledSlotInfo, desiredSlotIndex, referenceSettledSlotInfo, ref bestDesiredCandidate, ref bestObservedCandidate);
+
+            float stepAngle = GetSlotAngle() / k_deterministicNeighborhoodSubdivisionsPerSlot;
+            for (int stepIndex = 1; stepIndex <= k_deterministicNeighborhoodStepsPerSide; stepIndex++)
+            {
+                float angleOffset = stepAngle * stepIndex;
+
+                float clockwiseAngle = Mathf.Repeat(centerStartAngle + angleOffset, 360f);
+                SimulationState clockwiseState = RunSimulation(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, clockwiseAngle);
+                SettledSlotInfo clockwiseSettledSlotInfo = AnalyzeSettledSlot(clockwiseState);
+                EvaluateDeterministicCandidate(clockwiseAngle, clockwiseState, clockwiseSettledSlotInfo, desiredSlotIndex, referenceSettledSlotInfo, ref bestDesiredCandidate, ref bestObservedCandidate);
+
+                float counterClockwiseAngle = Mathf.Repeat(centerStartAngle - angleOffset, 360f);
+                SimulationState counterClockwiseState = RunSimulation(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, counterClockwiseAngle);
+                SettledSlotInfo counterClockwiseSettledSlotInfo = AnalyzeSettledSlot(counterClockwiseState);
+                EvaluateDeterministicCandidate(counterClockwiseAngle, counterClockwiseState, counterClockwiseSettledSlotInfo, desiredSlotIndex, referenceSettledSlotInfo, ref bestDesiredCandidate, ref bestObservedCandidate);
+            }
+
+            return bestDesiredCandidate.HasValue && bestDesiredCandidate.SettledSlotInfo.FinalSlotIndex == desiredSlotIndex;
+        }
+
+        private void EvaluateDeterministicCandidate(float startAngle, in SimulationState simulationState, in SettledSlotInfo settledSlotInfo, int desiredSlotIndex, in SettledSlotInfo referenceSettledSlotInfo, ref DeterministicCandidate bestDesiredCandidate, ref DeterministicCandidate bestObservedCandidate)
+        {
+            if (!settledSlotInfo.HasSettledSlot)
+            {
+                return;
+            }
+
+            float matchScore = GetSettledMatchScore(referenceSettledSlotInfo, settledSlotInfo);
+            float observedCandidateScore = GetObservedCandidateScore(settledSlotInfo.FinalSlotIndex, desiredSlotIndex, matchScore);
+
+            if (!bestObservedCandidate.HasValue || observedCandidateScore < bestObservedCandidate.MatchScore)
+            {
+                bestObservedCandidate = new DeterministicCandidate
+                {
+                    HasValue = true,
+                    StartAngle = startAngle,
+                    MatchScore = observedCandidateScore,
+                    State = simulationState,
+                    SettledSlotInfo = settledSlotInfo
+                };
+            }
+
+            if (settledSlotInfo.FinalSlotIndex != desiredSlotIndex)
+            {
+                return;
+            }
+
+            if (bestDesiredCandidate.HasValue && bestDesiredCandidate.MatchScore <= matchScore)
+            {
+                return;
+            }
+
+            bestDesiredCandidate = new DeterministicCandidate
+            {
+                HasValue = true,
+                StartAngle = startAngle,
+                MatchScore = matchScore,
+                State = simulationState,
+                SettledSlotInfo = settledSlotInfo
+            };
+        }
+
+        private static float GetSettledMatchScore(in SettledSlotInfo referenceSettledSlotInfo, in SettledSlotInfo candidateSettledSlotInfo)
+        {
+            float localPointScore = (candidateSettledSlotInfo.SlotLocalBallPosition - referenceSettledSlotInfo.SlotLocalBallPosition).sqrMagnitude;
+            float frameScore = Mathf.Abs(candidateSettledSlotInfo.ContinuousStartFrame - referenceSettledSlotInfo.ContinuousStartFrame) * k_settledFramePenalty;
+            return localPointScore + frameScore;
+        }
+
+        private float GetObservedCandidateScore(int candidateSlotIndex, int desiredSlotIndex, float settledMatchScore)
+        {
+            int slotDistance = GetSlotDistance(candidateSlotIndex, desiredSlotIndex);
+            return slotDistance + settledMatchScore;
+        }
+
+        private int GetSlotDistance(int firstSlotIndex, int secondSlotIndex)
+        {
+            int slotDistance = Mathf.Abs(firstSlotIndex - secondSlotIndex);
+            return Mathf.Min(slotDistance, m_deskPhysicSettings.SlotCount - slotDistance);
+        }
+
+        private Vector3 GetSlotLocalBallPosition(Vector3 ballWorldPosition, in DeskState deskState, int slotIndex)
+        {
+            Vector3 deskCenter = GetDeskSlotOrigin(deskState.Position);
+            Quaternion slotWorldRotation = GetSlotWorldRotation(slotIndex, deskState.Rotation);
+            Vector3 slotCenter = GetSlotCenter(deskCenter, slotWorldRotation);
+            return Quaternion.Inverse(slotWorldRotation) * (ballWorldPosition - slotCenter);
+        }
+
+        private Vector3 GetDeskSlotOrigin(Vector3 deskPosition)
+        {
+            return deskPosition + m_deskPhysicSettings.SlotOriginOffset;
+        }
+
+        private Quaternion GetSlotWorldRotation(int slotIndex, Quaternion deskRotation)
+        {
+            float slotAngle = slotIndex * GetSlotAngle();
+            return Quaternion.Euler(0f, slotAngle, 0f) * Quaternion.Euler(m_deskPhysicSettings.SlotRotationOffset) * deskRotation;
+        }
+
+        private Vector3 GetSlotCenter(Vector3 deskCenter, Quaternion slotWorldRotation)
+        {
+            return deskCenter + slotWorldRotation * Vector3.forward * m_deskPhysicSettings.DistanceFromOrigin;
+        }
+
+        private float GetSlotMatchScore(Vector3 ballWorldPosition, Vector3 slotCenter, Quaternion slotWorldRotation)
+        {
+            Vector3 localBallPosition = Quaternion.Inverse(slotWorldRotation) * (ballWorldPosition - slotCenter);
+            Vector3 halfExtents = m_deskPhysicSettings.SlotBoxSize / 2f;
+
+            float x = halfExtents.x > Mathf.Epsilon ? localBallPosition.x / halfExtents.x : localBallPosition.x;
+            float y = halfExtents.y > Mathf.Epsilon ? localBallPosition.y / halfExtents.y : localBallPosition.y;
+            float z = halfExtents.z > Mathf.Epsilon ? localBallPosition.z / halfExtents.z : localBallPosition.z;
+
+            return x * x + y * y + z * z;
+        }
+
+        private static void LogDeterministicSuccess(string reason, int finalSlotIndex, int desiredSlotIndex, float startAngle, float appliedOffset, int settledStartFrame)
+        {
+            Debug.Log($"Deterministic simulate <color=green>SUCCEEDED</color>: {reason} " + $"Final slot [{finalSlotIndex}], desired slot [{desiredSlotIndex}], start angle [{startAngle:F3}], " + $"applied offset [{appliedOffset:F3}], continuous slot start frame [{settledStartFrame}].");
+        }
+
+        private static void LogDeterministicFailure(string reason, int finalSlotIndex, int desiredSlotIndex, float startAngle, float appliedOffset, int settledStartFrame)
+        {
+            string settledStartFrameText = settledStartFrame >= 0 ? settledStartFrame.ToString() : "n/a";
+            Debug.Log($"Deterministic simulate <color=red>FAILED</color>: {reason} " + $"Final slot [{finalSlotIndex}], desired slot [{desiredSlotIndex}], start angle [{startAngle:F3}], " + $"applied offset [{appliedOffset:F3}], continuous slot start frame [{settledStartFrameText}].");
         }
     }
 }

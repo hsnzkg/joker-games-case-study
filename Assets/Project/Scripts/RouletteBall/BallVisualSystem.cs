@@ -4,15 +4,15 @@ namespace Project.Scripts.RouletteBall
 {
     public class BallVisualSystem
     {
-        private readonly MeshRenderer m_ballRenderer;
+        private readonly MeshRenderer m_renderer;
         public BallVisualSystem(GameObject instance)
         {
-            m_ballRenderer = instance.GetComponent<MeshRenderer>();
+            m_renderer = instance.GetComponent<MeshRenderer>();
         }
         
         public void ChangeVisualState(bool active)
         {
-            m_ballRenderer.enabled = active;
+            m_renderer.enabled = active;
         }
     }
 }

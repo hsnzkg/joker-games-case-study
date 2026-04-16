@@ -14,9 +14,11 @@ namespace Project.Scripts.RouletteDesk
         private SimulationMode m_simulationMode;
         private SimulationReplayPlayer<DeskState> m_replayPlayer;
         private DeskPhysicSystem m_deskPhysicSystem;
+        private DeskVisualSystem m_deskVisualSystem;
         public Transform LaunchTransform => m_launchTransform;
         public Transform SpinTransform => m_spinTransform;
         public bool IsSpinning => m_deskPhysicSystem.IsEnabled;
+        public SimulationMode SimulationMode => m_simulationMode;
 
         #region Unity Callbacks
 
@@ -48,7 +50,8 @@ namespace Project.Scripts.RouletteDesk
         public void Initialize()
         {
             m_renderers = GetComponentsInChildren<Renderer>();
-            m_deskPhysicSystem = new DeskPhysicSystem(m_deskPhysicSettings, m_spinTransform);
+            m_deskPhysicSystem = new DeskPhysicSystem(this,m_deskPhysicSettings, m_spinTransform);
+            m_deskVisualSystem = new DeskVisualSystem(gameObject);
             m_replayPlayer = new SimulationReplayPlayer<DeskState>(new DeskReplayAdapter(m_spinTransform));
         }
 
@@ -64,11 +67,7 @@ namespace Project.Scripts.RouletteDesk
             {
                 m_replayPlayer.Stop();
             }
-
-            foreach (Renderer r in m_renderers)
-            {
-                r.enabled = true;
-            }
+            m_deskVisualSystem.ChangeVisualState(mode == SimulationMode.Replay);
         }
 
         public void Replay(SimulationState simulationState)

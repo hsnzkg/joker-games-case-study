@@ -1,4 +1,3 @@
-using System;
 using Project.Scripts.Physic;
 using Project.Scripts.Physic.State;
 using Project.Scripts.RouletteBall;
@@ -57,6 +56,12 @@ namespace Project.Scripts
             }
         }
 
+        private void OnDestroy()
+        {
+            m_simulator?.Dispose();
+            m_simulator = null;
+        }
+
         private void OnDrawGizmos()
         {
             if (!m_hasLastSimulationState || m_lastSimulationState.BallStates == null || m_lastSimulationState.FrameCount <= 0)
@@ -81,10 +86,10 @@ namespace Project.Scripts
         {
             m_ball.Initialize();
             m_desk.Initialize();
-            
+
             m_ball.ChangeSimulationMode(SimulationMode.Replay);
             m_desk.ChangeSimulationMode(SimulationMode.Replay);
-            
+
             m_simulator = new PhysicSimulator(m_predictionDeskPhysicSettings, m_predictionBallPrefab, m_predictionDeskPrefab, m_predictionMaxIterations);
         }
 
@@ -94,7 +99,7 @@ namespace Project.Scripts
 
             if (TrySimulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, out SimulationState simulationState))
             {
-                SetLastSimulationState(simulationState, "StartGame");
+                SetLastSimulationState(simulationState);
             }
             else
             {
@@ -116,7 +121,7 @@ namespace Project.Scripts
                 return;
             }
 
-            SetLastSimulationState(simulationState, "StartDeterministicGame");
+            SetLastSimulationState(simulationState);
             PlaySimulation(simulationState);
         }
 
@@ -139,12 +144,12 @@ namespace Project.Scripts
             return simulationState is { BallStates: not null, FrameCount: > 0 };
         }
 
-        private void SetLastSimulationState(SimulationState simulationState, string context)
+        private void SetLastSimulationState(SimulationState simulationState)
         {
             m_lastSimulationState = simulationState;
             m_hasLastSimulationState = simulationState is { BallStates: not null, FrameCount: > 0 };
             int finalSlotIndex = GetFinalSlotIndex(simulationState);
-            Debug.Log($"{context} completed. FrameCount: [{simulationState.FrameCount}], final slot index: [{finalSlotIndex}].");
+            Debug.Log($"Simulation completed. FrameCount: [{simulationState.FrameCount}], final slot index: [{finalSlotIndex}].");
         }
 
         private void ClearLastSimulationState()

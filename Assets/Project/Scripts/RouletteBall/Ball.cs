@@ -40,7 +40,7 @@ namespace Project.Scripts.RouletteBall
                 m_replayPlayer.Stop();
             }
 
-            m_ballVisualSystem.ChangeVisualState(true);
+            m_ballVisualSystem.ChangeVisualState(mode == SimulationMode.Replay);
         }
 
         public void Tick(float delta)
