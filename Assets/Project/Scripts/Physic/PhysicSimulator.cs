@@ -151,8 +151,8 @@ namespace Project.Scripts.Physic
                     }
                 }
 
-                m_ballInstance.Stop();
-                m_deskInstance.Stop();
+                m_ballInstance.Disable();
+                m_deskInstance.Disable();
                 return simulationData;
             }
             finally
@@ -191,6 +191,7 @@ namespace Project.Scripts.Physic
         private void CreateDesk()
         {
             m_deskInstance = UnityEngine.Object.Instantiate(m_deskPrefab);
+            m_deskInstance.Initialize();
             m_deskInstance.enabled = false;
             m_deskInstance.ChangeSimulationMode(SimulationMode.Simulation);
             SetRenderersEnabled(m_deskInstance.gameObject, false);
@@ -200,6 +201,7 @@ namespace Project.Scripts.Physic
         private void CreateBall()
         {
             m_ballInstance = UnityEngine.Object.Instantiate(m_ballPrefab);
+            m_ballInstance.Initialize();
             m_ballInstance.enabled = false;
             m_ballInstance.ChangeSimulationMode(SimulationMode.Simulation);
             SetRenderersEnabled(m_ballInstance.gameObject, false);

@@ -2,10 +2,11 @@
 {
     public interface ISimulationObject
     {
+        public void Initialize();
         public void ChangeSimulationMode(SimulationMode mode);
         public void Tick(float delta);
-        public void Start();
-        public void Stop();
+        public void Enable();
+        public void Disable();
         public void ResetSimulationObject();
     }
 }

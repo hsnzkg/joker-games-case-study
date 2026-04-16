@@ -428,7 +428,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Project::Project.Scripts.RouletteGame
   m_gameMode: 1
-  m_startDesiredSlotIndex: 0
+  m_startDesiredSlotIndex: 5
   m_ball: {fileID: 2049276437}
   m_desk: {fileID: 1343160131}
   m_predictionDeskPhysicSettings: {fileID: 11400000, guid: 32c9a1f7b5739684ca9271ab80b8129b, type: 2}

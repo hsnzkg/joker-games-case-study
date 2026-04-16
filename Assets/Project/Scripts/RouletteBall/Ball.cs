@@ -13,12 +13,7 @@ namespace Project.Scripts.RouletteBall
         private SimulationMode m_simulationMode;
 
         #region Unity Callbacks
-
-        private void Awake()
-        {
-            Initialize();
-        }
-
+        
         private void Update()
         {
             Tick(Time.deltaTime);
@@ -26,7 +21,7 @@ namespace Project.Scripts.RouletteBall
 
         #endregion
 
-        private void Initialize()
+        public void Initialize()
         {
             m_ballVisualSystem = new BallVisualSystem(gameObject);
             m_ballPhysicSystem = new BallPhysicSystem(gameObject);
@@ -56,12 +51,12 @@ namespace Project.Scripts.RouletteBall
             }
         }
 
-        public void Start()
+        public void Enable()
         {
             m_ballPhysicSystem.Start();
         }
 
-        public void Stop()
+        public void Disable()
         {
             m_ballPhysicSystem.Stop();
         }
@@ -79,6 +74,7 @@ namespace Project.Scripts.RouletteBall
 
         public void Launch(Vector3 fromPos,Quaternion fromRot, Vector3 dir, float force)
         {
+            ChangeSimulationMode(SimulationMode.Simulation);
             m_ballPhysicSystem.Launch(fromPos, fromRot, dir, force);
         }
     }

@@ -20,11 +20,6 @@ namespace Project.Scripts.RouletteDesk
 
         #region Unity Callbacks
 
-        private void Awake()
-        {
-            Initialize();
-        }
-
         private void FixedUpdate()
         {
             if (m_simulationMode != SimulationMode.Simulation)
@@ -50,7 +45,7 @@ namespace Project.Scripts.RouletteDesk
 
         #endregion
 
-        private void Initialize()
+        public void Initialize()
         {
             m_renderers = GetComponentsInChildren<Renderer>();
             m_deskPhysicSystem = new DeskPhysicSystem(m_deskPhysicSettings, m_spinTransform);
@@ -60,6 +55,7 @@ namespace Project.Scripts.RouletteDesk
         public void ChangeSimulationMode(SimulationMode mode)
         {
             m_simulationMode = mode;
+            
             if (m_simulationMode == SimulationMode.Replay)
             {
                 m_deskPhysicSystem.Stop();
@@ -83,6 +79,7 @@ namespace Project.Scripts.RouletteDesk
 
         public void StartSpin(float deskRotationSpeed, float deskDrag, float startAngle = 0f)
         {
+            ChangeSimulationMode(SimulationMode.Simulation);
             m_deskPhysicSystem.StartSpin(deskRotationSpeed, deskDrag, startAngle);
         }
 
@@ -104,12 +101,12 @@ namespace Project.Scripts.RouletteDesk
             }
         }
 
-        public void Start()
+        public void Enable()
         {
             m_deskPhysicSystem.Start();
         }
 
-        public void Stop()
+        public void Disable()
         {
             m_deskPhysicSystem.Stop();
         }

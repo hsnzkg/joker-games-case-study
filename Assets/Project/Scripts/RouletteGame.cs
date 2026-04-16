@@ -79,16 +79,17 @@ namespace Project.Scripts
 
         private void Initialize()
         {
+            m_ball.Initialize();
+            m_desk.Initialize();
+            
+            m_ball.ChangeSimulationMode(SimulationMode.Replay);
+            m_desk.ChangeSimulationMode(SimulationMode.Replay);
+            
             m_simulator = new PhysicSimulator(m_predictionDeskPhysicSettings, m_predictionBallPrefab, m_predictionDeskPrefab, m_predictionMaxIterations);
         }
 
         public void StartGame()
         {
-            if (!HasRuntimeReferences())
-            {
-                return;
-            }
-
             GenerateRandomStart(out Vector3 ballDir, out float ballForce, out float spinSpeed, out float spinDrag, out float spinStartAngle);
 
             if (TrySimulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, out SimulationState simulationState))
@@ -98,26 +99,14 @@ namespace Project.Scripts
             else
             {
                 ClearLastSimulationState();
+                return;
             }
 
-            Transform launchTransform = m_desk.LaunchTransform;
-            ResetRuntimeObjects();
-            m_desk.StartSpin(spinSpeed, spinDrag, spinStartAngle);
-            m_ball.Launch(launchTransform.position,launchTransform.rotation, ballDir, ballForce);
-        }
-
-        public void StartDeterministicGame()
-        {
-            StartDeterministicGame(m_startDesiredSlotIndex);
+            PlaySimulation(simulationState);
         }
 
         public void StartDeterministicGame(int desiredSlotIndex)
         {
-            if (!HasRuntimeReferences())
-            {
-                return;
-            }
-
             GenerateRandomStart(out Vector3 ballDir, out float ballForce, out float spinSpeed, out float spinDrag, out float spinStartAngle);
 
             if (!TrySimulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, out SimulationState simulationState, desiredSlotIndex))
@@ -128,31 +117,19 @@ namespace Project.Scripts
             }
 
             SetLastSimulationState(simulationState, "StartDeterministicGame");
-            m_ball.Replay(simulationState);
-            m_desk.Replay(simulationState);
+            PlaySimulation(simulationState);
         }
 
-        private void ResetRuntimeObjects()
+        private void PlaySimulation(in SimulationState simulationState)
         {
-            m_ball.ChangeSimulationMode(SimulationMode.Simulation);
-            m_desk.ChangeSimulationMode(SimulationMode.Simulation);
-
-            m_ball.Stop();
-            m_desk.Stop();
+            m_ball.Disable();
+            m_desk.Disable();
 
             m_desk.ResetSimulationObject();
             m_ball.ResetSimulationObject();
-        }
 
-        private bool HasRuntimeReferences()
-        {
-            if (m_ball != null && m_desk != null)
-            {
-                return true;
-            }
-
-            Debug.LogError("RouletteGame requires both runtime Ball and Desk references.");
-            return false;
+            m_desk.Replay(simulationState);
+            m_ball.Replay(simulationState);
         }
 
         private bool TrySimulate(Vector3 ballDir, float ballForce, float spinSpeed, float spinDrag, float spinStartAngle, out SimulationState simulationState, int? desiredSlotIndex = null)
@@ -165,8 +142,7 @@ namespace Project.Scripts
         private void SetLastSimulationState(SimulationState simulationState, string context)
         {
             m_lastSimulationState = simulationState;
-            m_hasLastSimulationState = simulationState.BallStates != null && simulationState.FrameCount > 0;
-
+            m_hasLastSimulationState = simulationState is { BallStates: not null, FrameCount: > 0 };
             int finalSlotIndex = GetFinalSlotIndex(simulationState);
             Debug.Log($"{context} completed. FrameCount: [{simulationState.FrameCount}], final slot index: [{finalSlotIndex}].");
         }

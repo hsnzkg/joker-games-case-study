@@ -7,10 +7,8 @@ namespace Project.Scripts.RouletteDesk
     public class DeskPhysicSystem
     {
         private readonly Transform m_spinTransform;
-        private float m_spinInitialSpeed;
         private float m_remainingSpeed;
         private float m_drag;
-        private readonly float m_tick;
         private DeskPhysicSettings m_settings;
         public bool IsEnabled { get; private set; }
 
@@ -18,7 +16,6 @@ namespace Project.Scripts.RouletteDesk
         {
             m_settings = deskPhysicSettings;
             m_spinTransform = spinTransform;
-            m_tick = m_settings.Tick;
         }
 
         public void Tick(float delta)
@@ -47,7 +44,6 @@ namespace Project.Scripts.RouletteDesk
         {
             Start();
             m_spinTransform.rotation = Quaternion.Euler(0, startAngle, 0);
-            m_spinInitialSpeed = speed;
             m_remainingSpeed = speed;
             m_drag = drag;
         }
@@ -59,8 +55,9 @@ namespace Project.Scripts.RouletteDesk
 
         public void DrawGizmos()
         {
+            if(!m_spinTransform)return;
             Gizmos.color = Color.green;
-
+            
             Vector3 center = m_spinTransform.position + m_settings.SlotOriginOffset;
 
             Matrix4x4 oldMatrix = Gizmos.matrix;
