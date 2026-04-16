@@ -5,7 +5,7 @@ namespace Project.Scripts.RouletteDesk
     [CreateAssetMenu(fileName = "DeskPhysicSettings", menuName = "Project/DeskPhysicSettings", order = 0)]
     public class DeskPhysicSettings : ScriptableObject
     {
-        [Range(1,37)] public float SlotCount;
+        [Range(1,37)] public int SlotCount;
         public Vector3 SlotOriginOffset;
         public Vector3 SlotRotationOffset;
         public Vector3 SlotBoxSize;

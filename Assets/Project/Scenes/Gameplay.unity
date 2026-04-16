@@ -422,7 +422,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 477024675}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aeffc22a7ed246e88cf59cb57761ad38, type: 3}
   m_Name: 
@@ -534,6 +534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb3c5aa5952eac54b9465d03b9a8b8a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Project::Project.Scripts.Physic.PhysicSimulator
+  m_deskPhysicSettings: {fileID: 11400000, guid: 32c9a1f7b5739684ca9271ab80b8129b, type: 2}
   m_ballForce: 5
   m_ballForceDirection: {x: 3, y: 0.25, z: 0}
   m_deskRotationSpeed: 100

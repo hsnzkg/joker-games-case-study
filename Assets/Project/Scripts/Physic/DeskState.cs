@@ -2,12 +2,12 @@
 
 namespace Project.Scripts.Physic
 {
-    public struct SimulationObjectState
+    public struct DeskState
     {
         public Vector3 Position;
         public Quaternion Rotation;
 
-        public SimulationObjectState(Vector3 pos, Quaternion rot)
+        public DeskState(Vector3 pos, Quaternion rot)
         {
             Position = pos;
             Rotation = rot;

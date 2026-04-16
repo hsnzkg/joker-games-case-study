@@ -8,11 +8,10 @@ namespace Project.Scripts.RouletteDesk
         [SerializeField] private DeskPhysicSettings m_deskPhysicSettings;
         [SerializeField] private Transform m_spinTransform;
         [SerializeField] private Transform m_launchTransform;
+        private Renderer[] m_renderers;
+        private SimulationMode m_simulationMode;
         public DeskPhysicSystem DeskPhysicSystem { get; private set; }
         public Transform LaunchTransform => m_launchTransform;
-        private Renderer[] m_renderers;
-
-        private SimulationMode m_simulationMode;
 
         public SimulationMode SimulationMode
         {
@@ -29,27 +28,31 @@ namespace Project.Scripts.RouletteDesk
 
         private void FixedUpdate()
         {
-            DeskPhysicSystem.Tick();
+            DeskPhysicSystem.Tick(m_deskPhysicSettings.Tick);
         }
 
         private void OnDrawGizmos()
         {
-            DeskPhysicSystem?.DrawGizmos();
+            if (m_simulationMode == SimulationMode.FixedUpdate)
+            {
+                DeskPhysicSystem?.DrawGizmos();
+            }
         }
 
         #endregion
 
         private void Initialize()
         {
-            DeskPhysicSystem = new DeskPhysicSystem(m_deskPhysicSettings,m_spinTransform);
             m_renderers = GetComponentsInChildren<Renderer>();
+            DeskPhysicSystem = new DeskPhysicSystem(m_deskPhysicSettings, m_spinTransform);
         }
 
         public void ChangeSimulationMode(SimulationMode mode)
         {
+            m_simulationMode = mode;
             foreach (Renderer r in m_renderers)
             {
-                r.enabled = mode == SimulationMode.FixedUpdate;
+                r.enabled = m_simulationMode == SimulationMode.FixedUpdate;
             }
         }
     }

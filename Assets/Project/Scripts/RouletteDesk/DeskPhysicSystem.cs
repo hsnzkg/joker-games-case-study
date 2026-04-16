@@ -22,29 +22,29 @@ namespace Project.Scripts.RouletteDesk
             m_tick = m_settings.Tick;
         }
 
-        public void Tick()
+        public void Tick(float delta)
         {
-            if(!IsEnabled) return;
-            m_spinTransform.Rotate(Vector3.up * (m_remainingSpeed * m_tick), Space.Self);
-            m_remainingSpeed -= Time.fixedDeltaTime * m_drag;
+            if (!IsEnabled) return;
+            m_spinTransform.Rotate(Vector3.up * (m_remainingSpeed * delta), Space.Self);
+            m_remainingSpeed -= delta * m_drag;
             if (!(m_remainingSpeed <= 0)) return;
             m_remainingSpeed = 0;
             Disable();
         }
-        
+
         public void Enable()
         {
-            if(IsEnabled) return;
+            if (IsEnabled) return;
             IsEnabled = true;
         }
 
         public void Disable()
         {
-            if(!IsEnabled) return;
+            if (!IsEnabled) return;
             IsEnabled = false;
         }
 
-        public void StartSpin(float speed,float drag,float startAngle = 0f)
+        public void StartSpin(float speed, float drag, float startAngle = 0f)
         {
             Enable();
             m_spinTransform.rotation = Quaternion.Euler(0, startAngle, 0);
@@ -67,14 +67,13 @@ namespace Project.Scripts.RouletteDesk
             Matrix4x4 oldMatrix = Gizmos.matrix;
 
             float slotPerAngle = 360f / m_settings.SlotCount;
-            for (float i = 0f; i < 360f; i += slotPerAngle)
+
+            for (int i = 0; i < m_settings.SlotCount; i++)
             {
                 float percentage = i / 360f;
-  
-                
-                Quaternion rot =
-                    Quaternion.Euler(0f, i, 0f) *
-                    Quaternion.Euler(m_settings.SlotRotationOffset);
+                float angle = i * slotPerAngle;
+
+                Quaternion rot = Quaternion.Euler(0f, angle, 0f) * Quaternion.Euler(m_settings.SlotRotationOffset) * m_spinTransform.rotation;
 
                 Vector3 dir = rot * Vector3.forward;
                 Vector3 pointB = center + dir * m_settings.DistanceFromOrigin;
@@ -82,11 +81,16 @@ namespace Project.Scripts.RouletteDesk
                 Gizmos.matrix = oldMatrix;
                 Gizmos.color = Color.aquamarine;
                 Gizmos.DrawLine(center, pointB);
-                
+
                 Color color = Color.Lerp(Color.purple, Color.blue, percentage);
                 Gizmos.color = color;
                 Gizmos.matrix = Matrix4x4.TRS(pointB, rot, Vector3.one);
                 Gizmos.DrawWireCube(Vector3.zero, m_settings.SlotBoxSize);
+
+#if UNITY_EDITOR
+                Gizmos.matrix = oldMatrix;
+                UnityEditor.Handles.Label(pointB, i.ToString());
+#endif
             }
 
             Gizmos.matrix = oldMatrix;

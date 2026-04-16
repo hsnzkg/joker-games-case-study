@@ -15,6 +15,6 @@ MonoBehaviour:
   SlotCount: 37
   SlotOriginOffset: {x: 0, y: 1.425, z: 0}
   SlotRotationOffset: {x: 0, y: 5, z: 0}
-  SlotBoxSize: {x: 0.35, y: 0.5, z: 0.85}
+  SlotBoxSize: {x: 0.35, y: 0.0625, z: 0.85}
   DistanceFromOrigin: 3.27
   Tick: 0.02
