@@ -14,7 +14,7 @@ namespace Project.Scripts.Physic.State
             Position = pos;
             Rotation = rot;
             IsCollidingWithSlot = isCollidingWithSlot;
-            SlotIndex = -1;
+            SlotIndex = slotIndex;
         }
     }
 }

@@ -36,7 +36,6 @@ namespace Project.Scripts.RouletteBall
         public void ChangeSimulationMode(SimulationMode mode)
         {
             m_simulationMode = mode;
-            m_ballVisualSystem.ChangeVisualState(m_simulationMode == SimulationMode.Replay);
             if (m_simulationMode == SimulationMode.Replay)
             {
                 m_ballPhysicSystem.Stop();
@@ -45,6 +44,8 @@ namespace Project.Scripts.RouletteBall
             {
                 m_replayPlayer.Stop();
             }
+
+            m_ballVisualSystem.ChangeVisualState(true);
         }
 
         public void Tick(float delta)
@@ -63,6 +64,11 @@ namespace Project.Scripts.RouletteBall
         public void Stop()
         {
             m_ballPhysicSystem.Stop();
+        }
+
+        public void Reset(Vector3 position, Quaternion rotation)
+        {
+            m_ballPhysicSystem.Reset(position, rotation);
         }
 
         public void Replay(SimulationState simulationState)

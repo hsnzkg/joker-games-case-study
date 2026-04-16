@@ -5,7 +5,7 @@
         private enum GameMode
         {
             Game,
-            Predicted
+            Deterministic
         }
     }
 }

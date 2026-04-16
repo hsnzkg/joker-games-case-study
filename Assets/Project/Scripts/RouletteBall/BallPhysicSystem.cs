@@ -27,6 +27,13 @@ namespace Project.Scripts.RouletteBall
             m_rigidbody.angularVelocity = Vector3.zero;
             m_rigidbody.isKinematic = true;
         }
+
+        public void Reset(Vector3 position, Quaternion rotation)
+        {
+            Stop();
+            m_rigidbody.position = position;
+            m_rigidbody.rotation = rotation;
+        }
         
         public void Launch(Vector3 dir, float force)
         {

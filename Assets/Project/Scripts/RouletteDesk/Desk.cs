@@ -45,10 +45,7 @@ namespace Project.Scripts.RouletteDesk
 
         private void OnDrawGizmos()
         {
-            if (m_simulationMode == SimulationMode.Replay)
-            {
-                m_deskPhysicSystem?.DrawGizmos();
-            }
+            m_deskPhysicSystem?.DrawGizmos();
         }
 
         #endregion
@@ -74,7 +71,7 @@ namespace Project.Scripts.RouletteDesk
 
             foreach (Renderer r in m_renderers)
             {
-                r.enabled = m_simulationMode == SimulationMode.Replay;
+                r.enabled = true;
             }
         }
 
@@ -91,6 +88,7 @@ namespace Project.Scripts.RouletteDesk
 
         public void Reset()
         {
+            m_deskPhysicSystem.Stop();
             m_deskPhysicSystem.Reset();
         }
 
