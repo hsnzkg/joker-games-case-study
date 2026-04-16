@@ -1,4 +1,5 @@
 using System;
+using Project.Scripts.Physic.State;
 using Project.Scripts.RouletteBall;
 using Project.Scripts.RouletteDesk;
 using UnityEngine;
@@ -6,136 +7,127 @@ using UnityEngine.SceneManagement;
 
 namespace Project.Scripts.Physic
 {
-    public class PhysicSimulator : MonoBehaviour
+    public sealed class PhysicSimulator : IDisposable
     {
-        [SerializeField] private DeskPhysicSettings m_deskPhysicSettings;
-        [SerializeField] private float m_ballForce;
-        [SerializeField] private Vector3 m_ballForceDirection;
-        [SerializeField] private float m_deskRotationSpeed;
-        [SerializeField] private float m_deskDrag;
-        [SerializeField] private Ball m_ballPrefab;
-        [SerializeField] private Desk m_deskPrefab;
-        [SerializeField] private int m_maxIterations = 100;
+        private static int s_simulationIndex;
 
-        private SimulationState m_simulationData;
+        private readonly DeskPhysicSettings m_deskPhysicSettings;
+        private readonly Ball m_ballPrefab;
+        private readonly Desk m_deskPrefab;
+        private readonly int m_maxIterations;
+
         private Scene m_simulationScene;
         private PhysicsScene m_physicsScene;
         private Ball m_ballInstance;
         private Desk m_deskInstance;
-        private SphereCollider m_ballCollider;
         private Rigidbody m_ballRb;
-        private float m_tick;
-        private int m_currentIteration;
-        private int m_replayIndex;
-        private bool m_isPhysicSceneCreated;
-        private Collider[] m_overlapResults;
-        private int m_ballLayerMask;
-        private bool m_isBallCollidingWithSlot;
+        private readonly Collider[] m_overlapResults;
+        private readonly int m_ballLayerMask;
 
-        public SimulationState SimulationState => m_simulationData;
-
-
-        #region Unity Callbacks
-
-        private void Awake()
+        public PhysicSimulator(DeskPhysicSettings deskPhysicSettings, Ball ballPrefab, Desk deskPrefab, int maxIterations = 100)
         {
-            Initialize();
-            CreatePhysicsScene();
+            m_deskPhysicSettings = deskPhysicSettings;
+            m_ballPrefab = ballPrefab;
+            m_deskPrefab = deskPrefab;
+            m_maxIterations = Mathf.Max(2, maxIterations);
 
-            m_currentIteration = 0;
-            ResetBall();
-            ResetDesk();
-            RecordState();
-
-            m_ballInstance.Launch(m_ballForceDirection, m_ballForce);
-            m_deskInstance.StartSpin(m_deskRotationSpeed, m_deskDrag);
-
-            SimulateUntilStop();
+            m_overlapResults = new Collider[1];
+            m_ballLayerMask = ballPrefab != null ? 1 << ballPrefab.gameObject.layer : 0;
         }
 
-        private void OnDrawGizmos()
+        public void Initialize()
         {
-            if (!m_isPhysicSceneCreated) return;
-            for (int i = 0; i < m_simulationData.BallStates.Length; i++)
+            CreatePhysicsScene();
+        }
+
+        public SimulationState Simulate(Vector3 ballForceDirection, float ballForce, float deskRotationSpeed, float deskDrag, float deskStartAngle)
+        {
+            float tick = m_deskPhysicSettings != null && m_deskPhysicSettings.Tick > 0f ? m_deskPhysicSettings.Tick : Time.fixedDeltaTime;
+            SimulationState simulationData = new(m_maxIterations, tick);
+
+            UnityEngine.SimulationMode previousMode = Physics.simulationMode;
+            try
             {
-                Color color = Color.Lerp(Color.green, Color.red, i / (float)m_maxIterations);
-                Gizmos.color = color;
-                Gizmos.DrawWireSphere(m_simulationData.BallStates[i].Position, m_ballCollider.radius * m_ballInstance.transform.localScale.x);
+                Physics.simulationMode = UnityEngine.SimulationMode.Script;
+                if (m_ballRb == null)
+                {
+                    Debug.LogError("PhysicSimulator requires a Rigidbody on the ball prefab.");
+                    return simulationData;
+                }
+                ResetBall(ref simulationData);
+                ResetDesk();
+
+                m_deskInstance.StartSpin(deskRotationSpeed, deskDrag, deskStartAngle);
+                m_ballInstance.Launch(ballForceDirection, ballForce);
+
+                int currentIteration = 0;
+                bool isBallCollidingWithSlot = false;
+                RecordState(ref simulationData, currentIteration, isBallCollidingWithSlot);
+
+                for (int i = 1; i < m_maxIterations; i++)
+                {
+                    m_deskInstance.Tick(tick);
+                    Physics.SyncTransforms();
+                    m_physicsScene.Simulate(tick);
+
+                    currentIteration = i;
+                    isBallCollidingWithSlot = CheckSlots();
+                    RecordState(ref simulationData, currentIteration, isBallCollidingWithSlot);
+
+                    if (IsBallStopped() && IsDeskStopped())
+                    {
+                        break;
+                    }
+                }
+
+                m_ballInstance.Stop();
+                m_deskInstance.Stop();
+                return simulationData;
+            }
+            finally
+            {
+                Physics.simulationMode = previousMode;
+                Dispose();
             }
         }
 
-        #endregion
-
-
-        private void Initialize()
+        public void Dispose()
         {
-            Physics.simulationMode = UnityEngine.SimulationMode.Script;
-            m_tick = Time.fixedDeltaTime;
-            m_overlapResults = new Collider[1];
-            m_simulationData = new SimulationState(m_maxIterations, m_tick);
-            m_ballLayerMask = 1 << m_ballPrefab.gameObject.layer;
+            if (m_ballInstance != null)
+            {
+                UnityEngine.Object.Destroy(m_ballInstance.gameObject);
+                m_ballInstance = null;
+            }
+
+            if (m_deskInstance != null)
+            {
+                UnityEngine.Object.Destroy(m_deskInstance.gameObject);
+                m_deskInstance = null;
+            }
+
+            if (m_simulationScene.IsValid())
+            {
+                SceneManager.UnloadSceneAsync(m_simulationScene);
+                m_simulationScene = default;
+            }
         }
 
         private void CreatePhysicsScene()
         {
             CreateSceneParameters parameters = new(LocalPhysicsMode.Physics3D);
-            m_simulationScene = SceneManager.CreateScene("Gameplay_Simulation", parameters);
+            string sceneName = $"Gameplay_Simulation_{++s_simulationIndex}";
+            m_simulationScene = SceneManager.CreateScene(sceneName, parameters);
             m_physicsScene = m_simulationScene.GetPhysicsScene();
 
             CreateDesk();
             CreateBall();
-
-            m_isPhysicSceneCreated = true;
-        }
-
-        private void CopyCollidersToSimulation(GameObject obj)
-        {
-            Collider[] colliders = obj.GetComponents<Collider>();
-
-            if (colliders.Length == 0) return;
-
-            GameObject clone = new(obj.name + "_SIM") { transform = { position = obj.transform.position, rotation = obj.transform.rotation, localScale = obj.transform.localScale } };
-
-            foreach (Collider col in colliders)
-            {
-                Type type = col.GetType();
-
-                if (type == typeof(BoxCollider))
-                {
-                    BoxCollider src = (BoxCollider)col;
-                    BoxCollider dst = clone.AddComponent<BoxCollider>();
-
-                    dst.center = src.center;
-                    dst.size = src.size;
-                    dst.isTrigger = src.isTrigger;
-                }
-                else if (type == typeof(SphereCollider))
-                {
-                    SphereCollider src = (SphereCollider)col;
-                    SphereCollider dst = clone.AddComponent<SphereCollider>();
-
-                    dst.center = src.center;
-                    dst.radius = src.radius;
-                    dst.isTrigger = src.isTrigger;
-                }
-                else if (type == typeof(MeshCollider))
-                {
-                    MeshCollider src = (MeshCollider)col;
-                    MeshCollider dst = clone.AddComponent<MeshCollider>();
-
-                    dst.sharedMesh = src.sharedMesh;
-                    dst.convex = src.convex;
-                    dst.isTrigger = src.isTrigger;
-                }
-            }
-
-            SceneManager.MoveGameObjectToScene(clone, m_simulationScene);
         }
 
         private void CreateDesk()
         {
             if (m_deskInstance != null) return;
-            m_deskInstance = Instantiate(m_deskPrefab);
+            m_deskInstance = UnityEngine.Object.Instantiate(m_deskPrefab);
+            m_deskInstance.enabled = false;
             m_deskInstance.ChangeSimulationMode(SimulationMode.Simulation);
             SceneManager.MoveGameObjectToScene(m_deskInstance.gameObject, m_simulationScene);
         }
@@ -143,19 +135,20 @@ namespace Project.Scripts.Physic
         private void CreateBall()
         {
             if (m_ballInstance != null) return;
-            m_ballInstance = Instantiate(m_ballPrefab);
-            m_ballCollider = m_ballInstance.GetComponent<SphereCollider>();
+            m_ballInstance = UnityEngine.Object.Instantiate(m_ballPrefab);
+            m_ballInstance.enabled = false;
             m_ballRb = m_ballInstance.GetComponent<Rigidbody>();
             m_ballInstance.ChangeSimulationMode(SimulationMode.Simulation);
             SceneManager.MoveGameObjectToScene(m_ballInstance.gameObject, m_simulationScene);
         }
 
-        private void ResetBall()
+        private void ResetBall(ref SimulationState simulationState)
         {
+            if (m_ballRb == null) return;
             m_ballRb.position = m_deskInstance.LaunchTransform.position;
             m_ballRb.rotation = Quaternion.identity;
-            Array.Clear(m_simulationData.BallStates, 0, m_maxIterations);
-            m_simulationData.FrameCount = 0;
+            Array.Clear(simulationState.BallStates, 0, simulationState.Buffer);
+            simulationState.FrameCount = 0;
         }
 
         private void ResetDesk()
@@ -163,50 +156,22 @@ namespace Project.Scripts.Physic
             m_deskInstance.Reset();
         }
 
-        private void SimulateUntilStop()
-        {
-            for (int i = 1; i < m_maxIterations - 1; i++)
-            {
-                m_deskInstance.Tick(m_deskPhysicSettings.Tick);
-                Physics.SyncTransforms();
-                m_physicsScene.Simulate(m_tick);
-
-                m_currentIteration = i;
-                m_isBallCollidingWithSlot = CheckSlots();
-                RecordState();
-
-                if (!IsBallStopped() || !IsDeskStopped()) continue;
-
-                Debug.Log("Ball & Desk stopped at iteration : " + i);
-                Stop();
-                break;
-            }
-        }
-
         private bool IsBallStopped()
         {
-            return m_ballRb.IsSleeping();
+            return m_ballRb != null && m_ballRb.IsSleeping();
         }
 
         private bool IsDeskStopped()
         {
-            return !m_deskInstance.IsSpinning;
+            return m_deskInstance != null && !m_deskInstance.IsSpinning;
         }
 
-        private void Stop()
+        private void RecordState(ref SimulationState simulationState, int iteration, bool isBallCollidingWithSlot)
         {
-            m_ballInstance.Stop();
-            m_deskInstance.Stop();
-            Physics.simulationMode = UnityEngine.SimulationMode.FixedUpdate;
-        }
-
-        private void RecordState()
-        {
-            if (m_currentIteration >= m_simulationData.Buffer) return;
-
-            m_simulationData.BallStates[m_currentIteration] = new BallState(m_ballRb.position, m_ballRb.rotation, m_isBallCollidingWithSlot);
-            m_simulationData.DeskStates[m_currentIteration] = new DeskState(m_deskInstance.SpinTransform.position, m_deskInstance.SpinTransform.rotation);
-            m_simulationData.FrameCount = Mathf.Max(m_simulationData.FrameCount, m_currentIteration + 1);
+            if (iteration >= simulationState.Buffer) return;
+            simulationState.BallStates[iteration] = new BallState(m_ballRb.position, m_ballRb.rotation, isBallCollidingWithSlot);
+            simulationState.DeskStates[iteration] = new DeskState(m_deskInstance.SpinTransform.position, m_deskInstance.SpinTransform.rotation);
+            simulationState.FrameCount = Mathf.Max(simulationState.FrameCount, iteration + 1);
         }
 
         private bool CheckSlots()
@@ -216,7 +181,9 @@ namespace Project.Scripts.Physic
 
             for (int i = 0; i < m_deskPhysicSettings.SlotCount; i++)
             {
-                Quaternion rot = Quaternion.Euler(0f, i * slotPerAngle, 0f) * Quaternion.Euler(m_deskPhysicSettings.SlotRotationOffset) * m_deskInstance.SpinTransform.rotation;
+                Quaternion rot = Quaternion.Euler(0f, i * slotPerAngle, 0f) *
+                                 Quaternion.Euler(m_deskPhysicSettings.SlotRotationOffset) *
+                                 m_deskInstance.SpinTransform.rotation;
 
                 Vector3 dir = rot * Vector3.forward;
                 Vector3 pointB = center + dir * m_deskPhysicSettings.DistanceFromOrigin;
@@ -224,7 +191,6 @@ namespace Project.Scripts.Physic
                 int hitCount = m_physicsScene.OverlapBox(pointB, m_deskPhysicSettings.SlotBoxSize / 2f, m_overlapResults, rot, m_ballLayerMask);
                 if (hitCount > 0)
                 {
-                    Debug.Log($"Ball in slot [{i}] | Iteration: {m_currentIteration}");
                     return true;
                 }
             }

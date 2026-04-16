@@ -1,4 +1,4 @@
-﻿namespace Project.Scripts.Physic
+﻿namespace Project.Scripts.Physic.State
 {
     public struct SimulationState
     {

@@ -1,20 +1,20 @@
 ﻿using UnityEngine;
 
-namespace Project.Scripts.Physic
+namespace Project.Scripts.Physic.State
 {
     public struct BallState
     {
         public Vector3 Position;
         public Quaternion Rotation;
         public readonly bool IsCollidingWithSlot;
-        public readonly Collider SlotCollider;
+        public readonly int SlotIndex;
 
-        public BallState(Vector3 pos, Quaternion rot, bool isCollidingWithSlot = false, Collider slotCollider = null)
+        public BallState(Vector3 pos, Quaternion rot, bool isCollidingWithSlot = false, int slotIndex = -1)
         {
             Position = pos;
             Rotation = rot;
             IsCollidingWithSlot = isCollidingWithSlot;
-            SlotCollider = slotCollider;
+            SlotIndex = -1;
         }
     }
 }

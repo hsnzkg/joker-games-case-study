@@ -1,4 +1,5 @@
 ﻿using Project.Scripts.Physic;
+using Project.Scripts.Physic.State;
 using UnityEngine;
 using SimulationMode = Project.Scripts.Physic.SimulationMode;
 
@@ -9,7 +10,7 @@ namespace Project.Scripts.RouletteBall
         private BallVisualSystem m_ballVisualSystem;
         private BallPhysicSystem m_ballPhysicSystem;
         private SimulationReplayPlayer<BallState> m_replayPlayer;
-        private SimulationMode SimulationMode { get; set; }
+        private SimulationMode m_simulationMode;
 
         #region Unity Callbacks
 
@@ -34,8 +35,9 @@ namespace Project.Scripts.RouletteBall
 
         public void ChangeSimulationMode(SimulationMode mode)
         {
-            m_ballVisualSystem.ChangeVisualState(mode == SimulationMode.Replay);
-            if (mode == SimulationMode.Replay)
+            m_simulationMode = mode;
+            m_ballVisualSystem.ChangeVisualState(m_simulationMode == SimulationMode.Replay);
+            if (m_simulationMode == SimulationMode.Replay)
             {
                 m_ballPhysicSystem.Stop();
             }
@@ -43,13 +45,11 @@ namespace Project.Scripts.RouletteBall
             {
                 m_replayPlayer.Stop();
             }
-
-            SimulationMode = mode;
         }
 
         public void Tick(float delta)
         {
-            if (SimulationMode == SimulationMode.Replay)
+            if (m_simulationMode == SimulationMode.Replay)
             {
                 m_replayPlayer.Tick(delta);
             }

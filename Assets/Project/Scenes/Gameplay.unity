@@ -427,14 +427,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeffc22a7ed246e88cf59cb57761ad38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Project::Project.Scripts.RouletteGame
-  m_simulationMode: 0
-  m_ballDir: {x: 3, y: 0.25, z: 0}
-  m_ballForce: 3
-  m_rotateSpeed: 100
-  m_drag: 10
-  m_physicSimulator: {fileID: 1100945895}
+  m_gameMode: 1
   m_ball: {fileID: 2049276437}
   m_desk: {fileID: 1343160131}
+  m_predictionDeskPhysicSettings: {fileID: 11400000, guid: 32c9a1f7b5739684ca9271ab80b8129b, type: 2}
+  m_predictionBallPrefab: {fileID: 6289613284532919235, guid: fb40ce8609f13ec449d2d8bbfecf9646, type: 3}
+  m_predictionDeskPrefab: {fileID: 7121211515567644994, guid: 586597b0b8b8f4b4f9b45b5cfa0cae52, type: 3}
+  m_predictionMaxIterations: 1000
+  m_ballDirectionMin: {x: -1, y: 0, z: -1}
+  m_ballDirectionMax: {x: 1, y: 0.35, z: 1}
+  m_ballForceRange: {x: 2, y: 6}
+  m_spinSpeedRange: {x: 60, y: 140}
+  m_spinDragRange: {x: 4, y: 14}
+  m_spinStartAngleRange: {x: 0, y: 360}
 --- !u!1001 &890023998
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -492,58 +497,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 586597b0b8b8f4b4f9b45b5cfa0cae52, type: 3}
---- !u!1 &1100945893
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1100945894}
-  - component: {fileID: 1100945895}
-  m_Layer: 0
-  m_Name: PhysicSimulator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1100945894
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1100945893}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1100945895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1100945893}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb3c5aa5952eac54b9465d03b9a8b8a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Project::Project.Scripts.Physic.PhysicSimulator
-  m_deskPhysicSettings: {fileID: 11400000, guid: 32c9a1f7b5739684ca9271ab80b8129b, type: 2}
-  m_ballForce: 3
-  m_ballForceDirection: {x: 3, y: 0.25, z: 0}
-  m_deskRotationSpeed: 100
-  m_deskDrag: 10
-  m_ballPrefab: {fileID: 6289613284532919235, guid: fb40ce8609f13ec449d2d8bbfecf9646, type: 3}
-  m_deskPrefab: {fileID: 7121211515567644994, guid: 586597b0b8b8f4b4f9b45b5cfa0cae52, type: 3}
-  m_maxIterations: 15000
 --- !u!114 &1343160131 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7121211515567644994, guid: 586597b0b8b8f4b4f9b45b5cfa0cae52, type: 3}
@@ -729,5 +682,4 @@ SceneRoots:
   - {fileID: 1908866855}
   - {fileID: 890023998}
   - {fileID: 2010500774}
-  - {fileID: 1100945894}
   - {fileID: 477024676}

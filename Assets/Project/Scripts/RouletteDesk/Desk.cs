@@ -1,4 +1,5 @@
 ﻿using Project.Scripts.Physic;
+using Project.Scripts.Physic.State;
 using UnityEngine;
 using SimulationMode = Project.Scripts.Physic.SimulationMode;
 
@@ -83,9 +84,9 @@ namespace Project.Scripts.RouletteDesk
             m_replayPlayer.Play(simulationState.DeskStates, simulationState.FrameCount, simulationState.TickDuration);
         }
 
-        public void StartSpin(float deskRotationSpeed, float deskDrag)
+        public void StartSpin(float deskRotationSpeed, float deskDrag, float startAngle = 0f)
         {
-            m_deskPhysicSystem.StartSpin(deskRotationSpeed, deskDrag);
+            m_deskPhysicSystem.StartSpin(deskRotationSpeed, deskDrag, startAngle);
         }
 
         public void Reset()

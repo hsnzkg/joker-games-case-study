@@ -1,51 +1,107 @@
-﻿using Project.Scripts.RouletteBall;
+using System;
+using Project.Scripts.Physic;
+using Project.Scripts.Physic.State;
+using Project.Scripts.RouletteBall;
 using Project.Scripts.RouletteDesk;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Project.Scripts
 {
-    public class RouletteGame : MonoBehaviour
+    public partial class RouletteGame : MonoBehaviour
     {
-        [SerializeField] private Project.Scripts.Physic.SimulationMode m_simulationMode = Physic.SimulationMode.Simulation;
-        [SerializeField] private Vector3 m_ballDir;
-        [SerializeField] private float m_ballForce;
-        [SerializeField] private float m_rotateSpeed;
-        [SerializeField] private float m_drag;
-        [SerializeField] private Physic.PhysicSimulator m_physicSimulator;
+        [Header("Mode")]
+        [SerializeField] private GameMode m_gameMode = GameMode.Game;
+
+        [Header("Runtime References")]
         [SerializeField] private Ball m_ball;
         [SerializeField] private Desk m_desk;
+
+        [Header("Prediction (Simulation Scene)")]
+        [SerializeField] private DeskPhysicSettings m_predictionDeskPhysicSettings;
+        [SerializeField] private Ball m_predictionBallPrefab;
+        [SerializeField] private Desk m_predictionDeskPrefab;
+        [SerializeField] private int m_predictionMaxIterations = 1000;
+
+        [Header("Random Ranges")]
+        [SerializeField] private Vector3 m_ballDirectionMin = new(-1f, 0f, -1f);
+        [SerializeField] private Vector3 m_ballDirectionMax = new(1f, 0.35f, 1f);
+        [SerializeField] private Vector2 m_ballForceRange = new(2f, 6f);
+        [SerializeField] private Vector2 m_spinSpeedRange = new(60f, 140f);
+        [SerializeField] private Vector2 m_spinDragRange = new(4f, 14f);
+        [SerializeField] private Vector2 m_spinStartAngleRange = new(0f, 360f);
         
-        private void Start()
+        private PhysicSimulator m_simulator;
+
+        private void Awake()
         {
-            if (m_simulationMode == Physic.SimulationMode.Replay)
-            {
-                if (m_physicSimulator == null)
-                {
-                    Debug.LogWarning("Replay mode selected but PhysicSimulator is null. Falling back to Simulation.");
-                    StartSimulation();
-                    return;
-                }
-
-                Physic.SimulationState simulationState = m_physicSimulator.SimulationState;
-                if (simulationState.FrameCount <= 0)
-                {
-                    Debug.LogWarning("Replay mode selected but SimulationState has no frames. Falling back to Simulation.");
-                    StartSimulation();
-                    return;
-                }
-
-                m_ball.Replay(simulationState);
-                m_desk.Replay(simulationState);
-                return;
-            }
-
-            StartSimulation();
+            m_simulator = new PhysicSimulator(m_predictionDeskPhysicSettings, m_predictionBallPrefab, m_predictionDeskPrefab, m_predictionMaxIterations);
+            m_simulator.Initialize();
         }
 
-        private void StartSimulation()
+        private void Start()
         {
-            m_ball.Launch(m_ballDir, m_ballForce);
-            m_desk.StartSpin(m_rotateSpeed, m_drag);
+            if (m_gameMode == GameMode.Predicted)
+            {
+                StartPredictedGame();
+            }
+            else
+            {
+                StartGame();
+            }
+        }
+
+        public void StartGame()
+        {
+            GenerateRandomStart(out Vector3 ballDir, out float ballForce, out float spinSpeed, out float spinDrag, out float spinStartAngle);
+            m_ball.Launch(ballDir, ballForce);
+            m_desk.StartSpin(spinSpeed, spinDrag, spinStartAngle);
+        }
+
+        public void StartPredictedGame()
+        {
+            GenerateRandomStart(out Vector3 ballDir, out float ballForce, out float spinSpeed, out float spinDrag, out float spinStartAngle);
+            SimulationState simulationState = m_simulator.Simulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle);
+            if (simulationState.FrameCount <= 0)
+            {
+                Debug.LogWarning("Predicted simulation produced no frames. Falling back to StartGame().");
+                StartGame();
+                return;
+            }
+            m_ball.Replay(simulationState);
+            m_desk.Replay(simulationState);
+        }
+
+        private void GenerateRandomStart(out Vector3 ballDir, out float ballForce, out float spinSpeed, out float spinDrag, out float spinStartAngle)
+        {
+            ballDir = RandomDirection();
+            ballForce = RandomRange(m_ballForceRange);
+            spinSpeed = RandomRange(m_spinSpeedRange);
+            spinDrag = RandomRange(m_spinDragRange);
+            spinStartAngle = RandomRange(m_spinStartAngleRange);
+        }
+
+        private Vector3 RandomDirection()
+        {
+            Vector3 v = new(
+                Random.Range(m_ballDirectionMin.x, m_ballDirectionMax.x),
+                Random.Range(m_ballDirectionMin.y, m_ballDirectionMax.y),
+                Random.Range(m_ballDirectionMin.z, m_ballDirectionMax.z)
+            );
+
+            if (v.sqrMagnitude < 0.0001f)
+            {
+                v = Vector3.forward;
+            }
+
+            return v.normalized;
+        }
+
+        private static float RandomRange(Vector2 range)
+        {
+            float min = Mathf.Min(range.x, range.y);
+            float max = Mathf.Max(range.x, range.y);
+            return Random.Range(min, max);
         }
     }
 }
