@@ -129,8 +129,9 @@ namespace Project.Scripts.Physic
                 ResetBall(ref simulationData);
                 ResetDesk();
 
+                Transform launchTransform = m_deskInstance.LaunchTransform;
                 m_deskInstance.StartSpin(deskRotationSpeed, deskDrag, deskStartAngle);
-                m_ballInstance.Launch(ballForceDirection, ballForce);
+                m_ballInstance.Launch(launchTransform.position,launchTransform.rotation,ballForceDirection, ballForce);
 
                 int slotIndex = CheckSlots();
                 RecordState(ref simulationData, 0, slotIndex);
@@ -226,7 +227,7 @@ namespace Project.Scripts.Physic
 
         private void ResetDesk()
         {
-            m_deskInstance.Reset();
+            m_deskInstance.ResetSimulationObject();
         }
 
         private bool IsBallStopped()

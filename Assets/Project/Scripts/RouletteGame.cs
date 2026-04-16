@@ -11,18 +11,22 @@ namespace Project.Scripts
 {
     public partial class RouletteGame : MonoBehaviour
     {
-        [Header("Mode")] [SerializeField] private GameMode m_gameMode = GameMode.Game;
+        [Header("Mode")] 
+        [SerializeField] private GameMode m_gameMode = GameMode.Game;
         [SerializeField] private int m_startDesiredSlotIndex;
 
-        [Header("Runtime References")] [SerializeField] private Ball m_ball;
+        [Header("Runtime References")] 
+        [SerializeField] private Ball m_ball;
         [SerializeField] private Desk m_desk;
 
-        [Header("Simulation")] [SerializeField] private DeskPhysicSettings m_predictionDeskPhysicSettings;
+        [Header("Simulation")] 
+        [SerializeField] private DeskPhysicSettings m_predictionDeskPhysicSettings;
         [SerializeField] private Ball m_predictionBallPrefab;
         [SerializeField] private Desk m_predictionDeskPrefab;
         [SerializeField] private int m_predictionMaxIterations = 1000;
 
-        [Header("Random Ranges")] [SerializeField] private Vector3 m_ballDirectionMin = new(-1f, 0f, -1f);
+        [Header("Random Ranges")] 
+        [SerializeField] private Vector3 m_ballDirectionMin = new(-1f, 0f, -1f);
         [SerializeField] private Vector3 m_ballDirectionMax = new(1f, 0.35f, 1f);
         [SerializeField] private Vector2 m_ballForceRange = new(2f, 6f);
         [SerializeField] private Vector2 m_spinSpeedRange = new(60f, 140f);
@@ -87,7 +91,7 @@ namespace Project.Scripts
 
             GenerateRandomStart(out Vector3 ballDir, out float ballForce, out float spinSpeed, out float spinDrag, out float spinStartAngle);
 
-            if (TrySimulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle,out SimulationState simulationState))
+            if (TrySimulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, out SimulationState simulationState))
             {
                 SetLastSimulationState(simulationState, "StartGame");
             }
@@ -96,9 +100,10 @@ namespace Project.Scripts
                 ClearLastSimulationState();
             }
 
+            Transform launchTransform = m_desk.LaunchTransform;
             ResetRuntimeObjects();
             m_desk.StartSpin(spinSpeed, spinDrag, spinStartAngle);
-            m_ball.Launch(ballDir, ballForce);
+            m_ball.Launch(launchTransform.position,launchTransform.rotation, ballDir, ballForce);
         }
 
         public void StartDeterministicGame()
@@ -131,10 +136,12 @@ namespace Project.Scripts
         {
             m_ball.ChangeSimulationMode(SimulationMode.Simulation);
             m_desk.ChangeSimulationMode(SimulationMode.Simulation);
+
             m_ball.Stop();
             m_desk.Stop();
-            m_desk.Reset();
-            m_ball.Reset(m_desk.LaunchTransform.position, Quaternion.identity);
+
+            m_desk.ResetSimulationObject();
+            m_ball.ResetSimulationObject();
         }
 
         private bool HasRuntimeReferences()
@@ -151,9 +158,7 @@ namespace Project.Scripts
         private bool TrySimulate(Vector3 ballDir, float ballForce, float spinSpeed, float spinDrag, float spinStartAngle, out SimulationState simulationState, int? desiredSlotIndex = null)
         {
             simulationState = default;
-            simulationState = desiredSlotIndex.HasValue 
-                ? m_simulator.Simulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, desiredSlotIndex.Value) 
-                : m_simulator.Simulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle);
+            simulationState = desiredSlotIndex.HasValue ? m_simulator.Simulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, desiredSlotIndex.Value) : m_simulator.Simulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle);
             return simulationState is { BallStates: not null, FrameCount: > 0 };
         }
 

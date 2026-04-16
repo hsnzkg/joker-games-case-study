@@ -86,7 +86,7 @@ namespace Project.Scripts.RouletteDesk
             m_deskPhysicSystem.StartSpin(deskRotationSpeed, deskDrag, startAngle);
         }
 
-        public void Reset()
+        public void ResetSimulationObject()
         {
             m_deskPhysicSystem.Stop();
             m_deskPhysicSystem.Reset();

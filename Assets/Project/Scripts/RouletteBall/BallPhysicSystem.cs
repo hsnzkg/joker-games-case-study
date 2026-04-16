@@ -28,15 +28,17 @@ namespace Project.Scripts.RouletteBall
             m_rigidbody.isKinematic = true;
         }
 
-        public void Reset(Vector3 position, Quaternion rotation)
+        public void Reset()
         {
             Stop();
-            m_rigidbody.position = position;
-            m_rigidbody.rotation = rotation;
+            m_rigidbody.position = Vector3.zero;
+            m_rigidbody.rotation = Quaternion.identity;
         }
         
-        public void Launch(Vector3 dir, float force)
+        public void Launch(Vector3 fromPos,Quaternion fromRot, Vector3 dir, float force)
         {
+            m_rigidbody.position = fromPos;
+            m_rigidbody.rotation = fromRot;
             Start();
             m_rigidbody.AddForce(dir * force,ForceMode.Impulse);
         }

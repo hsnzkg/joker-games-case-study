@@ -66,9 +66,9 @@ namespace Project.Scripts.RouletteBall
             m_ballPhysicSystem.Stop();
         }
 
-        public void Reset(Vector3 position, Quaternion rotation)
+        public void ResetSimulationObject()
         {
-            m_ballPhysicSystem.Reset(position, rotation);
+            m_ballPhysicSystem.Reset();
         }
 
         public void Replay(SimulationState simulationState)
@@ -77,9 +77,9 @@ namespace Project.Scripts.RouletteBall
             m_replayPlayer.Play(simulationState.BallStates, simulationState.FrameCount, simulationState.TickDuration);
         }
 
-        public void Launch(Vector3 dir, float force)
+        public void Launch(Vector3 fromPos,Quaternion fromRot, Vector3 dir, float force)
         {
-            m_ballPhysicSystem.Launch(dir, force);
+            m_ballPhysicSystem.Launch(fromPos, fromRot, dir, force);
         }
     }
 }

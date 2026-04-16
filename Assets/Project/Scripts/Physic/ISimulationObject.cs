@@ -6,5 +6,6 @@
         public void Tick(float delta);
         public void Start();
         public void Stop();
+        public void ResetSimulationObject();
     }
 }
