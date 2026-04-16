@@ -427,10 +427,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeffc22a7ed246e88cf59cb57761ad38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Project::Project.Scripts.RouletteGame
+  m_simulationMode: 0
   m_ballDir: {x: 3, y: 0.25, z: 0}
-  m_ballForce: 5
+  m_ballForce: 3
   m_rotateSpeed: 100
   m_drag: 10
+  m_physicSimulator: {fileID: 1100945895}
   m_ball: {fileID: 2049276437}
   m_desk: {fileID: 1343160131}
 --- !u!1001 &890023998
@@ -535,7 +537,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Project::Project.Scripts.Physic.PhysicSimulator
   m_deskPhysicSettings: {fileID: 11400000, guid: 32c9a1f7b5739684ca9271ab80b8129b, type: 2}
-  m_ballForce: 5
+  m_ballForce: 3
   m_ballForceDirection: {x: 3, y: 0.25, z: 0}
   m_deskRotationSpeed: 100
   m_deskDrag: 10

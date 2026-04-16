@@ -1,10 +1,10 @@
-﻿using UnityEngine;
-
-namespace Project.Scripts.Physic
+﻿namespace Project.Scripts.Physic
 {
     public interface ISimulationObject
     {
-        public SimulationMode SimulationMode { get; set; }
         public void ChangeSimulationMode(SimulationMode mode);
+        public void Tick(float delta);
+        public void Start();
+        public void Stop();
     }
 }

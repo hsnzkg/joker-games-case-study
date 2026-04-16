@@ -6,15 +6,15 @@ namespace Project.Scripts.Physic
     {
         public Vector3 Position;
         public Quaternion Rotation;
-        public bool IsCollidingWithSlot;
-        public Collider SlotCollider;
+        public readonly bool IsCollidingWithSlot;
+        public readonly Collider SlotCollider;
 
-        public BallState(Vector3 pos, Quaternion rot)
+        public BallState(Vector3 pos, Quaternion rot, bool isCollidingWithSlot = false, Collider slotCollider = null)
         {
             Position = pos;
             Rotation = rot;
-            IsCollidingWithSlot = false;
-            SlotCollider = null;
+            IsCollidingWithSlot = isCollidingWithSlot;
+            SlotCollider = slotCollider;
         }
     }
 }

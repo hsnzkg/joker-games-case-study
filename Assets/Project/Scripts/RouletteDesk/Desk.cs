@@ -1,5 +1,6 @@
 ﻿using Project.Scripts.Physic;
 using UnityEngine;
+using SimulationMode = Project.Scripts.Physic.SimulationMode;
 
 namespace Project.Scripts.RouletteDesk
 {
@@ -10,14 +11,11 @@ namespace Project.Scripts.RouletteDesk
         [SerializeField] private Transform m_launchTransform;
         private Renderer[] m_renderers;
         private SimulationMode m_simulationMode;
-        public DeskPhysicSystem DeskPhysicSystem { get; private set; }
+        private SimulationReplayPlayer<DeskState> m_replayPlayer;
+        private DeskPhysicSystem m_deskPhysicSystem;
         public Transform LaunchTransform => m_launchTransform;
-
-        public SimulationMode SimulationMode
-        {
-            get => m_simulationMode;
-            set => ChangeSimulationMode(value);
-        }
+        public Transform SpinTransform => m_spinTransform;
+        public bool IsSpinning => m_deskPhysicSystem.IsEnabled;
 
         #region Unity Callbacks
 
@@ -28,14 +26,27 @@ namespace Project.Scripts.RouletteDesk
 
         private void FixedUpdate()
         {
-            DeskPhysicSystem.Tick(m_deskPhysicSettings.Tick);
+            if (m_simulationMode != SimulationMode.Simulation)
+            {
+                return;
+            }
+            Tick(m_deskPhysicSettings.Tick);
+        }
+
+        private void Update()
+        {
+            if (m_simulationMode != SimulationMode.Replay)
+            {
+                return;
+            }
+            Tick(Time.deltaTime);
         }
 
         private void OnDrawGizmos()
         {
-            if (m_simulationMode == SimulationMode.FixedUpdate)
+            if (m_simulationMode == SimulationMode.Replay)
             {
-                DeskPhysicSystem?.DrawGizmos();
+                m_deskPhysicSystem?.DrawGizmos();
             }
         }
 
@@ -44,16 +55,64 @@ namespace Project.Scripts.RouletteDesk
         private void Initialize()
         {
             m_renderers = GetComponentsInChildren<Renderer>();
-            DeskPhysicSystem = new DeskPhysicSystem(m_deskPhysicSettings, m_spinTransform);
+            m_deskPhysicSystem = new DeskPhysicSystem(m_deskPhysicSettings, m_spinTransform);
+            m_replayPlayer = new SimulationReplayPlayer<DeskState>(new DeskReplayAdapter(m_spinTransform));
         }
 
         public void ChangeSimulationMode(SimulationMode mode)
         {
             m_simulationMode = mode;
+            if (m_simulationMode == SimulationMode.Replay)
+            {
+                m_deskPhysicSystem.Stop();
+            }
+            else
+            {
+                m_replayPlayer.Stop();
+            }
+
             foreach (Renderer r in m_renderers)
             {
-                r.enabled = m_simulationMode == SimulationMode.FixedUpdate;
+                r.enabled = m_simulationMode == SimulationMode.Replay;
             }
+        }
+
+        public void Replay(SimulationState simulationState)
+        {
+            ChangeSimulationMode(SimulationMode.Replay);
+            m_replayPlayer.Play(simulationState.DeskStates, simulationState.FrameCount, simulationState.TickDuration);
+        }
+
+        public void StartSpin(float deskRotationSpeed, float deskDrag)
+        {
+            m_deskPhysicSystem.StartSpin(deskRotationSpeed, deskDrag);
+        }
+
+        public void Reset()
+        {
+            m_deskPhysicSystem.Reset();
+        }
+
+        public void Tick(float delta)
+        {
+            if (m_simulationMode == SimulationMode.Simulation)
+            {
+                m_deskPhysicSystem.Tick(delta);
+            }
+            else
+            {
+                m_replayPlayer.Tick(delta);
+            }
+        }
+
+        public void Start()
+        {
+            m_deskPhysicSystem.Start();
+        }
+
+        public void Stop()
+        {
+            m_deskPhysicSystem.Stop();
         }
     }
 }

@@ -11,17 +11,17 @@ namespace Project.Scripts.RouletteBall
         public BallPhysicSystem(GameObject instance)
         {
             m_rigidbody = instance.GetComponent<Rigidbody>();
-            Disable();
+            Stop();
         }
 
-        public void Enable()
+        public void Start()
         {
             m_rigidbody.isKinematic = false;
             m_rigidbody.linearVelocity = Vector3.zero;
             m_rigidbody.angularVelocity = Vector3.zero;
         }
 
-        public void Disable()
+        public void Stop()
         {
             m_rigidbody.linearVelocity = Vector3.zero;
             m_rigidbody.angularVelocity = Vector3.zero;
@@ -30,7 +30,7 @@ namespace Project.Scripts.RouletteBall
         
         public void Launch(Vector3 dir, float force)
         {
-            Enable();
+            Start();
             m_rigidbody.AddForce(dir * force,ForceMode.Impulse);
         }
     }

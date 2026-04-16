@@ -13,7 +13,6 @@ namespace Project.Scripts.RouletteDesk
         private readonly float m_tick;
         private DeskPhysicSettings m_settings;
         public bool IsEnabled { get; private set; }
-        public Transform SpinTransform => m_spinTransform;
 
         public DeskPhysicSystem(DeskPhysicSettings deskPhysicSettings, Transform spinTransform)
         {
@@ -29,16 +28,16 @@ namespace Project.Scripts.RouletteDesk
             m_remainingSpeed -= delta * m_drag;
             if (!(m_remainingSpeed <= 0)) return;
             m_remainingSpeed = 0;
-            Disable();
+            Stop();
         }
 
-        public void Enable()
+        public void Start()
         {
             if (IsEnabled) return;
             IsEnabled = true;
         }
 
-        public void Disable()
+        public void Stop()
         {
             if (!IsEnabled) return;
             IsEnabled = false;
@@ -46,7 +45,7 @@ namespace Project.Scripts.RouletteDesk
 
         public void StartSpin(float speed, float drag, float startAngle = 0f)
         {
-            Enable();
+            Start();
             m_spinTransform.rotation = Quaternion.Euler(0, startAngle, 0);
             m_spinInitialSpeed = speed;
             m_remainingSpeed = speed;
