@@ -95,8 +95,13 @@ namespace Project.Scripts.Roulette.RouletteDesk
 
         public void Replay(SimulationState simulationState, float replayTickDuration)
         {
+            Replay(simulationState, replayTickDuration, 1f);
+        }
+
+        public void Replay(SimulationState simulationState, float replayTickDuration, float replayInterpolationFactor)
+        {
             ChangeSimulationMode(SimulationMode.Replay);
-            m_replayPlayer.Play(simulationState.DeskStates, simulationState.FrameCount, replayTickDuration);
+            m_replayPlayer.Play(simulationState.DeskStates, simulationState.FrameCount, replayTickDuration, replayInterpolationFactor);
         }
 
         public void ResetSimulationObject()

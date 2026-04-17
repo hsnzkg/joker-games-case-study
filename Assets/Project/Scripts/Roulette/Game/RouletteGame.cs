@@ -6,6 +6,7 @@ using Project.Scripts.Roulette.RouletteBall;
 using Project.Scripts.Roulette.RouletteDesk;
 using Project.Scripts.Roulette.Simulation;
 using Project.Scripts.Roulette.Simulation.State;
+using Project.Scripts.Utility.Easing;
 using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -16,7 +17,8 @@ namespace Project.Scripts.Roulette.Game
     public partial class RouletteGame : MonoBehaviour
     {
         [Header("Game")] 
-        [SerializeField] private float m_replayDuration;
+        [Range(0f, 1f)]
+        [SerializeField] private float m_replayInterpolationFactor = 1f;
         [SerializeField] private float m_deskStartAlignmentDuration = 0.35f;
 
         [Header("Mode")] 
@@ -152,7 +154,6 @@ namespace Project.Scripts.Roulette.Game
             StopDeskReplayAlignmentRoutine();
             StopActiveReplayIfNeeded();
             ResetReplayLifecycleTracking(simulationState);
-            float replayTickDuration = GetReplayTickDuration(simulationState);
 
             m_ball.Disable();
             m_desk.Disable();
@@ -162,11 +163,11 @@ namespace Project.Scripts.Roulette.Game
             if (ShouldAlignDeskBeforeReplay(simulationState))
             {
                 m_desk.ChangeSimulationMode(SimulationMode.Replay);
-                m_deskReplayAlignmentRoutine = StartCoroutine(AlignDeskToReplayStartAndPlay(simulationState, replayTickDuration));
+                m_deskReplayAlignmentRoutine = StartCoroutine(AlignDeskToReplayStartAndPlay(simulationState));
                 return;
             }
 
-            StartReplay(simulationState, replayTickDuration);
+            StartReplay(simulationState);
         }
 
         private bool TrySimulate(Vector3 ballDir, float ballForce, float spinSpeed, float spinDrag, float spinStartAngle, out SimulationState simulationState, int? desiredSlotIndex = null)
@@ -221,17 +222,6 @@ namespace Project.Scripts.Roulette.Game
             float min = Mathf.Min(range.x, range.y);
             float max = Mathf.Max(range.x, range.y);
             return Random.Range(min, max);
-        }
-
-        private float GetReplayTickDuration(in SimulationState simulationState)
-        {
-            if (simulationState.FrameCount <= 1 || m_replayDuration <= 0f)
-            {
-                return simulationState.TickDuration;
-            }
-
-            float replayStepCount = simulationState.FrameCount - 1;
-            return Mathf.Max(m_replayDuration / replayStepCount, Mathf.Epsilon);
         }
 
         private void SubscribeReplayCallbacks(ISimulationObject simulationObject)
@@ -340,31 +330,41 @@ namespace Project.Scripts.Roulette.Game
             return m_deskStartAlignmentDuration > 0f && simulationState.FrameCount > 0;
         }
 
-        private IEnumerator AlignDeskToReplayStartAndPlay(SimulationState simulationState, float replayTickDuration)
+        private IEnumerator AlignDeskToReplayStartAndPlay(SimulationState simulationState)
         {
             Transform deskTransform = m_desk.SpinTransform;
             DeskState replayStartDeskState = simulationState.DeskStates[0];
             Vector3 startPosition = deskTransform.position;
-            Quaternion startRotation = deskTransform.rotation;
+            Vector3 startEuler = deskTransform.rotation.eulerAngles;
+            Vector3 targetEuler = replayStartDeskState.Rotation.eulerAngles;
+            float leftRotationDelta = GetLeftRotationDelta(startEuler.y, targetEuler.y);
             float elapsedTime = 0f;
 
             while (elapsedTime < m_deskStartAlignmentDuration)
             {
                 elapsedTime += Time.deltaTime;
                 float t = Mathf.Clamp01(elapsedTime / m_deskStartAlignmentDuration);
-                deskTransform.SetPositionAndRotation(Vector3.Lerp(startPosition, replayStartDeskState.Position, t), Quaternion.Slerp(startRotation, replayStartDeskState.Rotation, t));
+                float easedT = EaseUtility.EaseInCirc(t);
+                float currentYAngle = Mathf.Repeat(startEuler.y + (leftRotationDelta * easedT), 360f);
+                Quaternion currentRotation = Quaternion.Euler(targetEuler.x, currentYAngle, targetEuler.z);
+                deskTransform.SetPositionAndRotation(Vector3.Lerp(startPosition, replayStartDeskState.Position, easedT), currentRotation);
                 yield return null;
             }
 
             deskTransform.SetPositionAndRotation(replayStartDeskState.Position, replayStartDeskState.Rotation);
             m_deskReplayAlignmentRoutine = null;
-            StartReplay(simulationState, replayTickDuration);
+            StartReplay(simulationState);
         }
 
-        private void StartReplay(in SimulationState simulationState, float replayTickDuration)
+        private static float GetLeftRotationDelta(float startAngle, float targetAngle)
         {
-            m_desk.Replay(simulationState, replayTickDuration);
-            m_ball.Replay(simulationState, replayTickDuration);
+            return -Mathf.Repeat(startAngle - targetAngle, 360f);
+        }
+
+        private void StartReplay(in SimulationState simulationState)
+        {
+            m_desk.Replay(simulationState, simulationState.TickDuration, m_replayInterpolationFactor);
+            m_ball.Replay(simulationState, simulationState.TickDuration, m_replayInterpolationFactor);
         }
 
         private void StopDeskReplayAlignmentRoutine()

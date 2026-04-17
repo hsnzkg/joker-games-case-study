@@ -7,6 +7,7 @@ namespace Project.Scripts.Roulette.Simulation.Replay.Core
         private readonly ISimulationReplayAdapter<TState> m_adapter;
         private TState[] m_states;
         private float m_tickDuration;
+        private float m_interpolationFactor;
         private float m_elapsedTime;
         private int m_frameCount;
         private int m_lastAppliedTick;
@@ -21,11 +22,12 @@ namespace Project.Scripts.Roulette.Simulation.Replay.Core
             m_lastAppliedTick = -1;
         }
 
-        public void Play(TState[] states, int frameCount, float tickDuration)
+        public void Play(TState[] states, int frameCount, float tickDuration, float interpolationFactor = 1f)
         {
             m_states = states;
             m_frameCount = Mathf.Clamp(frameCount, 0, states?.Length ?? 0);
             m_tickDuration = Mathf.Max(tickDuration, Mathf.Epsilon);
+            m_interpolationFactor = Mathf.Clamp01(interpolationFactor);
             m_elapsedTime = 0f;
             m_lastAppliedTick = -1;
             IsPlaying = m_frameCount > 0;
@@ -82,7 +84,7 @@ namespace Project.Scripts.Roulette.Simulation.Replay.Core
                 return;
             }
 
-            float alpha = replayTick - fromIndex;
+            float alpha = (replayTick - fromIndex) * m_interpolationFactor;
             m_adapter.ApplyInterpolatedState(m_states[fromIndex], m_states[toIndex], alpha);
         }
 
