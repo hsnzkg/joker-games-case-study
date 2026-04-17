@@ -13,6 +13,8 @@ namespace Project.Scripts.Roulette.RouletteBall
         private BallPhysicSystem m_ballPhysicSystem;
         private SimulationReplayPlayer<BallState> m_replayPlayer;
         private SimulationMode m_simulationMode;
+        public event System.Action<ISimulationObject> OnReplayStarted;
+        public event System.Action<ISimulationObject> OnReplayEnded;
         public bool IsReplaying => m_replayPlayer != null && m_replayPlayer.IsPlaying;
 
         #region Unity Callbacks
@@ -20,6 +22,11 @@ namespace Project.Scripts.Roulette.RouletteBall
         private void Update()
         {
             Tick(Time.deltaTime);
+        }
+
+        private void OnDestroy()
+        {
+            UnregisterReplayPlayerCallbacks();
         }
 
         #endregion
@@ -31,6 +38,7 @@ namespace Project.Scripts.Roulette.RouletteBall
             m_ballVisualSystem = new BallVisualSystem(gameObject);
             m_ballPhysicSystem = new BallPhysicSystem(gameObject);
             m_replayPlayer = new SimulationReplayPlayer<BallState>(new BallReplayAdapter(this));
+            RegisterReplayPlayerCallbacks();
         }
 
         public void Enable()
@@ -84,11 +92,33 @@ namespace Project.Scripts.Roulette.RouletteBall
         }
 
         #endregion
-        
+
         public void Launch(Vector3 fromPos, Quaternion fromRot, Vector3 dir, float force)
         {
             ChangeSimulationMode(SimulationMode.Simulation);
             m_ballPhysicSystem.Launch(fromPos, fromRot, dir, force);
+        }
+
+        private void RegisterReplayPlayerCallbacks()
+        {
+            m_replayPlayer.OnReplayStarted += HandleReplayStarted;
+            m_replayPlayer.OnReplayEnded += HandleReplayEnded;
+        }
+
+        private void UnregisterReplayPlayerCallbacks()
+        {
+            m_replayPlayer.OnReplayStarted -= HandleReplayStarted;
+            m_replayPlayer.OnReplayEnded -= HandleReplayEnded;
+        }
+
+        private void HandleReplayStarted()
+        {
+            OnReplayStarted?.Invoke(this);
+        }
+
+        private void HandleReplayEnded()
+        {
+            OnReplayEnded?.Invoke(this);
         }
     }
 }

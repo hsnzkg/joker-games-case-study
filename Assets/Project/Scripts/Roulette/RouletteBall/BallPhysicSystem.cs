@@ -5,13 +5,12 @@ namespace Project.Scripts.Roulette.RouletteBall
 {
     [Serializable]
     public class BallPhysicSystem
-    { 
+    {
         private readonly Rigidbody m_rigidbody;
-        
+
         public BallPhysicSystem(GameObject instance)
         {
             m_rigidbody = instance.GetComponent<Rigidbody>();
-            Stop();
         }
 
         public void Start()
@@ -23,6 +22,11 @@ namespace Project.Scripts.Roulette.RouletteBall
 
         public void Stop()
         {
+            if (m_rigidbody.isKinematic)
+            {
+                return;
+            }
+
             m_rigidbody.linearVelocity = Vector3.zero;
             m_rigidbody.angularVelocity = Vector3.zero;
             m_rigidbody.isKinematic = true;
@@ -34,12 +38,12 @@ namespace Project.Scripts.Roulette.RouletteBall
             m_rigidbody.position = Vector3.zero;
             m_rigidbody.rotation = Quaternion.identity;
         }
-        
-        public void Launch(Vector3 fromPos,Quaternion fromRot, Vector3 dir, float force)
+
+        public void Launch(Vector3 fromPos, Quaternion fromRot, Vector3 dir, float force)
         {
             m_rigidbody.position = fromPos;
             m_rigidbody.rotation = fromRot;
-            m_rigidbody.AddForce(dir * force,ForceMode.Impulse);
+            m_rigidbody.AddForce(dir * force, ForceMode.Impulse);
         }
     }
 }

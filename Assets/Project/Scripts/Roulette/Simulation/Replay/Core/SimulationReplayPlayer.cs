@@ -11,6 +11,8 @@ namespace Project.Scripts.Roulette.Simulation.Replay.Core
         private int m_frameCount;
         private int m_lastAppliedTick;
 
+        public event System.Action OnReplayStarted;
+        public event System.Action OnReplayEnded;
         public bool IsPlaying { get; private set; }
 
         public SimulationReplayPlayer(ISimulationReplayAdapter<TState> adapter)
@@ -34,11 +36,18 @@ namespace Project.Scripts.Roulette.Simulation.Replay.Core
             }
 
             ApplyTick(0);
+            OnReplayStarted?.Invoke();
         }
 
         public void Stop()
         {
+            if (!IsPlaying)
+            {
+                return;
+            }
+
             IsPlaying = false;
+            OnReplayEnded?.Invoke();
         }
 
         public void Tick(float deltaTime)

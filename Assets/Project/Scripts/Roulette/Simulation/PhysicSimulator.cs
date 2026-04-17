@@ -11,7 +11,7 @@ namespace Project.Scripts.Roulette.Simulation
 {
     public sealed class PhysicSimulator : IDisposable
     {
-        private static int s_simulationIndex;
+        private int m_simulationIndex;
 
         private readonly DeskSettings m_deskSettings;
         private readonly Ball m_ballPrefab;
@@ -146,23 +146,13 @@ namespace Project.Scripts.Roulette.Simulation
                     }
                 }
 
-                m_ballInstance.Disable();
-                m_deskInstance.Disable();
                 simulationData.FinalSlotInfo = ResolveFinalSlotInfo(simulationData);
                 return simulationData;
             }
             finally
             {
-                if (m_ballInstance != null)
-                {
-                    m_ballInstance.Disable();
-                }
-
-                if (m_deskInstance != null)
-                {
-                    m_deskInstance.Disable();
-                }
-
+                m_ballInstance?.Disable();
+                m_deskInstance?.Disable();
                 Physics.simulationMode = previousMode;
             }
         }
@@ -188,7 +178,7 @@ namespace Project.Scripts.Roulette.Simulation
             if (!m_simulationScene.IsValid())
             {
                 CreateSceneParameters parameters = new(LocalPhysicsMode.Physics3D);
-                string sceneName = $"Gameplay_Simulation_{++s_simulationIndex}";
+                string sceneName = $"Gameplay_Simulation_{++m_simulationIndex}";
                 m_simulationScene = SceneManager.CreateScene(sceneName, parameters);
                 m_physicsScene = m_simulationScene.GetPhysicsScene();
             }

@@ -17,6 +17,8 @@ namespace Project.Scripts.Roulette.RouletteDesk
         private SimulationReplayPlayer<DeskState> m_replayPlayer;
         private DeskPhysicSystem m_deskPhysicSystem;
         private DeskVisualSystem m_deskVisualSystem;
+        public event System.Action<ISimulationObject> OnReplayStarted;
+        public event System.Action<ISimulationObject> OnReplayEnded;
         public Transform LaunchTransform => m_launchTransform;
         public Transform SpinTransform => m_spinTransform;
         public bool IsSpinning => m_deskPhysicSystem.IsEnabled;
@@ -27,21 +29,13 @@ namespace Project.Scripts.Roulette.RouletteDesk
 
         private void FixedUpdate()
         {
-            if (m_simulationMode != SimulationMode.Simulation)
-            {
-                return;
-            }
-
+            if (m_simulationMode != SimulationMode.Simulation) return;
             Tick(m_deskSettings.Tick);
         }
 
         private void Update()
         {
-            if (m_simulationMode != SimulationMode.Replay)
-            {
-                return;
-            }
-
+            if (m_simulationMode != SimulationMode.Replay) return;
             Tick(Time.deltaTime);
         }
 
@@ -52,6 +46,7 @@ namespace Project.Scripts.Roulette.RouletteDesk
 
         private void OnDestroy()
         {
+            UnregisterReplayPlayerCallbacks();
             m_deskPhysicSystem.Dispose();
         }
 
@@ -64,6 +59,7 @@ namespace Project.Scripts.Roulette.RouletteDesk
             m_deskPhysicSystem = new DeskPhysicSystem(this, m_deskSettings, m_spinTransform);
             m_deskVisualSystem = new DeskVisualSystem(gameObject);
             m_replayPlayer = new SimulationReplayPlayer<DeskState>(new DeskReplayAdapter(m_spinTransform));
+            RegisterReplayPlayerCallbacks();
         }
 
         public void Enable()
@@ -125,11 +121,43 @@ namespace Project.Scripts.Roulette.RouletteDesk
         }
 
         #endregion
-        
+
         public void StartSpin(float deskRotationSpeed, float deskDrag, float startAngle = 0f)
         {
             ChangeSimulationMode(SimulationMode.Simulation);
             m_deskPhysicSystem.StartSpin(deskRotationSpeed, deskDrag, startAngle);
+        }
+
+        private void RegisterReplayPlayerCallbacks()
+        {
+            if (m_replayPlayer == null)
+            {
+                return;
+            }
+
+            m_replayPlayer.OnReplayStarted += HandleReplayStarted;
+            m_replayPlayer.OnReplayEnded += HandleReplayEnded;
+        }
+
+        private void UnregisterReplayPlayerCallbacks()
+        {
+            if (m_replayPlayer == null)
+            {
+                return;
+            }
+
+            m_replayPlayer.OnReplayStarted -= HandleReplayStarted;
+            m_replayPlayer.OnReplayEnded -= HandleReplayEnded;
+        }
+
+        private void HandleReplayStarted()
+        {
+            OnReplayStarted?.Invoke(this);
+        }
+
+        private void HandleReplayEnded()
+        {
+            OnReplayEnded?.Invoke(this);
         }
     }
 }

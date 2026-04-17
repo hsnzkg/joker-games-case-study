@@ -1,6 +1,5 @@
 using Project.Scripts.Event;
 using Project.Scripts.Event.Events.Camera;
-using Project.Scripts.Event.Events.GUI;
 using Project.Scripts.Event.Events.Replay;
 using Project.Scripts.Roulette.Data;
 using Project.Scripts.Roulette.RouletteBall;
@@ -17,7 +16,7 @@ namespace Project.Scripts.Roulette.Game
     {
         [Header("Game")] 
         [SerializeField] private float m_replayDuration;
-        
+
         [Header("Mode")] 
         [SerializeField] private GameMode m_gameMode = GameMode.Game;
         [SerializeField] private int m_startDesiredSlotIndex;
@@ -30,12 +29,18 @@ namespace Project.Scripts.Roulette.Game
         [SerializeField] private DeskSettings m_predictionDeskSettings;
         [SerializeField] private BallSettings m_predictionBallSettings;
         [SerializeField] private int m_predictionMaxIterations = 5000;
-        
+
         private SimulationState m_lastSimulationState;
         private bool m_hasLastSimulationState;
         private PhysicSimulator m_simulator;
         private bool m_isReplayRunning;
-        
+        private bool m_ballReplayStarted;
+        private bool m_ballReplayEnded;
+        private bool m_deskReplayStarted;
+        private bool m_deskReplayEnded;
+        private SimulationState m_pendingReplayStartState;
+        private bool m_hasPendingReplayStartState;
+
         #region Unity Callbacks
 
         private void Awake()
@@ -51,21 +56,6 @@ namespace Project.Scripts.Roulette.Game
         private void OnDisable()
         {
             Unregister();
-        }
-
-        private void LateUpdate()
-        {
-            if (!m_isReplayRunning || m_ball == null || m_desk == null)
-            {
-                return;
-            }
-
-            if (m_ball.IsReplaying || m_desk.IsReplaying)
-            {
-                return;
-            }
-
-            NotifyReplayEnded();
         }
 
         private void OnDestroy()
@@ -105,15 +95,19 @@ namespace Project.Scripts.Roulette.Game
 
             m_simulator = new PhysicSimulator(m_predictionDeskSettings, m_predictionBallSettings.Prefab, m_predictionDeskSettings.Prefab, m_predictionMaxIterations);
         }
-        
+
         private void Register()
         {
             EventBus.Subscribe<ECameraFocusEnd>(StartGame);
+            SubscribeReplayCallbacks(m_ball);
+            SubscribeReplayCallbacks(m_desk);
         }
-        
+
         private void Unregister()
         {
             EventBus.Unsubscribe<ECameraFocusEnd>(StartGame);
+            UnsubscribeReplayCallbacks(m_ball);
+            UnsubscribeReplayCallbacks(m_desk);
         }
 
         public void StartGame()
@@ -150,7 +144,8 @@ namespace Project.Scripts.Roulette.Game
 
         private void PlaySimulation(in SimulationState simulationState)
         {
-            NotifyReplayEnded();
+            StopActiveReplayIfNeeded();
+            ResetReplayLifecycleTracking(simulationState);
             float replayTickDuration = GetReplayTickDuration(simulationState);
 
             m_ball.Disable();
@@ -161,8 +156,6 @@ namespace Project.Scripts.Roulette.Game
 
             m_desk.Replay(simulationState, replayTickDuration);
             m_ball.Replay(simulationState, replayTickDuration);
-
-            NotifyReplayStarted(simulationState);
         }
 
         private bool TrySimulate(Vector3 ballDir, float ballForce, float spinSpeed, float spinDrag, float spinStartAngle, out SimulationState simulationState, int? desiredSlotIndex = null)
@@ -201,7 +194,7 @@ namespace Project.Scripts.Roulette.Game
         {
             Vector3 directionMin = m_predictionBallSettings.DirectionMin;
             Vector3 directionMax = m_predictionBallSettings.DirectionMax;
-            
+
             Vector3 v = new(Random.Range(directionMin.x, directionMax.x), Random.Range(directionMin.y, directionMax.y), Random.Range(directionMin.z, directionMax.z));
 
             if (v.sqrMagnitude < 0.0001f)
@@ -230,9 +223,96 @@ namespace Project.Scripts.Roulette.Game
             return Mathf.Max(m_replayDuration / replayStepCount, Mathf.Epsilon);
         }
 
+        private void SubscribeReplayCallbacks(ISimulationObject simulationObject)
+        {
+            simulationObject.OnReplayStarted += OnSimulationObjectReplayStarted;
+            simulationObject.OnReplayEnded += OnSimulationObjectReplayEnded;
+        }
+
+        private void UnsubscribeReplayCallbacks(ISimulationObject simulationObject)
+        {
+            simulationObject.OnReplayStarted -= OnSimulationObjectReplayStarted;
+            simulationObject.OnReplayEnded -= OnSimulationObjectReplayEnded;
+        }
+
+        private void ResetReplayLifecycleTracking(in SimulationState simulationState)
+        {
+            m_ballReplayStarted = false;
+            m_ballReplayEnded = false;
+            m_deskReplayStarted = false;
+            m_deskReplayEnded = false;
+            m_pendingReplayStartState = simulationState;
+            m_hasPendingReplayStartState = true;
+            m_isReplayRunning = false;
+        }
+
+        private void StopActiveReplayIfNeeded()
+        {
+            if (!m_isReplayRunning)
+            {
+                return;
+            }
+
+            m_ball?.ChangeSimulationMode(SimulationMode.Simulation);
+            m_desk?.ChangeSimulationMode(SimulationMode.Simulation);
+        }
+
+        private void OnSimulationObjectReplayStarted(ISimulationObject simulationObject)
+        {
+            if (simulationObject == m_ball)
+            {
+                m_ballReplayStarted = true;
+            }
+            else if (simulationObject == m_desk)
+            {
+                m_deskReplayStarted = true;
+            }
+
+            if (!m_hasPendingReplayStartState || m_isReplayRunning || !HaveAllReplayObjectsStarted())
+            {
+                return;
+            }
+
+            NotifyReplayStarted(m_pendingReplayStartState);
+        }
+
+        private void OnSimulationObjectReplayEnded(ISimulationObject simulationObject)
+        {
+            if (simulationObject == m_ball)
+            {
+                m_ballReplayEnded = true;
+            }
+            else if (simulationObject == m_desk)
+            {
+                m_deskReplayEnded = true;
+            }
+
+            if (!m_isReplayRunning || !HaveAllReplayObjectsEnded())
+            {
+                return;
+            }
+
+            NotifyReplayEnded();
+        }
+
+        private bool HaveAllReplayObjectsStarted()
+        {
+            bool ballStarted = m_ball == null || m_ballReplayStarted;
+            bool deskStarted = m_desk == null || m_deskReplayStarted;
+            return ballStarted && deskStarted;
+        }
+
+        private bool HaveAllReplayObjectsEnded()
+        {
+            bool ballEnded = m_ball == null || m_ballReplayEnded;
+            bool deskEnded = m_desk == null || m_deskReplayEnded;
+            return ballEnded && deskEnded;
+        }
+
         private void NotifyReplayStarted(in SimulationState simulationState)
         {
             m_isReplayRunning = true;
+            m_hasPendingReplayStartState = false;
             EventBus.Publish(new EReplayStart(simulationState));
         }
 
@@ -240,6 +320,7 @@ namespace Project.Scripts.Roulette.Game
         {
             if (!m_isReplayRunning) return;
             m_isReplayRunning = false;
+            m_hasPendingReplayStartState = false;
             EventBus.Publish<EReplayEnd>();
         }
     }

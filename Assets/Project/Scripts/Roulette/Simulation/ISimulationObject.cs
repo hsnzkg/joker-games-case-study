@@ -4,6 +4,8 @@ namespace Project.Scripts.Roulette.Simulation
 {
     public interface ISimulationObject
     {
+        event System.Action<ISimulationObject> OnReplayStarted;
+        event System.Action<ISimulationObject> OnReplayEnded;
         public void Initialize();
         public void ChangeSimulationMode(SimulationMode mode);
         public void Tick(float delta);
