@@ -57,9 +57,9 @@ namespace Project.Scripts.Roulette.RouletteDesk
 
         public void DrawGizmos()
         {
-            if (!IsEnabled) return;
             if (m_desk.SimulationMode == SimulationMode.Simulation) return;
-
+            if (!m_spinTransform) return;
+            if (!m_settings) return;
             Gizmos.color = Color.green;
             Vector3 center = m_spinTransform.position + m_settings.SlotOriginOffset;
 

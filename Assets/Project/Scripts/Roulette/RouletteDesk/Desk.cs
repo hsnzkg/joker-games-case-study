@@ -20,6 +20,7 @@ namespace Project.Scripts.Roulette.RouletteDesk
         public Transform LaunchTransform => m_launchTransform;
         public Transform SpinTransform => m_spinTransform;
         public bool IsSpinning => m_deskPhysicSystem.IsEnabled;
+        public bool IsReplaying => m_replayPlayer != null && m_replayPlayer.IsPlaying;
         public SimulationMode SimulationMode => m_simulationMode;
 
         #region Unity Callbacks
@@ -96,8 +97,13 @@ namespace Project.Scripts.Roulette.RouletteDesk
 
         public void Replay(SimulationState simulationState)
         {
+            Replay(simulationState, simulationState.TickDuration);
+        }
+
+        public void Replay(SimulationState simulationState, float replayTickDuration)
+        {
             ChangeSimulationMode(SimulationMode.Replay);
-            m_replayPlayer.Play(simulationState.DeskStates, simulationState.FrameCount, simulationState.TickDuration);
+            m_replayPlayer.Play(simulationState.DeskStates, simulationState.FrameCount, replayTickDuration);
         }
 
         public void ResetSimulationObject()

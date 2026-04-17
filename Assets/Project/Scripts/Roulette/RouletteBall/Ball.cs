@@ -13,6 +13,7 @@ namespace Project.Scripts.Roulette.RouletteBall
         private BallPhysicSystem m_ballPhysicSystem;
         private SimulationReplayPlayer<BallState> m_replayPlayer;
         private SimulationMode m_simulationMode;
+        public bool IsReplaying => m_replayPlayer != null && m_replayPlayer.IsPlaying;
 
         #region Unity Callbacks
 
@@ -73,8 +74,13 @@ namespace Project.Scripts.Roulette.RouletteBall
 
         public void Replay(SimulationState simulationState)
         {
+            Replay(simulationState, simulationState.TickDuration);
+        }
+
+        public void Replay(SimulationState simulationState, float replayTickDuration)
+        {
             ChangeSimulationMode(SimulationMode.Replay);
-            m_replayPlayer.Play(simulationState.BallStates, simulationState.FrameCount, simulationState.TickDuration);
+            m_replayPlayer.Play(simulationState.BallStates, simulationState.FrameCount, replayTickDuration);
         }
 
         #endregion

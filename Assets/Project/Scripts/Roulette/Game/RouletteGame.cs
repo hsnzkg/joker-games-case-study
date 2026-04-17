@@ -1,9 +1,11 @@
+using Project.Scripts.Event;
+using Project.Scripts.Event.Events.GUI;
+using Project.Scripts.Event.Events.Replay;
 using Project.Scripts.Roulette.Data;
 using Project.Scripts.Roulette.RouletteBall;
 using Project.Scripts.Roulette.RouletteDesk;
 using Project.Scripts.Roulette.Simulation;
 using Project.Scripts.Roulette.Simulation.State;
-using Project.Scripts.Roulette.Utility;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using SimulationMode = Project.Scripts.Roulette.Simulation.SimulationMode;
@@ -12,6 +14,9 @@ namespace Project.Scripts.Roulette.Game
 {
     public partial class RouletteGame : MonoBehaviour
     {
+        [Header("Game")] 
+        [SerializeField] private float m_replayDuration;
+        
         [Header("Mode")] 
         [SerializeField] private GameMode m_gameMode = GameMode.Game;
         [SerializeField] private int m_startDesiredSlotIndex;
@@ -28,8 +33,8 @@ namespace Project.Scripts.Roulette.Game
         private SimulationState m_lastSimulationState;
         private bool m_hasLastSimulationState;
         private PhysicSimulator m_simulator;
-
-
+        private bool m_isReplayRunning;
+        
         #region Unity Callbacks
 
         private void Awake()
@@ -37,20 +42,34 @@ namespace Project.Scripts.Roulette.Game
             Initialize();
         }
 
-        private void Start()
+        private void OnEnable()
         {
-            if (m_gameMode == GameMode.Deterministic)
+            Register();
+        }
+
+        private void OnDisable()
+        {
+            Unregister();
+        }
+
+        private void LateUpdate()
+        {
+            if (!m_isReplayRunning || m_ball == null || m_desk == null)
             {
-                StartDeterministicGame(SlotColor.GREEN.GetRandomSlotInfoByColor().Index);
+                return;
             }
-            else
+
+            if (m_ball.IsReplaying || m_desk.IsReplaying)
             {
-                StartGame();
+                return;
             }
+
+            NotifyReplayEnded();
         }
 
         private void OnDestroy()
         {
+            m_isReplayRunning = false;
             m_simulator?.Dispose();
             m_simulator = null;
         }
@@ -85,6 +104,16 @@ namespace Project.Scripts.Roulette.Game
 
             m_simulator = new PhysicSimulator(m_predictionDeskSettings, m_predictionBallSettings.Prefab, m_predictionDeskSettings.Prefab, m_predictionMaxIterations);
         }
+        
+        private void Register()
+        {
+            EventBus.Subscribe<EPlayPress>(StartGame);
+        }
+        
+        private void Unregister()
+        {
+            EventBus.Unsubscribe<EPlayPress>(StartGame);
+        }
 
         public void StartGame()
         {
@@ -103,11 +132,11 @@ namespace Project.Scripts.Roulette.Game
             PlaySimulation(simulationState);
         }
 
-        public void StartDeterministicGame(int desiredSlotIndex)
+        public void StartDeterministicGame(int slotIndex)
         {
             GenerateRandomStart(out Vector3 ballDir, out float ballForce, out float spinSpeed, out float spinDrag, out float spinStartAngle);
 
-            if (!TrySimulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, out SimulationState simulationState, desiredSlotIndex))
+            if (!TrySimulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, out SimulationState simulationState, slotIndex))
             {
                 Debug.LogWarning("StartDeterministicGame failed to calculate a simulation state. Falling back to StartGame().");
                 StartGame();
@@ -120,14 +149,19 @@ namespace Project.Scripts.Roulette.Game
 
         private void PlaySimulation(in SimulationState simulationState)
         {
+            NotifyReplayEnded();
+            float replayTickDuration = GetReplayTickDuration(simulationState);
+
             m_ball.Disable();
             m_desk.Disable();
 
             m_desk.ResetSimulationObject();
             m_ball.ResetSimulationObject();
 
-            m_desk.Replay(simulationState);
-            m_ball.Replay(simulationState);
+            m_desk.Replay(simulationState, replayTickDuration);
+            m_ball.Replay(simulationState, replayTickDuration);
+
+            NotifyReplayStarted(simulationState);
         }
 
         private bool TrySimulate(Vector3 ballDir, float ballForce, float spinSpeed, float spinDrag, float spinStartAngle, out SimulationState simulationState, int? desiredSlotIndex = null)
@@ -143,24 +177,14 @@ namespace Project.Scripts.Roulette.Game
         {
             m_lastSimulationState = simulationState;
             m_hasLastSimulationState = simulationState is { BallStates: not null, FrameCount: > 0 };
-            int finalSlotIndex = GetFinalSlotIndex(simulationState);
-            Debug.Log($"Simulation completed. FrameCount: [{simulationState.FrameCount}], final slot index: [{finalSlotIndex}].");
+            SlotInfo finalSlotInfo = simulationState.FinalSlotInfo;
+            Debug.Log($"Simulation completed. FrameCount: [{simulationState.FrameCount}], final slot index: [{finalSlotInfo.Index}], final slot number: [{finalSlotInfo.Number}], final slot color: [{finalSlotInfo.Color}].");
         }
 
         private void ClearLastSimulationState()
         {
             m_lastSimulationState = default;
             m_hasLastSimulationState = false;
-        }
-
-        private static int GetFinalSlotIndex(in SimulationState simulationState)
-        {
-            if (simulationState.BallStates == null || simulationState.FrameCount <= 0)
-            {
-                return -1;
-            }
-
-            return simulationState.BallStates[simulationState.FrameCount - 1].SlotIndex;
         }
 
         private void GenerateRandomStart(out Vector3 ballDir, out float ballForce, out float spinSpeed, out float spinDrag, out float spinStartAngle)
@@ -192,6 +216,30 @@ namespace Project.Scripts.Roulette.Game
             float min = Mathf.Min(range.x, range.y);
             float max = Mathf.Max(range.x, range.y);
             return Random.Range(min, max);
+        }
+
+        private float GetReplayTickDuration(in SimulationState simulationState)
+        {
+            if (simulationState.FrameCount <= 1 || m_replayDuration <= 0f)
+            {
+                return simulationState.TickDuration;
+            }
+
+            float replayStepCount = simulationState.FrameCount - 1;
+            return Mathf.Max(m_replayDuration / replayStepCount, Mathf.Epsilon);
+        }
+
+        private void NotifyReplayStarted(in SimulationState simulationState)
+        {
+            m_isReplayRunning = true;
+            EventBus.Publish(new EReplayStart(simulationState));
+        }
+
+        private void NotifyReplayEnded()
+        {
+            if (!m_isReplayRunning) return;
+            m_isReplayRunning = false;
+            EventBus.Publish<EReplayEnd>();
         }
     }
 }

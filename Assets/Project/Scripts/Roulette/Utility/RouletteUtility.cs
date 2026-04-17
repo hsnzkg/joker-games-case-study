@@ -56,7 +56,7 @@ namespace Project.Scripts.Roulette.Utility
             return new SlotInfo(index, numbers[index], colors[index]);
         }
 
-        public static SlotInfo GetSlotInfoByNumber(this int number)
+        public static SlotInfo GetSlotInfoBySlotNumber(this int number)
         {
             int[] numbers = RouletteMap.Numbers;
             for (int index = 0; index < numbers.Length; index++)

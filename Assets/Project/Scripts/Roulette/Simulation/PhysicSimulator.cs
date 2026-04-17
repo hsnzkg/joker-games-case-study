@@ -52,11 +52,13 @@ namespace Project.Scripts.Roulette.Simulation
                 return RunSimulation(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, deskStartAngle);
             }
 
+            SlotInfo desiredSlotInfo = desiredSlotIndex.GetSlotInfo();
             SimulationState simulationState = RunSimulation(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, deskStartAngle);
             SettledSlotInfo settledSlotInfo = AnalyzeSettledSlot(simulationState);
 
             if (!settledSlotInfo.HasSettledSlot)
             {
+                simulationState.FinalSlotInfo = desiredSlotInfo;
                 LogVisualRemapFailed("Physical simulation did not settle inside any slot. Replay stays unchanged.", settledSlotInfo.SlotInfo.Index, desiredSlotIndex, deskStartAngle, deskStartAngle, 0f, settledSlotInfo.ContinuousStartFrame);
                 return simulationState;
             }
@@ -64,6 +66,7 @@ namespace Project.Scripts.Roulette.Simulation
             int sourceSlotIndex = settledSlotInfo.SlotInfo.Index;
             if (sourceSlotIndex == desiredSlotIndex)
             {
+                simulationState.FinalSlotInfo = desiredSlotInfo;
                 LogVisualRemapSkipped(sourceSlotIndex, desiredSlotIndex, deskStartAngle, settledSlotInfo.ContinuousStartFrame);
                 return simulationState;
             }
@@ -76,6 +79,7 @@ namespace Project.Scripts.Roulette.Simulation
             LogVisualRemapInitial(sourceSlotIndex, desiredSlotIndex, slotIndexDifference, slotAngle, visualDeskOffset, settledSlotInfo.ContinuousStartFrame, deskStartAngle, visualStartAngle);
 
             SimulationState visualReplayState = CreateVisualReplayState(simulationState, slotIndexDifference, visualDeskOffset);
+            visualReplayState.FinalSlotInfo = desiredSlotInfo;
             LogVisualRemapApplied(sourceSlotIndex, desiredSlotIndex, deskStartAngle, visualStartAngle, visualDeskOffset, settledSlotInfo.ContinuousStartFrame);
             return visualReplayState;
         }
@@ -144,6 +148,7 @@ namespace Project.Scripts.Roulette.Simulation
 
                 m_ballInstance.Disable();
                 m_deskInstance.Disable();
+                simulationData.FinalSlotInfo = ResolveFinalSlotInfo(simulationData);
                 return simulationData;
             }
             finally
@@ -298,6 +303,12 @@ namespace Project.Scripts.Roulette.Simulation
             return simulationState.BallStates[simulationState.FrameCount - 1].SlotIndex;
         }
 
+        private static SlotInfo ResolveFinalSlotInfo(in SimulationState simulationState)
+        {
+            int finalSlotIndex = GetFinalSlotIndex(simulationState);
+            return finalSlotIndex.GetSlotInfo();
+        }
+
         private SettledSlotInfo AnalyzeSettledSlot(in SimulationState simulationState)
         {
             //If simulation not valid
@@ -330,7 +341,11 @@ namespace Project.Scripts.Roulette.Simulation
 
         private SimulationState CreateVisualReplayState(in SimulationState physicalState, int slotIndexDifference, float visualDeskOffset)
         {
-            SimulationState visualReplayState = new(physicalState.Buffer, physicalState.TickDuration) { FrameCount = physicalState.FrameCount };
+            SimulationState visualReplayState = new(physicalState.Buffer, physicalState.TickDuration)
+            {
+                FrameCount = physicalState.FrameCount,
+                FinalSlotInfo = physicalState.FinalSlotInfo
+            };
 
             Quaternion deskRotationOffset = Quaternion.Euler(0f, visualDeskOffset, 0f);
 
