@@ -1,4 +1,4 @@
-using Project.Scripts.Constants;
+using Project.Scripts.Roulette.Data;
 using Project.Scripts.Roulette.RouletteBall;
 using Project.Scripts.Roulette.RouletteDesk;
 using Project.Scripts.Roulette.Simulation;
@@ -21,19 +21,10 @@ namespace Project.Scripts.Roulette.Game
         [SerializeField] private Desk m_desk;
 
         [Header("Simulation")] 
-        [SerializeField] private DeskPhysicSettings m_predictionDeskPhysicSettings;
-        [SerializeField] private Ball m_predictionBallPrefab;
-        [SerializeField] private Desk m_predictionDeskPrefab;
-        [SerializeField] private int m_predictionMaxIterations = 1000;
-
-        [Header("Random Ranges")] 
-        [SerializeField] private Vector3 m_ballDirectionMin = new(-1f, 0f, -1f);
-        [SerializeField] private Vector3 m_ballDirectionMax = new(1f, 0.35f, 1f);
-        [SerializeField] private Vector2 m_ballForceRange = new(2f, 6f);
-        [SerializeField] private Vector2 m_spinSpeedRange = new(60f, 140f);
-        [SerializeField] private Vector2 m_spinDragRange = new(4f, 14f);
-        [SerializeField] private Vector2 m_spinStartAngleRange = new(0f, 360f);
-
+        [SerializeField] private DeskSettings m_predictionDeskSettings;
+        [SerializeField] private BallSettings m_predictionBallSettings;
+        [SerializeField] private int m_predictionMaxIterations = 5000;
+        
         private SimulationState m_lastSimulationState;
         private bool m_hasLastSimulationState;
         private PhysicSimulator m_simulator;
@@ -92,7 +83,7 @@ namespace Project.Scripts.Roulette.Game
             m_ball.ChangeSimulationMode(SimulationMode.Replay);
             m_desk.ChangeSimulationMode(SimulationMode.Replay);
 
-            m_simulator = new PhysicSimulator(m_predictionDeskPhysicSettings, m_predictionBallPrefab, m_predictionDeskPrefab, m_predictionMaxIterations);
+            m_simulator = new PhysicSimulator(m_predictionDeskSettings, m_predictionBallSettings.Prefab, m_predictionDeskSettings.Prefab, m_predictionMaxIterations);
         }
 
         public void StartGame()
@@ -175,15 +166,18 @@ namespace Project.Scripts.Roulette.Game
         private void GenerateRandomStart(out Vector3 ballDir, out float ballForce, out float spinSpeed, out float spinDrag, out float spinStartAngle)
         {
             ballDir = RandomDirection();
-            ballForce = RandomRange(m_ballForceRange);
-            spinSpeed = RandomRange(m_spinSpeedRange);
-            spinDrag = RandomRange(m_spinDragRange);
-            spinStartAngle = RandomRange(m_spinStartAngleRange);
+            ballForce = RandomRange(m_predictionBallSettings.ForceRange);
+            spinSpeed = RandomRange(m_predictionDeskSettings.SpinSpeedRange);
+            spinDrag = RandomRange(m_predictionDeskSettings.SpinDragRange);
+            spinStartAngle = RandomRange(m_predictionDeskSettings.SpinStartAngleRange);
         }
 
         private Vector3 RandomDirection()
         {
-            Vector3 v = new(Random.Range(m_ballDirectionMin.x, m_ballDirectionMax.x), Random.Range(m_ballDirectionMin.y, m_ballDirectionMax.y), Random.Range(m_ballDirectionMin.z, m_ballDirectionMax.z));
+            Vector3 directionMin = m_predictionBallSettings.DirectionMin;
+            Vector3 directionMax = m_predictionBallSettings.DirectionMax;
+            
+            Vector3 v = new(Random.Range(directionMin.x, directionMax.x), Random.Range(directionMin.y, directionMax.y), Random.Range(directionMin.z, directionMax.z));
 
             if (v.sqrMagnitude < 0.0001f)
             {

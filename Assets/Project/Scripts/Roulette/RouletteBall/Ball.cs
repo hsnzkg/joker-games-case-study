@@ -15,7 +15,7 @@ namespace Project.Scripts.Roulette.RouletteBall
         private SimulationMode m_simulationMode;
 
         #region Unity Callbacks
-        
+
         private void Update()
         {
             Tick(Time.deltaTime);
@@ -23,11 +23,31 @@ namespace Project.Scripts.Roulette.RouletteBall
 
         #endregion
 
+        #region Simulation Object
+
         public void Initialize()
         {
             m_ballVisualSystem = new BallVisualSystem(gameObject);
             m_ballPhysicSystem = new BallPhysicSystem(gameObject);
             m_replayPlayer = new SimulationReplayPlayer<BallState>(new BallReplayAdapter(this));
+        }
+
+        public void Enable()
+        {
+            m_ballPhysicSystem.Start();
+        }
+
+        public void Disable()
+        {
+            m_ballPhysicSystem.Stop();
+        }
+
+        public void Tick(float delta)
+        {
+            if (m_simulationMode == SimulationMode.Replay)
+            {
+                m_replayPlayer.Tick(delta);
+            }
         }
 
         public void ChangeSimulationMode(SimulationMode mode)
@@ -45,23 +65,6 @@ namespace Project.Scripts.Roulette.RouletteBall
             m_ballVisualSystem.ChangeVisualState(mode == SimulationMode.Replay);
         }
 
-        public void Tick(float delta)
-        {
-            if (m_simulationMode == SimulationMode.Replay)
-            {
-                m_replayPlayer.Tick(delta);
-            }
-        }
-
-        public void Enable()
-        {
-            m_ballPhysicSystem.Start();
-        }
-
-        public void Disable()
-        {
-            m_ballPhysicSystem.Stop();
-        }
 
         public void ResetSimulationObject()
         {
@@ -74,7 +77,9 @@ namespace Project.Scripts.Roulette.RouletteBall
             m_replayPlayer.Play(simulationState.BallStates, simulationState.FrameCount, simulationState.TickDuration);
         }
 
-        public void Launch(Vector3 fromPos,Quaternion fromRot, Vector3 dir, float force)
+        #endregion
+        
+        public void Launch(Vector3 fromPos, Quaternion fromRot, Vector3 dir, float force)
         {
             ChangeSimulationMode(SimulationMode.Simulation);
             m_ballPhysicSystem.Launch(fromPos, fromRot, dir, force);

@@ -1,21 +1,23 @@
-﻿using UnityEngine;
+﻿using System;
+using Project.Scripts.Roulette.Data;
+using UnityEngine;
 using SimulationMode = Project.Scripts.Roulette.Simulation.SimulationMode;
 
 namespace Project.Scripts.Roulette.RouletteDesk
 {
-    public class DeskPhysicSystem
+    public class DeskPhysicSystem : IDisposable
     {
-        private readonly Desk m_desk;
-        private readonly Transform m_spinTransform;
+        private Desk m_desk;
+        private Transform m_spinTransform;
         private float m_remainingSpeed;
         private float m_drag;
-        private readonly DeskPhysicSettings m_settings;
+        private DeskSettings m_settings;
         public bool IsEnabled { get; private set; }
 
-        public DeskPhysicSystem(Desk desk, DeskPhysicSettings deskPhysicSettings, Transform spinTransform)
+        public DeskPhysicSystem(Desk desk, DeskSettings deskSettings, Transform spinTransform)
         {
             m_desk = desk;
-            m_settings = deskPhysicSettings;
+            m_settings = deskSettings;
             m_spinTransform = spinTransform;
         }
 
@@ -43,7 +45,6 @@ namespace Project.Scripts.Roulette.RouletteDesk
 
         public void StartSpin(float speed, float drag, float startAngle = 0f)
         {
-            Start();
             m_spinTransform.rotation = Quaternion.Euler(0, startAngle, 0);
             m_remainingSpeed = speed;
             m_drag = drag;
@@ -56,10 +57,10 @@ namespace Project.Scripts.Roulette.RouletteDesk
 
         public void DrawGizmos()
         {
+            if (!IsEnabled) return;
             if (m_desk.SimulationMode == SimulationMode.Simulation) return;
-            if (!m_spinTransform) return;
-            Gizmos.color = Color.green;
 
+            Gizmos.color = Color.green;
             Vector3 center = m_spinTransform.position + m_settings.SlotOriginOffset;
 
             Matrix4x4 oldMatrix = Gizmos.matrix;
@@ -92,6 +93,13 @@ namespace Project.Scripts.Roulette.RouletteDesk
             }
 
             Gizmos.matrix = oldMatrix;
+        }
+
+        public void Dispose()
+        {
+            m_desk = null;
+            m_settings = null;
+            m_spinTransform = null;
         }
     }
 }

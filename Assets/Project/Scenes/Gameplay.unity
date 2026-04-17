@@ -348,7 +348,7 @@ Transform:
   m_GameObject: {fileID: 410087039}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.92387956, z: -0.38268343, w: 0}
-  m_LocalPosition: {x: -0.53395, y: -1.56734, z: 1.88654}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -430,18 +430,22 @@ MonoBehaviour:
   m_gameMode: 1
   m_startDesiredSlotIndex: 5
   m_ball: {fileID: 2049276437}
-  m_desk: {fileID: 1343160131}
-  m_predictionDeskPhysicSettings: {fileID: 11400000, guid: 32c9a1f7b5739684ca9271ab80b8129b, type: 2}
-  m_predictionBallPrefab: {fileID: 6289613284532919235, guid: fb40ce8609f13ec449d2d8bbfecf9646, type: 3}
-  m_predictionDeskPrefab: {fileID: 7121211515567644994, guid: 586597b0b8b8f4b4f9b45b5cfa0cae52, type: 3}
+  m_desk: {fileID: 862873540}
+  m_predictionDeskSettings: {fileID: 11400000, guid: 32c9a1f7b5739684ca9271ab80b8129b, type: 2}
+  m_predictionBallSettings: {fileID: 11400000, guid: 7ae5da833b4c08442a0a67d73a67f2c2, type: 2}
   m_predictionMaxIterations: 5000
-  m_ballDirectionMin: {x: -1, y: 0, z: -1}
-  m_ballDirectionMax: {x: 1, y: 0.35, z: 1}
-  m_ballForceRange: {x: 2, y: 6}
-  m_spinSpeedRange: {x: 60, y: 140}
-  m_spinDragRange: {x: 4, y: 14}
-  m_spinStartAngleRange: {x: 0, y: 360}
---- !u!1001 &890023998
+--- !u!114 &862873540 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7121211515567644994, guid: 586597b0b8b8f4b4f9b45b5cfa0cae52, type: 3}
+  m_PrefabInstance: {fileID: 1307631138}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36406bd6539c4fa999408289d0a6beda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Project::Project.Scripts.RouletteDesk.Desk
+--- !u!1001 &1307631138
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -491,24 +495,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6822620880273568917, guid: 586597b0b8b8f4b4f9b45b5cfa0cae52, type: 3}
       propertyPath: m_Name
-      value: RouletteDesk
+      value: Desk
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 586597b0b8b8f4b4f9b45b5cfa0cae52, type: 3}
---- !u!114 &1343160131 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7121211515567644994, guid: 586597b0b8b8f4b4f9b45b5cfa0cae52, type: 3}
-  m_PrefabInstance: {fileID: 890023998}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36406bd6539c4fa999408289d0a6beda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Project::Project.Scripts.RouletteDesk.Desk
 --- !u!1 &1382444809
 GameObject:
   m_ObjectHideFlags: 0
@@ -568,7 +561,7 @@ Transform:
   m_GameObject: {fileID: 1382444809}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.53395, y: -1.56734, z: 1.88654}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -599,7 +592,7 @@ Transform:
   m_GameObject: {fileID: 1908866854}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.53395, y: 1.56734, z: -1.88654}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -681,6 +674,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1908866855}
-  - {fileID: 890023998}
+  - {fileID: 1307631138}
   - {fileID: 2010500774}
   - {fileID: 477024676}

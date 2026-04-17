@@ -1,4 +1,5 @@
 using System;
+using Project.Scripts.Roulette.Data;
 using Project.Scripts.Roulette.RouletteBall;
 using Project.Scripts.Roulette.RouletteDesk;
 using Project.Scripts.Roulette.Simulation.State;
@@ -12,7 +13,7 @@ namespace Project.Scripts.Roulette.Simulation
     {
         private static int s_simulationIndex;
 
-        private readonly DeskPhysicSettings m_deskPhysicSettings;
+        private readonly DeskSettings m_deskSettings;
         private readonly Ball m_ballPrefab;
         private readonly Desk m_deskPrefab;
         private readonly int m_maxIterations;
@@ -25,9 +26,9 @@ namespace Project.Scripts.Roulette.Simulation
         private readonly Collider[] m_overlapResults;
         private readonly int m_ballLayerMask;
 
-        public PhysicSimulator(DeskPhysicSettings deskPhysicSettings, Ball ballPrefab, Desk deskPrefab, int maxIterations = 100)
+        public PhysicSimulator(DeskSettings deskSettings, Ball ballPrefab, Desk deskPrefab, int maxIterations = 100)
         {
-            m_deskPhysicSettings = deskPhysicSettings;
+            m_deskSettings = deskSettings;
             m_ballPrefab = ballPrefab;
             m_deskPrefab = deskPrefab;
             m_maxIterations = Mathf.Max(2, maxIterations);
@@ -45,9 +46,9 @@ namespace Project.Scripts.Roulette.Simulation
 
         public SimulationState Simulate(Vector3 ballForceDirection, float ballForce, float deskRotationSpeed, float deskDrag, float deskStartAngle, int desiredSlotIndex)
         {
-            if (desiredSlotIndex < 0 || desiredSlotIndex >= m_deskPhysicSettings.SlotCount)
+            if (desiredSlotIndex < 0 || desiredSlotIndex >= m_deskSettings.SlotCount)
             {
-                Debug.LogError($"Desired slot index [{desiredSlotIndex}] is outside valid range [0, {m_deskPhysicSettings.SlotCount - 1}]. Falling back to regular simulation.");
+                Debug.LogError($"Desired slot index [{desiredSlotIndex}] is outside valid range [0, {m_deskSettings.SlotCount - 1}]. Falling back to regular simulation.");
                 return RunSimulation(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, deskStartAngle);
             }
 
@@ -113,12 +114,15 @@ namespace Project.Scripts.Roulette.Simulation
             {
                 Physics.simulationMode = UnityEngine.SimulationMode.Script;
                 EnsureSimulationSceneCreated();
+
                 ResetBall(ref simulationData);
                 ResetDesk();
 
-                Transform launchTransform = m_deskInstance.LaunchTransform;
+                m_ballInstance.Enable();
+                m_deskInstance.Enable();
+
                 m_deskInstance.StartSpin(deskRotationSpeed, deskDrag, deskStartAngle);
-                m_ballInstance.Launch(launchTransform.position, launchTransform.rotation, ballForceDirection, ballForce);
+                m_ballInstance.Launch(m_deskInstance.LaunchTransform.position, m_deskInstance.LaunchTransform.rotation, ballForceDirection, ballForce);
 
                 int slotIndex = CheckSlots();
                 RecordState(ref simulationData, 0, slotIndex);
@@ -160,9 +164,9 @@ namespace Project.Scripts.Roulette.Simulation
 
         private float GetTickDuration()
         {
-            if (m_deskPhysicSettings != null && m_deskPhysicSettings.Tick > 0f)
+            if (m_deskSettings != null && m_deskSettings.Tick > 0f)
             {
-                return m_deskPhysicSettings.Tick;
+                return m_deskSettings.Tick;
             }
 
             return Time.fixedDeltaTime;
@@ -267,11 +271,11 @@ namespace Project.Scripts.Roulette.Simulation
         {
             Vector3 deskCenter = GetDeskSlotOrigin(m_deskInstance.SpinTransform.position);
 
-            for (int slotIndex = 0; slotIndex < m_deskPhysicSettings.SlotCount; slotIndex++)
+            for (int slotIndex = 0; slotIndex < m_deskSettings.SlotCount; slotIndex++)
             {
                 Quaternion slotRotation = GetSlotWorldRotation(slotIndex, m_deskInstance.SpinTransform.rotation);
                 Vector3 slotCenter = GetSlotCenter(deskCenter, slotRotation);
-                int hitCount = m_physicsScene.OverlapBox(slotCenter, m_deskPhysicSettings.SlotBoxSize / 2f, m_overlapResults, slotRotation, m_ballLayerMask);
+                int hitCount = m_physicsScene.OverlapBox(slotCenter, m_deskSettings.SlotBoxSize / 2f, m_overlapResults, slotRotation, m_ballLayerMask);
 
                 if (hitCount <= 0)
                 {
@@ -349,29 +353,29 @@ namespace Project.Scripts.Roulette.Simulation
                 return -1;
             }
 
-            int remappedSlotIndex = (sourceSlotIndex + slotIndexDifference) % m_deskPhysicSettings.SlotCount;
-            return remappedSlotIndex < 0 ? remappedSlotIndex + m_deskPhysicSettings.SlotCount : remappedSlotIndex;
+            int remappedSlotIndex = (sourceSlotIndex + slotIndexDifference) % m_deskSettings.SlotCount;
+            return remappedSlotIndex < 0 ? remappedSlotIndex + m_deskSettings.SlotCount : remappedSlotIndex;
         }
 
         private Vector3 GetDeskSlotOrigin(Vector3 deskPosition)
         {
-            return deskPosition + m_deskPhysicSettings.SlotOriginOffset;
+            return deskPosition + m_deskSettings.SlotOriginOffset;
         }
 
         private Quaternion GetSlotWorldRotation(int slotIndex, Quaternion deskRotation)
         {
             float slotAngle = slotIndex * GetSlotAngle();
-            return Quaternion.Euler(0f, slotAngle, 0f) * Quaternion.Euler(m_deskPhysicSettings.SlotRotationOffset) * deskRotation;
+            return Quaternion.Euler(0f, slotAngle, 0f) * Quaternion.Euler(m_deskSettings.SlotRotationOffset) * deskRotation;
         }
 
         private Vector3 GetSlotCenter(Vector3 deskCenter, Quaternion slotWorldRotation)
         {
-            return deskCenter + slotWorldRotation * Vector3.forward * m_deskPhysicSettings.DistanceFromOrigin;
+            return deskCenter + slotWorldRotation * Vector3.forward * m_deskSettings.DistanceFromOrigin;
         }
 
         private float GetSlotAngle()
         {
-            return 360f / m_deskPhysicSettings.SlotCount;
+            return 360f / m_deskSettings.SlotCount;
         }
 
         private static void LogVisualRemapInitial(int physicalSlotIndex, int desiredSlotIndex, int slotIndexDifference, float slotAngle, float visualDeskOffset, int sourceFrame, float physicalStartAngle, float visualStartAngle)

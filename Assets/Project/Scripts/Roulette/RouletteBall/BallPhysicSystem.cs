@@ -39,7 +39,6 @@ namespace Project.Scripts.Roulette.RouletteBall
         {
             m_rigidbody.position = fromPos;
             m_rigidbody.rotation = fromRot;
-            Start();
             m_rigidbody.AddForce(dir * force,ForceMode.Impulse);
         }
     }

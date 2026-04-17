@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4062811113304f2caee1294acc774f8e, type: 3}
   m_Name: DeskPhysicSettings
   m_EditorClassIdentifier: Project::Project.Scripts.RouletteDesk.DeskPhysicSettings
+  Prefab: {fileID: 7121211515567644994, guid: 586597b0b8b8f4b4f9b45b5cfa0cae52, type: 3}
   SlotCount: 37
   SlotOriginOffset: {x: 0, y: 1.425, z: 0}
   SlotRotationOffset: {x: 0, y: 5, z: 0}
   SlotBoxSize: {x: 0.35, y: 0.0625, z: 0.85}
   DistanceFromOrigin: 3.27
+  SpinSpeedRange: {x: 60, y: 140}
+  SpinDragRange: {x: 4, y: 14}
+  SpinStartAngleRange: {x: 0, y: 360}
   Tick: 0.02
