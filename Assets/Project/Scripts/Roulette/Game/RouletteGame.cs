@@ -344,7 +344,7 @@ namespace Project.Scripts.Roulette.Game
             {
                 elapsedTime += Time.deltaTime;
                 float t = Mathf.Clamp01(elapsedTime / m_deskStartAlignmentDuration);
-                float easedT = EaseUtility.EaseInCirc(t);
+                float easedT = EaseUtility.EaseInOutCirc(t);
                 float currentYAngle = Mathf.Repeat(startEuler.y + (leftRotationDelta * easedT), 360f);
                 Quaternion currentRotation = Quaternion.Euler(targetEuler.x, currentYAngle, targetEuler.z);
                 deskTransform.SetPositionAndRotation(Vector3.Lerp(startPosition, replayStartDeskState.Position, easedT), currentRotation);

@@ -19,6 +19,7 @@ namespace Project.Scripts.Roulette.RouletteDesk
         private DeskVisualSystem m_deskVisualSystem;
         public event System.Action<ISimulationObject> OnReplayStarted;
         public event System.Action<ISimulationObject> OnReplayEnded;
+        public event System.Action OnSpinEaseInCompleted;
         public Transform LaunchTransform => m_launchTransform;
         public Transform SpinTransform => m_spinTransform;
         public bool IsSpinning => m_deskPhysicSystem.IsEnabled;
@@ -46,6 +47,7 @@ namespace Project.Scripts.Roulette.RouletteDesk
 
         private void OnDestroy()
         {
+            UnregisterDeskPhysicSystemCallbacks();
             UnregisterReplayPlayerCallbacks();
             m_deskPhysicSystem.Dispose();
         }
@@ -59,6 +61,7 @@ namespace Project.Scripts.Roulette.RouletteDesk
             m_deskPhysicSystem = new DeskPhysicSystem(this, m_deskSettings, m_spinTransform);
             m_deskVisualSystem = new DeskVisualSystem(gameObject);
             m_replayPlayer = new SimulationReplayPlayer<DeskState>(new DeskReplayAdapter(m_spinTransform));
+            RegisterDeskPhysicSystemCallbacks();
             RegisterReplayPlayerCallbacks();
         }
 
@@ -141,6 +144,11 @@ namespace Project.Scripts.Roulette.RouletteDesk
             m_replayPlayer.OnReplayEnded += HandleReplayEnded;
         }
 
+        private void RegisterDeskPhysicSystemCallbacks()
+        {
+            m_deskPhysicSystem.OnSpinEaseInCompleted += HandleSpinEaseInCompleted;
+        }
+
         private void UnregisterReplayPlayerCallbacks()
         {
             if (m_replayPlayer == null)
@@ -152,6 +160,16 @@ namespace Project.Scripts.Roulette.RouletteDesk
             m_replayPlayer.OnReplayEnded -= HandleReplayEnded;
         }
 
+        private void UnregisterDeskPhysicSystemCallbacks()
+        {
+            if (m_deskPhysicSystem == null)
+            {
+                return;
+            }
+
+            m_deskPhysicSystem.OnSpinEaseInCompleted -= HandleSpinEaseInCompleted;
+        }
+
         private void HandleReplayStarted()
         {
             OnReplayStarted?.Invoke(this);
@@ -160,6 +178,11 @@ namespace Project.Scripts.Roulette.RouletteDesk
         private void HandleReplayEnded()
         {
             OnReplayEnded?.Invoke(this);
+        }
+
+        private void HandleSpinEaseInCompleted()
+        {
+            OnSpinEaseInCompleted?.Invoke();
         }
     }
 }

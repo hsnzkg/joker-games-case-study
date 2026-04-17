@@ -34,7 +34,7 @@ namespace Project.Scripts.Roulette.Simulation
             m_maxIterations = Mathf.Max(2, maxIterations);
 
             m_overlapResults = new Collider[1];
-            m_ballLayerMask = ballPrefab != null ? 1 << ballPrefab.gameObject.layer : 0;
+            m_ballLayerMask = m_ballPrefab != null ? 1 << m_ballPrefab.gameObject.layer : 0;
 
             EnsureSimulationSceneCreated();
         }
@@ -112,6 +112,12 @@ namespace Project.Scripts.Roulette.Simulation
         {
             float tick = GetTickDuration();
             SimulationState simulationData = new(m_maxIterations, tick);
+            bool hasDeskSpinEaseCompleted = false;
+
+            void HandleDeskSpinEaseCompleted()
+            {
+                hasDeskSpinEaseCompleted = true;
+            }
 
             UnityEngine.SimulationMode previousMode = Physics.simulationMode;
             try
@@ -122,11 +128,19 @@ namespace Project.Scripts.Roulette.Simulation
                 ResetBall(ref simulationData);
                 ResetDesk();
 
-                m_ballInstance.Enable();
                 m_deskInstance.Enable();
-
+                m_deskInstance.OnSpinEaseInCompleted += HandleDeskSpinEaseCompleted;
                 m_deskInstance.StartSpin(deskRotationSpeed, deskDrag, deskStartAngle);
-                m_ballInstance.Launch(m_deskInstance.LaunchTransform.position, m_deskInstance.LaunchTransform.rotation, ballForceDirection, ballForce);
+                bool isBallLaunchReady = hasDeskSpinEaseCompleted;
+
+                if (isBallLaunchReady)
+                {
+                    LaunchBall(ballForceDirection, ballForce);
+                }
+                else
+                {
+                    HoldBallAtLaunchPose();
+                }
 
                 int slotIndex = CheckSlots();
                 RecordState(ref simulationData, 0, slotIndex);
@@ -134,13 +148,27 @@ namespace Project.Scripts.Roulette.Simulation
                 for (int iteration = 1; iteration < m_maxIterations; iteration++)
                 {
                     m_deskInstance.Tick(tick);
+
+                    if (!isBallLaunchReady)
+                    {
+                        if (hasDeskSpinEaseCompleted)
+                        {
+                            LaunchBall(ballForceDirection, ballForce);
+                            isBallLaunchReady = true;
+                        }
+                        else
+                        {
+                            HoldBallAtLaunchPose();
+                        }
+                    }
+
                     Physics.SyncTransforms();
                     m_physicsScene.Simulate(tick);
 
                     slotIndex = CheckSlots();
                     RecordState(ref simulationData, iteration, slotIndex);
 
-                    if (IsBallStopped() && IsDeskStopped())
+                    if (isBallLaunchReady && IsBallStopped() && IsDeskStopped())
                     {
                         break;
                     }
@@ -151,6 +179,11 @@ namespace Project.Scripts.Roulette.Simulation
             }
             finally
             {
+                if (m_deskInstance != null)
+                {
+                    m_deskInstance.OnSpinEaseInCompleted -= HandleDeskSpinEaseCompleted;
+                }
+
                 m_ballInstance?.Disable();
                 m_deskInstance?.Disable();
                 Physics.simulationMode = previousMode;
@@ -233,7 +266,7 @@ namespace Project.Scripts.Roulette.Simulation
         {
             if (m_ballRb == null) return;
             m_ballRb.position = m_deskInstance.LaunchTransform.position;
-            m_ballRb.rotation = Quaternion.identity;
+            m_ballRb.rotation = m_deskInstance.LaunchTransform.rotation;
             Array.Clear(simulationState.BallStates, 0, simulationState.Buffer);
             simulationState.FrameCount = 0;
         }
@@ -241,6 +274,21 @@ namespace Project.Scripts.Roulette.Simulation
         private void ResetDesk()
         {
             m_deskInstance.ResetSimulationObject();
+        }
+
+        private void HoldBallAtLaunchPose()
+        {
+            Transform launchTransform = m_deskInstance.LaunchTransform;
+            m_ballRb.position = launchTransform.position;
+            m_ballRb.rotation = launchTransform.rotation;
+            m_ballRb.linearVelocity = Vector3.zero;
+            m_ballRb.angularVelocity = Vector3.zero;
+        }
+
+        private void LaunchBall(Vector3 ballForceDirection, float ballForce)
+        {
+            m_ballInstance.Enable();
+            m_ballInstance.Launch(m_deskInstance.LaunchTransform.position, m_deskInstance.LaunchTransform.rotation, ballForceDirection, ballForce);
         }
 
         private bool IsBallStopped()

@@ -20,6 +20,7 @@ namespace Project.Scripts.Roulette.Data
         public Vector2 SpinSpeedRange = new(60f, 140f);
         public Vector2 SpinDragRange = new(4f, 14f);
         public Vector2 SpinStartAngleRange = new(0f, 360f);
+        public float SpinEaseInDuration = 0.15f;
         public float Tick;
     }
 }

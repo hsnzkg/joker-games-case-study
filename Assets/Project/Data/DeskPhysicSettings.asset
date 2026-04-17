@@ -18,7 +18,8 @@ MonoBehaviour:
   SlotRotationOffset: {x: 0, y: 5, z: 0}
   SlotBoxSize: {x: 0.35, y: 0.0625, z: 0.85}
   DistanceFromOrigin: 3.27
-  SpinSpeedRange: {x: 100, y: 100}
-  SpinDragRange: {x: 8, y: 8}
-  SpinStartAngleRange: {x: 0, y: 360}
+  SpinSpeedRange: {x: 150, y: 150}
+  SpinDragRange: {x: 15, y: 15}
+  SpinStartAngleRange: {x: 0, y: 180}
+  SpinEaseInDuration: 0.5
   Tick: 0.02
