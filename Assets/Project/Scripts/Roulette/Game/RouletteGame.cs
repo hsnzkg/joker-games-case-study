@@ -1,4 +1,5 @@
 using Project.Scripts.Event;
+using Project.Scripts.Event.Events.Camera;
 using Project.Scripts.Event.Events.GUI;
 using Project.Scripts.Event.Events.Replay;
 using Project.Scripts.Roulette.Data;
@@ -107,12 +108,12 @@ namespace Project.Scripts.Roulette.Game
         
         private void Register()
         {
-            EventBus.Subscribe<EPlayPress>(StartGame);
+            EventBus.Subscribe<ECameraFocusEnd>(StartGame);
         }
         
         private void Unregister()
         {
-            EventBus.Unsubscribe<EPlayPress>(StartGame);
+            EventBus.Unsubscribe<ECameraFocusEnd>(StartGame);
         }
 
         public void StartGame()
