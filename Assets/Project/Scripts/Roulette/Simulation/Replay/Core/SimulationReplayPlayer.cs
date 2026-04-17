@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Project.Scripts.Roulette.Simulation.Replay
+namespace Project.Scripts.Roulette.Simulation.Replay.Core
 {
     public class SimulationReplayPlayer<TState>
     {

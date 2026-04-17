@@ -2,6 +2,7 @@ using System;
 using Project.Scripts.Roulette.RouletteBall;
 using Project.Scripts.Roulette.RouletteDesk;
 using Project.Scripts.Roulette.Simulation.State;
+using Project.Scripts.Roulette.Utility;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -55,11 +56,11 @@ namespace Project.Scripts.Roulette.Simulation
 
             if (!settledSlotInfo.HasSettledSlot)
             {
-                LogVisualRemapFailed("Physical simulation did not settle inside any slot. Replay stays unchanged.", settledSlotInfo.FinalSlotIndex, desiredSlotIndex, deskStartAngle, deskStartAngle, 0f, settledSlotInfo.ContinuousStartFrame);
+                LogVisualRemapFailed("Physical simulation did not settle inside any slot. Replay stays unchanged.", settledSlotInfo.SlotInfo.Index, desiredSlotIndex, deskStartAngle, deskStartAngle, 0f, settledSlotInfo.ContinuousStartFrame);
                 return simulationState;
             }
 
-            int sourceSlotIndex = simulationState.BallStates[settledSlotInfo.ContinuousStartFrame].SlotIndex;
+            int sourceSlotIndex = settledSlotInfo.SlotInfo.Index;
             if (sourceSlotIndex == desiredSlotIndex)
             {
                 LogVisualRemapSkipped(sourceSlotIndex, desiredSlotIndex, deskStartAngle, settledSlotInfo.ContinuousStartFrame);
@@ -298,14 +299,15 @@ namespace Project.Scripts.Roulette.Simulation
             //If simulation not valid
             if (simulationState.FrameCount <= 0 || simulationState.BallStates == null || simulationState.DeskStates == null)
             {
-                return new SettledSlotInfo(false, -1, -1);
+                return new SettledSlotInfo(false, (-1).GetSlotInfo(), -1);
             }
 
             //If ball not slotted any slot due to an error collider geometry problem etc. visual models is not stable
             int finalSlotIndex = GetFinalSlotIndex(simulationState);
+            SlotInfo finalSlotInfo = finalSlotIndex.GetSlotInfo();
             if (finalSlotIndex < 0)
             {
-                return new SettledSlotInfo(false, finalSlotIndex, -1);
+                return new SettledSlotInfo(false, finalSlotInfo, -1);
             }
 
             int continuousStartFrame = simulationState.FrameCount - 1;
@@ -313,21 +315,18 @@ namespace Project.Scripts.Roulette.Simulation
             {
                 continuousStartFrame--;
             }
-            
+
             if (finalSlotIndex != simulationState.BallStates[continuousStartFrame].SlotIndex)
             {
-                return new SettledSlotInfo(false, finalSlotIndex, -1);
+                return new SettledSlotInfo(false, finalSlotInfo, -1);
             }
-            
-            return new SettledSlotInfo(true, finalSlotIndex, continuousStartFrame);
+
+            return new SettledSlotInfo(true, finalSlotInfo, continuousStartFrame);
         }
 
         private SimulationState CreateVisualReplayState(in SimulationState physicalState, int slotIndexDifference, float visualDeskOffset)
         {
-            SimulationState visualReplayState = new(physicalState.Buffer, physicalState.TickDuration)
-            {
-                FrameCount = physicalState.FrameCount
-            };
+            SimulationState visualReplayState = new(physicalState.Buffer, physicalState.TickDuration) { FrameCount = physicalState.FrameCount };
 
             Quaternion deskRotationOffset = Quaternion.Euler(0f, visualDeskOffset, 0f);
 
@@ -377,35 +376,23 @@ namespace Project.Scripts.Roulette.Simulation
 
         private static void LogVisualRemapInitial(int physicalSlotIndex, int desiredSlotIndex, int slotIndexDifference, float slotAngle, float visualDeskOffset, int sourceFrame, float physicalStartAngle, float visualStartAngle)
         {
-            Debug.Log("Visual deterministic INITIAL: " +
-                      $"physical settled slot [{physicalSlotIndex}], desired visual slot [{desiredSlotIndex}], " +
-                      $"slot difference [{slotIndexDifference}], slot angle [{slotAngle:F3}], " +
-                      $"visual desk offset [{visualDeskOffset:F3}], source frame [{sourceFrame}], " +
-                      $"physical start angle [{physicalStartAngle:F3}], visual start angle [{visualStartAngle:F3}].");
+            Debug.Log("Visual deterministic INITIAL: " + $"physical settled slot [{physicalSlotIndex}], desired visual slot [{desiredSlotIndex}], " + $"slot difference [{slotIndexDifference}], slot angle [{slotAngle:F3}], " + $"visual desk offset [{visualDeskOffset:F3}], source frame [{sourceFrame}], " + $"physical start angle [{physicalStartAngle:F3}], visual start angle [{visualStartAngle:F3}].");
         }
 
         private static void LogVisualRemapApplied(int physicalSlotIndex, int desiredSlotIndex, float physicalStartAngle, float visualStartAngle, float visualDeskOffset, int sourceFrame)
         {
-            Debug.Log("Visual deterministic <color=green>APPLIED</color>: " +
-                      $"physics was not rerun. Replay keeps the same ball trajectory and rotates the desk by [{visualDeskOffset:F3}] " +
-                      $"from start angle [{physicalStartAngle:F3}] to [{visualStartAngle:F3}], remapping physical slot [{physicalSlotIndex}] " +
-                      $"to visual slot [{desiredSlotIndex}] from source frame [{sourceFrame}].");
+            Debug.Log("Visual deterministic <color=green>APPLIED</color>: " + $"physics was not rerun. Replay keeps the same ball trajectory and rotates the desk by [{visualDeskOffset:F3}] " + $"from start angle [{physicalStartAngle:F3}] to [{visualStartAngle:F3}], remapping physical slot [{physicalSlotIndex}] " + $"to visual slot [{desiredSlotIndex}] from source frame [{sourceFrame}].");
         }
 
         private static void LogVisualRemapSkipped(int physicalSlotIndex, int desiredSlotIndex, float startAngle, int sourceFrame)
         {
-            Debug.Log("Visual deterministic <color=green>SKIPPED</color>: " +
-                      $"physical settled slot [{physicalSlotIndex}] already matches desired visual slot [{desiredSlotIndex}]. " +
-                      $"Replay stays unchanged at start angle [{startAngle:F3}] from source frame [{sourceFrame}].");
+            Debug.Log("Visual deterministic <color=green>SKIPPED</color>: " + $"physical settled slot [{physicalSlotIndex}] already matches desired visual slot [{desiredSlotIndex}]. " + $"Replay stays unchanged at start angle [{startAngle:F3}] from source frame [{sourceFrame}].");
         }
 
         private static void LogVisualRemapFailed(string reason, int physicalSlotIndex, int desiredSlotIndex, float physicalStartAngle, float visualStartAngle, float visualDeskOffset, int sourceFrame)
         {
             string sourceFrameText = sourceFrame >= 0 ? sourceFrame.ToString() : "n/a";
-            Debug.Log("Visual deterministic <color=red>FAILED</color>: " +
-                      $"{reason} Physical slot [{physicalSlotIndex}], desired visual slot [{desiredSlotIndex}], " +
-                      $"visual desk offset [{visualDeskOffset:F3}], physical start angle [{physicalStartAngle:F3}], " +
-                      $"visual start angle [{visualStartAngle:F3}], source frame [{sourceFrameText}].");
+            Debug.Log("Visual deterministic <color=red>FAILED</color>: " + $"{reason} Physical slot [{physicalSlotIndex}], desired visual slot [{desiredSlotIndex}], " + $"visual desk offset [{visualDeskOffset:F3}], physical start angle [{physicalStartAngle:F3}], " + $"visual start angle [{visualStartAngle:F3}], source frame [{sourceFrameText}].");
         }
     }
 }

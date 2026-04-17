@@ -1,12 +1,14 @@
+using Project.Scripts.Constants;
 using Project.Scripts.Roulette.RouletteBall;
 using Project.Scripts.Roulette.RouletteDesk;
 using Project.Scripts.Roulette.Simulation;
 using Project.Scripts.Roulette.Simulation.State;
+using Project.Scripts.Roulette.Utility;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using SimulationMode = Project.Scripts.Roulette.Simulation.SimulationMode;
 
-namespace Project.Scripts.Roulette
+namespace Project.Scripts.Roulette.Game
 {
     public partial class RouletteGame : MonoBehaviour
     {
@@ -48,7 +50,7 @@ namespace Project.Scripts.Roulette
         {
             if (m_gameMode == GameMode.Deterministic)
             {
-                StartDeterministicGame(m_startDesiredSlotIndex);
+                StartDeterministicGame(SlotColor.GREEN.GetRandomSlotInfoByColor().Index);
             }
             else
             {
