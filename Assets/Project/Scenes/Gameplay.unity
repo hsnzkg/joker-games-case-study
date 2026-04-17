@@ -291,6 +291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Project::Project.Scripts.RouletteGame
   m_replayDuration: 3
+  m_deskStartAlignmentDuration: 1
   m_gameMode: 1
   m_startDesiredSlotIndex: 5
   m_ball: {fileID: 2049276437}

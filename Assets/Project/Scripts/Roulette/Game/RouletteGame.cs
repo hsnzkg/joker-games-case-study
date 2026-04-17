@@ -6,6 +6,7 @@ using Project.Scripts.Roulette.RouletteBall;
 using Project.Scripts.Roulette.RouletteDesk;
 using Project.Scripts.Roulette.Simulation;
 using Project.Scripts.Roulette.Simulation.State;
+using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using SimulationMode = Project.Scripts.Roulette.Simulation.SimulationMode;
@@ -16,6 +17,7 @@ namespace Project.Scripts.Roulette.Game
     {
         [Header("Game")] 
         [SerializeField] private float m_replayDuration;
+        [SerializeField] private float m_deskStartAlignmentDuration = 0.35f;
 
         [Header("Mode")] 
         [SerializeField] private GameMode m_gameMode = GameMode.Game;
@@ -40,6 +42,7 @@ namespace Project.Scripts.Roulette.Game
         private bool m_deskReplayEnded;
         private SimulationState m_pendingReplayStartState;
         private bool m_hasPendingReplayStartState;
+        private Coroutine m_deskReplayAlignmentRoutine;
 
         #region Unity Callbacks
 
@@ -55,11 +58,13 @@ namespace Project.Scripts.Roulette.Game
 
         private void OnDisable()
         {
+            StopDeskReplayAlignmentRoutine();
             Unregister();
         }
 
         private void OnDestroy()
         {
+            StopDeskReplayAlignmentRoutine();
             m_isReplayRunning = false;
             m_simulator?.Dispose();
             m_simulator = null;
@@ -144,18 +149,24 @@ namespace Project.Scripts.Roulette.Game
 
         private void PlaySimulation(in SimulationState simulationState)
         {
+            StopDeskReplayAlignmentRoutine();
             StopActiveReplayIfNeeded();
             ResetReplayLifecycleTracking(simulationState);
             float replayTickDuration = GetReplayTickDuration(simulationState);
 
             m_ball.Disable();
             m_desk.Disable();
-
-            m_desk.ResetSimulationObject();
+            m_ball.ChangeSimulationMode(SimulationMode.Simulation);
             m_ball.ResetSimulationObject();
 
-            m_desk.Replay(simulationState, replayTickDuration);
-            m_ball.Replay(simulationState, replayTickDuration);
+            if (ShouldAlignDeskBeforeReplay(simulationState))
+            {
+                m_desk.ChangeSimulationMode(SimulationMode.Replay);
+                m_deskReplayAlignmentRoutine = StartCoroutine(AlignDeskToReplayStartAndPlay(simulationState, replayTickDuration));
+                return;
+            }
+
+            StartReplay(simulationState, replayTickDuration);
         }
 
         private bool TrySimulate(Vector3 ballDir, float ballForce, float spinSpeed, float spinDrag, float spinStartAngle, out SimulationState simulationState, int? desiredSlotIndex = null)
@@ -322,6 +333,49 @@ namespace Project.Scripts.Roulette.Game
             m_isReplayRunning = false;
             m_hasPendingReplayStartState = false;
             EventBus.Publish<EReplayEnd>();
+        }
+
+        private bool ShouldAlignDeskBeforeReplay(in SimulationState simulationState)
+        {
+            return m_deskStartAlignmentDuration > 0f && simulationState.FrameCount > 0;
+        }
+
+        private IEnumerator AlignDeskToReplayStartAndPlay(SimulationState simulationState, float replayTickDuration)
+        {
+            Transform deskTransform = m_desk.SpinTransform;
+            DeskState replayStartDeskState = simulationState.DeskStates[0];
+            Vector3 startPosition = deskTransform.position;
+            Quaternion startRotation = deskTransform.rotation;
+            float elapsedTime = 0f;
+
+            while (elapsedTime < m_deskStartAlignmentDuration)
+            {
+                elapsedTime += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsedTime / m_deskStartAlignmentDuration);
+                deskTransform.SetPositionAndRotation(Vector3.Lerp(startPosition, replayStartDeskState.Position, t), Quaternion.Slerp(startRotation, replayStartDeskState.Rotation, t));
+                yield return null;
+            }
+
+            deskTransform.SetPositionAndRotation(replayStartDeskState.Position, replayStartDeskState.Rotation);
+            m_deskReplayAlignmentRoutine = null;
+            StartReplay(simulationState, replayTickDuration);
+        }
+
+        private void StartReplay(in SimulationState simulationState, float replayTickDuration)
+        {
+            m_desk.Replay(simulationState, replayTickDuration);
+            m_ball.Replay(simulationState, replayTickDuration);
+        }
+
+        private void StopDeskReplayAlignmentRoutine()
+        {
+            if (m_deskReplayAlignmentRoutine == null)
+            {
+                return;
+            }
+
+            StopCoroutine(m_deskReplayAlignmentRoutine);
+            m_deskReplayAlignmentRoutine = null;
         }
     }
 }
