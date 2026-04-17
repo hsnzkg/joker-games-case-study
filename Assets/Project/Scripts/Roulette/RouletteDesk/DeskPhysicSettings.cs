@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Project.Scripts.RouletteDesk
+namespace Project.Scripts.Roulette.RouletteDesk
 {
     [CreateAssetMenu(fileName = "DeskPhysicSettings", menuName = "Project/DeskPhysicSettings", order = 0)]
     public class DeskPhysicSettings : ScriptableObject

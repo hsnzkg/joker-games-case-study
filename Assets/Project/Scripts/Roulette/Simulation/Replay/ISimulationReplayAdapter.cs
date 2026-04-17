@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Project.Scripts.Physic
+namespace Project.Scripts.Roulette.Simulation.Replay
 {
     public interface ISimulationReplayAdapter<in TState>
     {

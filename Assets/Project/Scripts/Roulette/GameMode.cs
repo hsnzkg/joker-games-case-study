@@ -1,4 +1,4 @@
-﻿namespace Project.Scripts
+﻿namespace Project.Scripts.Roulette
 {
     public partial class RouletteGame
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Project.Scripts.RouletteDesk
+namespace Project.Scripts.Roulette.RouletteDesk
 {
     public class DeskVisualSystem
     {

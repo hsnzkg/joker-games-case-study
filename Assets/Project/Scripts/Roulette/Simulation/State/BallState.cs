@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Project.Scripts.Physic.State
+namespace Project.Scripts.Roulette.Simulation.State
 {
     public struct BallState
     {

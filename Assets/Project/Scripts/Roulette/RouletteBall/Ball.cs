@@ -1,9 +1,10 @@
-﻿using Project.Scripts.Physic;
-using Project.Scripts.Physic.State;
+﻿using Project.Scripts.Roulette.Simulation;
+using Project.Scripts.Roulette.Simulation.Replay;
+using Project.Scripts.Roulette.Simulation.State;
 using UnityEngine;
-using SimulationMode = Project.Scripts.Physic.SimulationMode;
+using SimulationMode = Project.Scripts.Roulette.Simulation.SimulationMode;
 
-namespace Project.Scripts.RouletteBall
+namespace Project.Scripts.Roulette.RouletteBall
 {
     public class Ball : MonoBehaviour, ISimulationObject
     {

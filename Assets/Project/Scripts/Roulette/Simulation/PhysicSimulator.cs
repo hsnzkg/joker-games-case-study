@@ -1,11 +1,11 @@
 using System;
-using Project.Scripts.Physic.State;
-using Project.Scripts.RouletteBall;
-using Project.Scripts.RouletteDesk;
+using Project.Scripts.Roulette.RouletteBall;
+using Project.Scripts.Roulette.RouletteDesk;
+using Project.Scripts.Roulette.Simulation.State;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Project.Scripts.Physic
+namespace Project.Scripts.Roulette.Simulation
 {
     public sealed class PhysicSimulator : IDisposable
     {
@@ -50,20 +50,20 @@ namespace Project.Scripts.Physic
                 return RunSimulation(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, deskStartAngle);
             }
 
-            SimulationState physicalState = RunSimulation(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, deskStartAngle);
-            SettledSlotInfo settledSlotInfo = AnalyzeSettledSlot(physicalState);
+            SimulationState simulationState = RunSimulation(ballForceDirection, ballForce, deskRotationSpeed, deskDrag, deskStartAngle);
+            SettledSlotInfo settledSlotInfo = AnalyzeSettledSlot(simulationState);
 
             if (!settledSlotInfo.HasSettledSlot)
             {
                 LogVisualRemapFailed("Physical simulation did not settle inside any slot. Replay stays unchanged.", settledSlotInfo.FinalSlotIndex, desiredSlotIndex, deskStartAngle, deskStartAngle, 0f, settledSlotInfo.ContinuousStartFrame);
-                return physicalState;
+                return simulationState;
             }
 
-            int sourceSlotIndex = physicalState.BallStates[settledSlotInfo.ContinuousStartFrame].SlotIndex;
+            int sourceSlotIndex = simulationState.BallStates[settledSlotInfo.ContinuousStartFrame].SlotIndex;
             if (sourceSlotIndex == desiredSlotIndex)
             {
                 LogVisualRemapSkipped(sourceSlotIndex, desiredSlotIndex, deskStartAngle, settledSlotInfo.ContinuousStartFrame);
-                return physicalState;
+                return simulationState;
             }
 
             int slotIndexDifference = desiredSlotIndex - sourceSlotIndex;
@@ -73,7 +73,7 @@ namespace Project.Scripts.Physic
 
             LogVisualRemapInitial(sourceSlotIndex, desiredSlotIndex, slotIndexDifference, slotAngle, visualDeskOffset, settledSlotInfo.ContinuousStartFrame, deskStartAngle, visualStartAngle);
 
-            SimulationState visualReplayState = CreateVisualReplayState(physicalState, slotIndexDifference, visualDeskOffset);
+            SimulationState visualReplayState = CreateVisualReplayState(simulationState, slotIndexDifference, visualDeskOffset);
             LogVisualRemapApplied(sourceSlotIndex, desiredSlotIndex, deskStartAngle, visualStartAngle, visualDeskOffset, settledSlotInfo.ContinuousStartFrame);
             return visualReplayState;
         }
@@ -298,14 +298,14 @@ namespace Project.Scripts.Physic
             //If simulation not valid
             if (simulationState.FrameCount <= 0 || simulationState.BallStates == null || simulationState.DeskStates == null)
             {
-                return new SettledSlotInfo(false, -1, -1, Vector3.zero);
+                return new SettledSlotInfo(false, -1, -1);
             }
 
             //If ball not slotted any slot due to an error collider geometry problem etc. visual models is not stable
             int finalSlotIndex = GetFinalSlotIndex(simulationState);
             if (finalSlotIndex < 0)
             {
-                return new SettledSlotInfo(false, finalSlotIndex, -1, Vector3.zero);
+                return new SettledSlotInfo(false, finalSlotIndex, -1);
             }
 
             int continuousStartFrame = simulationState.FrameCount - 1;
@@ -316,10 +316,10 @@ namespace Project.Scripts.Physic
             
             if (finalSlotIndex != simulationState.BallStates[continuousStartFrame].SlotIndex)
             {
-                return new SettledSlotInfo(false, finalSlotIndex, -1, Vector3.zero);
+                return new SettledSlotInfo(false, finalSlotIndex, -1);
             }
             
-            return new SettledSlotInfo(true, finalSlotIndex, continuousStartFrame, Vector3.zero);
+            return new SettledSlotInfo(true, finalSlotIndex, continuousStartFrame);
         }
 
         private SimulationState CreateVisualReplayState(in SimulationState physicalState, int slotIndexDifference, float visualDeskOffset)

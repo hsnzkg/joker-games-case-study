@@ -1,8 +1,7 @@
-using Project.Scripts.Physic;
-using Project.Scripts.Physic.State;
+using Project.Scripts.Roulette.Simulation.State;
 using UnityEngine;
 
-namespace Project.Scripts.RouletteDesk
+namespace Project.Scripts.Roulette.Simulation.Replay
 {
     public class DeskReplayAdapter : TransformSimulationReplayAdapter<DeskState>
     {

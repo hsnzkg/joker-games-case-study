@@ -1,12 +1,12 @@
-using Project.Scripts.Physic;
-using Project.Scripts.Physic.State;
-using Project.Scripts.RouletteBall;
-using Project.Scripts.RouletteDesk;
+using Project.Scripts.Roulette.RouletteBall;
+using Project.Scripts.Roulette.RouletteDesk;
+using Project.Scripts.Roulette.Simulation;
+using Project.Scripts.Roulette.Simulation.State;
 using UnityEngine;
 using Random = UnityEngine.Random;
-using SimulationMode = Project.Scripts.Physic.SimulationMode;
+using SimulationMode = Project.Scripts.Roulette.Simulation.SimulationMode;
 
-namespace Project.Scripts
+namespace Project.Scripts.Roulette
 {
     public partial class RouletteGame : MonoBehaviour
     {

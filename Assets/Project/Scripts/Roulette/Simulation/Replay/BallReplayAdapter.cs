@@ -1,8 +1,8 @@
-using Project.Scripts.Physic;
-using Project.Scripts.Physic.State;
+using Project.Scripts.Roulette.RouletteBall;
+using Project.Scripts.Roulette.Simulation.State;
 using UnityEngine;
 
-namespace Project.Scripts.RouletteBall
+namespace Project.Scripts.Roulette.Simulation.Replay
 {
     public class BallReplayAdapter : TransformSimulationReplayAdapter<BallState>
     {

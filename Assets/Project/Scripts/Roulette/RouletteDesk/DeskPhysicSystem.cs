@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using SimulationMode = Project.Scripts.Physic.SimulationMode;
+using SimulationMode = Project.Scripts.Roulette.Simulation.SimulationMode;
 
-namespace Project.Scripts.RouletteDesk
+namespace Project.Scripts.Roulette.RouletteDesk
 {
     public class DeskPhysicSystem
     {
