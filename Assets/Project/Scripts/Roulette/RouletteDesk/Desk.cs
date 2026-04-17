@@ -84,11 +84,8 @@ namespace Project.Scripts.Roulette.RouletteDesk
             {
                 m_replayPlayer.Stop();
             }
-
-            if (mode == SimulationMode.Simulation)
-            {
-                m_deskVisualSystem.ChangeVisualState(mode == SimulationMode.Replay);
-            }
+            
+            m_deskVisualSystem.ChangeVisualState(mode == SimulationMode.Replay);
         }
 
         public void Replay(SimulationState simulationState)
