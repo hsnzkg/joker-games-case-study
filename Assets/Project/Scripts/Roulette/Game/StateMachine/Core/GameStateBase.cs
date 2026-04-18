@@ -1,36 +1,58 @@
-﻿using Project.Scripts.EventBus;
-using Project.Scripts.EventBus.Events.Application;
-using Project.Scripts.HFSM;
+﻿using Project.Scripts.HFSM;
+using Project.Scripts.Roulette.Simulation.State;
+using Project.Scripts.StateManagement;
+using Project.Scripts.StateManagement.Data;
 
 namespace Project.Scripts.Roulette.Game.StateMachine.Core
 {
     public class GameStateBase : StateBase
     {
         protected readonly GameStateContext Context;
-        private readonly EventBind<EStart> m_applicationStartBind;
-        private readonly EventBind<EQuit> m_applicationQuitBind;
         
         protected GameStateBase(GameStateContext context)
         {
             Context = context;
-            
-            m_applicationStartBind = new EventBind<EStart>(OnApplicationStarted);
-            m_applicationQuitBind = new EventBind<EQuit>(OnApplicationQuit);
-            
-            EventBus<EStart>.Register(m_applicationStartBind);
-            EventBus<EQuit>.Register(m_applicationQuitBind);
         }
 
-        public virtual void Save(){}
+        protected virtual PostGameState? PersistedState => null;
+        public bool CanPersistPostGameData => PersistedState.HasValue;
 
-        public virtual void Load(){}
-
-        protected virtual void OnApplicationStarted(EStart obj)
+        public virtual void Save()
         {
+            if (!PersistedState.HasValue)
+            {
+                return;
+            }
+
+            if (!Context.Game.TryGetLastSimulationState(out SimulationState simulationState))
+            {
+                return;
+            }
+
+            PostGameData postGameData = PostGameData.Create(PersistedState.Value, simulationState);
+            Context.CurrentPostGameData = postGameData;
+            DataSerializer.SavePostGameData(postGameData);
         }
 
-        protected void OnApplicationQuit(EQuit obj)
+        protected virtual void Load()
         {
+            TryLoadPostGameData();
+        }
+
+        protected bool TryLoadPostGameData()
+        {
+            if (!Context.CurrentPostGameData.HasSimulationData)
+            {
+                return false;
+            }
+
+            if (!Context.CurrentPostGameData.TryGetSimulationState(out SimulationState simulationState))
+            {
+                return false;
+            }
+
+            Context.Game.SetLastSimulationState(simulationState);
+            return true;
         }
     }
 }

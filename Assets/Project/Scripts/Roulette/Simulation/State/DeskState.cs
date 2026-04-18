@@ -4,8 +4,8 @@ namespace Project.Scripts.Roulette.Simulation.State
 {
     public struct DeskState
     {
-        public Vector3 Position;
-        public Quaternion Rotation;
+        public SerializableVector3 Position;
+        public SerializableQuaternion Rotation;
 
         public DeskState(Vector3 pos, Quaternion rot)
         {

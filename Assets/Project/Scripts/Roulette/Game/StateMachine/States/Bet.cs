@@ -1,4 +1,5 @@
 ﻿using Project.Scripts.EventBus;
+using Project.Scripts.EventBus.Events.GameState;
 using Project.Scripts.EventBus.Events.GUI;
 using Project.Scripts.Roulette.Game.StateMachine.Core;
 
@@ -16,11 +17,22 @@ namespace Project.Scripts.Roulette.Game.StateMachine.States
         protected override void OnEnter()
         {
             EventBus<EPlayPress>.Register(m_playPressedBind);
+
+            if (Context.ShouldResumeFromPostGameData)
+            {
+                Context.ShouldResumeFromPostGameData = false;
+                Context.Game.StartGame();
+            }
+            else
+            {
+                Context.Game.ClearPersistedPostGameData();
+            }
         }
 
         protected override void OnExit()
         {
             EventBus<EPlayPress>.Unregister(m_playPressedBind);
+            EventBus<EBetExit>.Raise(new EBetExit());
         }
 
         private void OnPlayPressed()

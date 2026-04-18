@@ -292,8 +292,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Project::Project.Scripts.RouletteGame
   m_replayInterpolationFactor: 0.5
   m_deskStartAlignmentDuration: 1
-  m_gameMode: 0
-  m_startDesiredSlotIndex: 0
   m_ball: {fileID: 2049276437}
   m_desk: {fileID: 862873540}
   m_predictionDeskSettings: {fileID: 11400000, guid: 32c9a1f7b5739684ca9271ab80b8129b, type: 2}

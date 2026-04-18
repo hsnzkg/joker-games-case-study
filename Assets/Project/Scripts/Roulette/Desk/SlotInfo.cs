@@ -2,7 +2,7 @@
 {
     public struct SlotInfo
     {
-        public readonly int Index;
+        public int Index;
         public int Number;
         public SlotColor Color;
 

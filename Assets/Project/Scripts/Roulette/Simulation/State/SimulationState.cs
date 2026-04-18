@@ -4,10 +4,10 @@ namespace Project.Scripts.Roulette.Simulation.State
 {
     public struct SimulationState
     {
-        public readonly int Buffer;
-        public readonly float TickDuration;
-        public readonly BallState[] BallStates;
-        public readonly DeskState[] DeskStates;
+        public int Buffer;
+        public float TickDuration;
+        public BallState[] BallStates;
+        public DeskState[] DeskStates;
         public int FrameCount;
         public SlotInfo FinalSlotInfo;
 

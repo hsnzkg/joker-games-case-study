@@ -11,25 +11,20 @@ using Project.Scripts.Roulette.Game.StateMachine.States;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using SimulationMode = Project.Scripts.Roulette.Simulation.SimulationMode;
+using Project.Scripts.StateManagement;
+using Project.Scripts.StateManagement.Data;
 
 namespace Project.Scripts.Roulette.Game
 {
-    public partial class RouletteGame : MonoBehaviour, IDisposable
+    public class RouletteGame : MonoBehaviour, IDisposable
     {
-        [Header("Game")] [Range(0f, 1f)] 
-        [SerializeField] private float m_replayInterpolationFactor = 1f;
+        [Header("Game")] [Range(0f, 1f)] [SerializeField] private float m_replayInterpolationFactor = 1f;
         [SerializeField] private float m_deskStartAlignmentDuration = 0.35f;
 
-        [Header("Mode")] 
-        [SerializeField] private GameMode m_gameMode = GameMode.Game;
-        [SerializeField] private int m_startDesiredSlotIndex;
-
-        [Header("Runtime References")] 
-        [SerializeField] private Ball.Ball m_ball;
+        [Header("Runtime References")] [SerializeField] private Ball.Ball m_ball;
         [SerializeField] private Desk.Desk m_desk;
 
-        [Header("Simulation")] 
-        [SerializeField] private DeskSettings m_predictionDeskSettings;
+        [Header("Simulation")] [SerializeField] private DeskSettings m_predictionDeskSettings;
         [SerializeField] private BallSettings m_predictionBallSettings;
         [SerializeField] private int m_predictionMaxIterations = 5000;
 
@@ -41,12 +36,12 @@ namespace Project.Scripts.Roulette.Game
         private bool m_ballReplayEnded;
         private bool m_deskReplayStarted;
         private bool m_deskReplayEnded;
+        private bool m_isRegistered;
         private int? m_pendingDesiredSlotIndex;
         private Coroutine m_deskReplayAlignmentRoutine;
         private GameCamera m_camera;
 
         private GameStateContext m_context;
-
         public static HFSM.StateMachine StateMachine;
 
         #region Unity Callbacks
@@ -76,6 +71,11 @@ namespace Project.Scripts.Roulette.Game
             m_simulator = null;
         }
 
+        private void OnApplicationQuit()
+        {
+            SaveCurrentPostGameState();
+        }
+
         private void OnDrawGizmos()
         {
             if (!m_hasLastSimulationState || m_lastSimulationState.BallStates == null || m_lastSimulationState.FrameCount <= 0)
@@ -101,8 +101,6 @@ namespace Project.Scripts.Roulette.Game
             m_camera = FindFirstObjectByType<GameCamera>();
             m_camera.Initialize();
 
-            CreateStateMachine();
-
             m_ball.Initialize();
             m_desk.Initialize();
 
@@ -110,6 +108,9 @@ namespace Project.Scripts.Roulette.Game
             m_desk.ChangeSimulationMode(SimulationMode.Replay);
 
             m_simulator = new PhysicSimulator(m_predictionDeskSettings, m_predictionBallSettings.Prefab, m_predictionDeskSettings.Prefab, m_predictionMaxIterations);
+            Register();
+            CreateStateMachine();
+            EnterInitialState();
         }
 
         private void CreateStateMachine()
@@ -129,19 +130,38 @@ namespace Project.Scripts.Roulette.Game
             StateMachine.AddState(result);
 
             StateMachine.SetDefaultState(bet);
-            StateMachine.ChangeState<Bet>();
         }
 
         private void Register()
         {
+            if (m_isRegistered)
+            {
+                return;
+            }
+
             SubscribeReplayCallbacks(m_ball);
             SubscribeReplayCallbacks(m_desk);
+            m_isRegistered = true;
+        }
+
+        private void EnterInitialState()
+        {
+            if (!TryRestorePostGameState())
+            {
+                StateMachine.ChangeState<Bet>();
+            }
         }
 
         private void Unregister()
         {
+            if (!m_isRegistered)
+            {
+                return;
+            }
+
             UnsubscribeReplayCallbacks(m_ball);
             UnsubscribeReplayCallbacks(m_desk);
+            m_isRegistered = false;
         }
 
         public void StartGame()
@@ -189,6 +209,12 @@ namespace Project.Scripts.Roulette.Game
         {
             m_lastSimulationState = simulationState;
             m_hasLastSimulationState = simulationState is { BallStates: not null, FrameCount: > 0 };
+        }
+
+        public bool TryGetLastSimulationState(out SimulationState simulationState)
+        {
+            simulationState = m_lastSimulationState;
+            return m_hasLastSimulationState && m_lastSimulationState.BallStates != null && m_lastSimulationState.DeskStates != null && m_lastSimulationState.FrameCount > 0;
         }
 
         public void ClearLastSimulationState()
@@ -305,7 +331,7 @@ namespace Project.Scripts.Roulette.Game
             DeskState replayStartDeskState = m_lastSimulationState.DeskStates[0];
             Vector3 startPosition = deskTransform.position;
             Vector3 startEuler = deskTransform.rotation.eulerAngles;
-            Vector3 targetEuler = replayStartDeskState.Rotation.eulerAngles;
+            Vector3 targetEuler = ((Quaternion)replayStartDeskState.Rotation).eulerAngles;
             float leftRotationDelta = GetLeftRotationDelta(startEuler.y, targetEuler.y);
             float elapsedTime = 0f;
 
@@ -356,6 +382,47 @@ namespace Project.Scripts.Roulette.Game
         public void Dispose()
         {
             StateMachine = null;
+        }
+
+        public void ClearPersistedPostGameData()
+        {
+            DataSerializer.DeletePostGameData();
+
+            if (m_context != null)
+            {
+                m_context.CurrentPostGameData = PostGameData.Empty;
+                m_context.ShouldResumeFromPostGameData = false;
+            }
+        }
+
+        private void SaveCurrentPostGameState()
+        {
+            if (StateMachine?.GetActiveState() is GameStateBase gameState && gameState.CanPersistPostGameData)
+            {
+                gameState.Save();
+                return;
+            }
+
+            ClearPersistedPostGameData();
+        }
+
+        private bool TryRestorePostGameState()
+        {
+            if (!DataSerializer.TryLoadPostGameData(out PostGameData postGameData))
+            {
+                return false;
+            }
+
+            if (!postGameData.TryGetSimulationState(out _))
+            {
+                ClearPersistedPostGameData();
+                return false;
+            }
+
+            m_context.CurrentPostGameData = postGameData;
+            m_context.ShouldResumeFromPostGameData = true;
+            StateMachine.ChangeState<Bet>();
+            return true;
         }
     }
 }
