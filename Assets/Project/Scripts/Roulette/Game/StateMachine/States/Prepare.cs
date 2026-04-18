@@ -1,10 +1,9 @@
 ﻿using Project.Scripts.Camera;
 using Project.Scripts.Roulette.Game.StateMachine.Core;
+using Project.Scripts.SessionManagement.Data;
 
 namespace Project.Scripts.Roulette.Game.StateMachine.States
 {
-    using Project.Scripts.StateManagement.Data;
-
     public class Prepare : GameStateBase
     {
         protected override GameSessionStateType StateType => GameSessionStateType.Prepare;

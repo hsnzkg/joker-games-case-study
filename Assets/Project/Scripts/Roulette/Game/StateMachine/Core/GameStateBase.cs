@@ -1,7 +1,7 @@
 ﻿using Project.Scripts.HFSM;
 using Project.Scripts.Roulette.Simulation.State;
-using Project.Scripts.StateManagement;
-using Project.Scripts.StateManagement.Data;
+using Project.Scripts.SessionManagement;
+using Project.Scripts.SessionManagement.Data;
 
 namespace Project.Scripts.Roulette.Game.StateMachine.Core
 {

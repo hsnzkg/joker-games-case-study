@@ -1,10 +1,9 @@
 ﻿using Project.Scripts.Roulette.Game.StateMachine.Core;
 using Project.Scripts.Roulette.Simulation.State;
+using Project.Scripts.SessionManagement.Data;
 
 namespace Project.Scripts.Roulette.Game.StateMachine.States
 {
-    using Project.Scripts.StateManagement.Data;
-
     public class Simulation : GameStateBase
     {
         protected override GameSessionStateType StateType => GameSessionStateType.Simulation;

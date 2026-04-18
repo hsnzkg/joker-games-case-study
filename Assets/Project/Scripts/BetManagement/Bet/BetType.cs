@@ -1,4 +1,4 @@
-namespace Project.Scripts.GUI.Bet
+namespace Project.Scripts.BetManagement.Bet
 {
     public enum BetType
     {

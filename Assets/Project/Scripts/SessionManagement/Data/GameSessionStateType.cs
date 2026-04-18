@@ -1,4 +1,4 @@
-﻿namespace Project.Scripts.StateManagement.Data
+﻿namespace Project.Scripts.SessionManagement.Data
 {
     public enum GameSessionStateType
     {

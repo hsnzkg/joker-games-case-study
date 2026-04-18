@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Project.Scripts.Utility
 {
-    [DefaultExecutionOrder(-1000)]
     public class MonoBehaviourBridge : MonoBehaviourSingleton<MonoBehaviourBridge>
     {
         protected override void OnAwake()

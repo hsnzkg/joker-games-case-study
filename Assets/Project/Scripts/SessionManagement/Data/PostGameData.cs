@@ -1,7 +1,7 @@
 ﻿using System;
 using Project.Scripts.Roulette.Simulation.State;
 
-namespace Project.Scripts.StateManagement.Data
+namespace Project.Scripts.SessionManagement.Data
 {
     [Serializable]
     public struct PostGameData

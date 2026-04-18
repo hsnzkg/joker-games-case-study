@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using Newtonsoft.Json;
-using Project.Scripts.StateManagement.Data;
+using Project.Scripts.SessionManagement.Data;
 using UnityEngine;
 
-namespace Project.Scripts.StateManagement
+namespace Project.Scripts.SessionManagement
 {
     public static class DataSerializer
     {

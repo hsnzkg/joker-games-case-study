@@ -8,11 +8,11 @@ using Project.Scripts.Camera;
 using Project.Scripts.HFSM.RuntimeMode;
 using Project.Scripts.Roulette.Game.StateMachine.Core;
 using Project.Scripts.Roulette.Game.StateMachine.States;
+using Project.Scripts.SessionManagement;
+using Project.Scripts.SessionManagement.Data;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using SimulationMode = Project.Scripts.Roulette.Simulation.SimulationMode;
-using Project.Scripts.StateManagement;
-using Project.Scripts.StateManagement.Data;
 
 namespace Project.Scripts.Roulette.Game
 {
@@ -117,7 +117,7 @@ namespace Project.Scripts.Roulette.Game
         {
             StateMachine = new HFSM.StateMachine(new ManualMode(), true);
             m_context = new GameStateContext(this, m_camera);
-            Bet bet = new(m_context);
+            StateMachine.States.Bet bet = new(m_context);
             StateMachine.States.Simulation simulation = new(m_context);
             Prepare prepare = new(m_context);
             Replay replay = new(m_context);
@@ -148,7 +148,7 @@ namespace Project.Scripts.Roulette.Game
         {
             if (!TryRestorePostGameState())
             {
-                StateMachine.ChangeState<Bet>();
+                StateMachine.ChangeState<StateMachine.States.Bet>();
             }
         }
 
@@ -429,7 +429,7 @@ namespace Project.Scripts.Roulette.Game
                 return false;
             }
 
-            StateMachine.ChangeState<Bet>();
+            StateMachine.ChangeState<StateMachine.States.Bet>();
             return true;
         }
     }

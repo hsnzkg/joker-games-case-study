@@ -1,6 +1,6 @@
 ﻿using Project.Scripts.Roulette.Desk;
 using Project.Scripts.Roulette.Game.StateMachine.Core;
-using Project.Scripts.StateManagement.Data;
+using Project.Scripts.SessionManagement.Data;
 
 namespace Project.Scripts.Roulette.Game.StateMachine.States
 {

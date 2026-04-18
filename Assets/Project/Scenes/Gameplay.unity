@@ -474,6 +474,7 @@ GameObject:
   - component: {fileID: 1486784686}
   - component: {fileID: 1486784690}
   - component: {fileID: 1486784689}
+  - component: {fileID: 1486784691}
   m_Layer: 0
   m_Name: Game_Camera
   m_TagString: MainCamera
@@ -613,6 +614,22 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &1486784691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486784685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c49b4cc203aa6414fae5c798d1d0e7d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.PhysicsRaycaster
+  m_EventMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_MaxRayIntersections: 0
 --- !u!1 &1715564078
 GameObject:
   m_ObjectHideFlags: 0
@@ -872,13 +889,9 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1486784687}
-    - target: {fileID: 1847709881564691582, guid: 7bc854f42857b436aad9ae0700012095, type: 3}
-      propertyPath: m_AdditionalShaderChannelsFlag
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3175675754259136133, guid: 7bc854f42857b436aad9ae0700012095, type: 3}
       propertyPath: m_Name
-      value: Bet_GUI
+      value: Desk_GUI
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

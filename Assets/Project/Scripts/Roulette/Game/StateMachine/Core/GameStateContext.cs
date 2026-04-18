@@ -1,9 +1,8 @@
 ﻿using Project.Scripts.Camera;
+using Project.Scripts.SessionManagement.Data;
 
 namespace Project.Scripts.Roulette.Game.StateMachine.Core
 {
-    using Project.Scripts.StateManagement.Data;
-
     public sealed class GameStateContext
     {
         public RouletteGame Game { get; }
