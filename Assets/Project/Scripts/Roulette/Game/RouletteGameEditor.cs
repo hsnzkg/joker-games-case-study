@@ -1,6 +1,8 @@
-﻿using Project.Scripts.Roulette.Desk;
+﻿using System.IO;
+using Project.Scripts.Roulette.Desk;
 using Project.Scripts.Roulette.Utility;
 using Project.Scripts.SessionManagement;
+using Unity.CodeEditor;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,6 +12,8 @@ namespace Project.Scripts.Roulette.Game
     [CustomEditor(typeof(RouletteGame))]
     public class RouletteWheelControllerEditor : Editor
     {
+        private SaveFileSelection m_selectedSaveFile = SaveFileSelection.PostGameData;
+
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
@@ -17,6 +21,13 @@ namespace Project.Scripts.Roulette.Game
 
             EditorGUILayout.Space();
             EditorGUILayout.HelpBox($"Post Game Save Path:\n{DataSerializer.PostGameDataFilePath}", MessageType.Info);
+            EditorGUILayout.HelpBox($"Game Data Save Path:\n{DataSerializer.GameDataFilePath}", MessageType.Info);
+            m_selectedSaveFile = (SaveFileSelection)EditorGUILayout.EnumPopup("Selected Save File", m_selectedSaveFile);
+
+            if (GUILayout.Button("Open Selected Save File"))
+            {
+                OpenSelectedSaveFile(m_selectedSaveFile);
+            }
 
             if (GUILayout.Button("Start Random Game"))
             {
@@ -49,6 +60,35 @@ namespace Project.Scripts.Roulette.Game
             {
                 DataSerializer.DeletePostGameData();
             }
+        }
+
+        private static void OpenSelectedSaveFile(SaveFileSelection selectedSaveFile)
+        {
+            string filePath = selectedSaveFile switch
+            {
+                SaveFileSelection.PostGameData => DataSerializer.PostGameDataFilePath,
+                SaveFileSelection.GameData => DataSerializer.GameDataFilePath,
+                _ => DataSerializer.PostGameDataFilePath
+            };
+
+            string directoryPath = Path.GetDirectoryName(filePath);
+            if (!string.IsNullOrWhiteSpace(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+
+            if (!File.Exists(filePath))
+            {
+                File.WriteAllText(filePath, "{}");
+            }
+
+            CodeEditor.CurrentEditor.OpenProject(filePath, 0, 0);
+        }
+
+        private enum SaveFileSelection
+        {
+            PostGameData,
+            GameData
         }
     }
 #endif

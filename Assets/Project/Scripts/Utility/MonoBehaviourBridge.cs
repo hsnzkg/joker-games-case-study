@@ -1,4 +1,5 @@
-﻿using Project.Scripts.EventBus;
+﻿using Project.Scripts.Currency;
+using Project.Scripts.EventBus;
 using Project.Scripts.EventBus.Events.Application;
 using Project.Scripts.Singleton;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace Project.Scripts.Utility
         {
             Application.runInBackground = true;
             Application.quitting += OnQuit;
+            _ = CurrencyManager.Instance;
             EventBus<EStart>.Raise(new EStart());
         }
 

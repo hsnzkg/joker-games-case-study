@@ -8,9 +8,12 @@ namespace Project.Scripts.SessionManagement
 {
     public static class DataSerializer
     {
+        private const string k_gameDataDirectoryName = "GameData";
+        private const string k_gameDataFileName = "GameData.json";
         private const string k_postGameDataDirectoryName = "PostGameData";
         private const string k_postGameDataFileName = "PostGameData.json";
 
+        public static string GameDataFilePath => Path.Combine(Application.persistentDataPath, k_gameDataDirectoryName, k_gameDataFileName);
         public static string PostGameDataFilePath => Path.Combine(Application.persistentDataPath, k_postGameDataDirectoryName, k_postGameDataFileName);
 
         public static void Save<T>(string filePath, T data)
@@ -88,6 +91,16 @@ namespace Project.Scripts.SessionManagement
         public static void SavePostGameData(PostGameData postGameData)
         {
             Save(PostGameDataFilePath, postGameData);
+        }
+
+        public static void SaveGameData(GameData gameData)
+        {
+            Save(GameDataFilePath, gameData);
+        }
+
+        public static bool TryLoadGameData(out GameData gameData)
+        {
+            return TryLoad(GameDataFilePath, out gameData);
         }
 
         public static bool TryLoadPostGameData(out PostGameData postGameData)
