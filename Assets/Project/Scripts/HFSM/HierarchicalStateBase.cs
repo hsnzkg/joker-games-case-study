@@ -1,6 +1,6 @@
-using Project.Scripts.StateMachine.RuntimeMode;
+using Project.Scripts.HFSM.RuntimeMode;
 
-namespace Project.Scripts.StateMachine
+namespace Project.Scripts.HFSM
 {
     public partial class StateBase
     {

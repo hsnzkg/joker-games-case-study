@@ -9,28 +9,23 @@ namespace Project.Scripts.Camera
         [SerializeField] private Transform m_rouletteFocusPoint;
         [SerializeField] private float m_cameraFocusDuration = 1f;
 
-        private CameraFocusController m_cameraFocusController;
-
-        private void Awake()
-        {
-            Initialize();
-        }
+        public CameraFocusController CameraFocusController { get; private set; }
 
         private void OnEnable()
         {
-            m_cameraFocusController?.Enable();
+            CameraFocusController?.Enable();
         }
 
         private void OnDisable()
         {
-            m_cameraFocusController?.Disable();
+            CameraFocusController?.Disable();
         }
 
-        private void Initialize()
+        public void Initialize()
         {
             Unity.Cinemachine.CinemachineCamera cinemachineCamera = GetComponent<Unity.Cinemachine.CinemachineCamera>();
-            m_cameraFocusController = new CameraFocusController(this, cinemachineCamera, m_betFocusPoint, m_rouletteFocusPoint, m_cameraFocusDuration);
-            m_cameraFocusController.Initialize();
+            CameraFocusController = new CameraFocusController(this, cinemachineCamera, m_betFocusPoint, m_rouletteFocusPoint, m_cameraFocusDuration);
+            CameraFocusController.Initialize();
         }
     }
 }

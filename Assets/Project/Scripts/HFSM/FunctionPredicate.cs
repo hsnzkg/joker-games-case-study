@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Project.Scripts.StateMachine
+namespace Project.Scripts.HFSM
 {
     public class FunctionPredicate : IPredicate
     {

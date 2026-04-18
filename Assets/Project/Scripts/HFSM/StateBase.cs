@@ -1,4 +1,4 @@
-﻿namespace Project.Scripts.StateMachine
+﻿namespace Project.Scripts.HFSM
 {
     public abstract partial class StateBase
     {

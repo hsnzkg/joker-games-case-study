@@ -1,4 +1,4 @@
-﻿namespace Project.Scripts.StateMachine.RuntimeMode
+﻿namespace Project.Scripts.HFSM.RuntimeMode
 {
     public sealed class ManualMode : IRuntimeMode
     {

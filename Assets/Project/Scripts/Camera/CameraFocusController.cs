@@ -1,5 +1,7 @@
-﻿using Project.Scripts.EventBus;
-using Project.Scripts.EventBus.Events.Camera;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using Project.Scripts.EventBus;
 using Project.Scripts.EventBus.Events.GUI;
 using Project.Scripts.EventBus.Events.Replay;
 using Unity.Cinemachine;
@@ -19,6 +21,8 @@ namespace Project.Scripts.Camera
         
         private EventBind<EPlayPress> m_playPressedBind;
         private EventBind<EReplayEnd>  m_replayEndedBind;
+
+        public event Action<FocusType> FocusComplete;
 
         public CameraFocusController(GameCamera owner, CinemachineCamera camera, Transform betFocusPoint, Transform rouletteFocusPoint, float cameraFocusDuration)
         {
@@ -51,45 +55,39 @@ namespace Project.Scripts.Camera
 
         private void OnPlayPressed()
         {
-            FocusTo(m_rouletteFocusPoint, true);
+         
         }
 
         private void OnReplayEnded()
         {
-            FocusTo(m_betFocusPoint, false);
+            FocusTo(FocusType.Bet);
         }
 
-        private void FocusTo(Transform targetFocusPoint, bool publishPlayStarted)
+        public void FocusTo(FocusType focusType)
         {
+            Transform targetFocusPoint = focusType == FocusType.Bet ? m_betFocusPoint : m_rouletteFocusPoint;
+            
             StopFocusRoutine();
 
             if (m_camera == null || targetFocusPoint == null)
             {
-                if (publishPlayStarted)
-                {
-                    EventBus<ECameraFocusEnd>.Raise(new ECameraFocusEnd());
-                }
-
+                FocusComplete?.Invoke(focusType);
                 return;
             }
 
             if (m_cameraFocusDuration <= 0f)
             {
                 SnapTo(targetFocusPoint);
-
-                if (publishPlayStarted)
-                {
-                    EventBus<ECameraFocusEnd>.Raise(new ECameraFocusEnd());
-                }
-
+                FocusComplete?.Invoke(focusType);
                 return;
             }
 
-            m_focusRoutine = m_owner.StartCoroutine(FocusRoutine(targetFocusPoint, publishPlayStarted));
+            m_focusRoutine = m_owner.StartCoroutine(FocusRoutine(focusType));
         }
 
-        private System.Collections.IEnumerator FocusRoutine(Transform targetFocusPoint, bool publishPlayStarted)
+        private IEnumerator FocusRoutine(FocusType focusType)
         {
+            Transform targetFocusPoint = focusType == FocusType.Bet ? m_betFocusPoint : m_rouletteFocusPoint;
             Vector3 startPosition = m_camera.transform.position;
             Quaternion startRotation = m_camera.transform.rotation;
             float elapsedTime = 0f;
@@ -105,19 +103,12 @@ namespace Project.Scripts.Camera
             ApplyCameraPose(targetFocusPoint.position, targetFocusPoint.rotation);
             m_focusRoutine = null;
 
-            if (publishPlayStarted)
-            {
-                EventBus<ECameraFocusEnd>.Raise(new ECameraFocusEnd());
-            }
+            FocusComplete?.Invoke(focusType);
         }
 
         private void SnapTo(Transform targetFocusPoint)
         {
-            if (m_camera == null || targetFocusPoint == null)
-            {
-                return;
-            }
-
+            if (m_camera == null || targetFocusPoint == null) return;
             ApplyCameraPose(targetFocusPoint.position, targetFocusPoint.rotation);
         }
 

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Project.Scripts.StateMachine
+namespace Project.Scripts.HFSM
 {
     public static class StateMachineExtensions
     {

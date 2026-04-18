@@ -1,3 +1,4 @@
+using System;
 using Project.Scripts.Roulette.Data;
 using Project.Scripts.Roulette.RouletteBall;
 using Project.Scripts.Roulette.RouletteDesk;
@@ -5,16 +6,19 @@ using Project.Scripts.Roulette.Simulation;
 using Project.Scripts.Roulette.Simulation.State;
 using Project.Scripts.Utility.Easing;
 using System.Collections;
+using Project.Scripts.Camera;
 using Project.Scripts.EventBus;
-using Project.Scripts.EventBus.Events.Camera;
 using Project.Scripts.EventBus.Events.Replay;
+using Project.Scripts.HFSM.RuntimeMode;
+using Project.Scripts.Roulette.Game.StateMachine.Core;
+using Project.Scripts.Roulette.Game.StateMachine.States;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using SimulationMode = Project.Scripts.Roulette.Simulation.SimulationMode;
 
 namespace Project.Scripts.Roulette.Game
 {
-    public partial class RouletteGame : MonoBehaviour
+    public partial class RouletteGame : MonoBehaviour, IDisposable
     {
         [Header("Game")] [Range(0f, 1f)] [SerializeField] private float m_replayInterpolationFactor = 1f;
         [SerializeField] private float m_deskStartAlignmentDuration = 0.35f;
@@ -30,18 +34,19 @@ namespace Project.Scripts.Roulette.Game
         [SerializeField] private int m_predictionMaxIterations = 5000;
 
         private SimulationState m_lastSimulationState;
-        private bool m_hasLastSimulationState;
+        private SimulationState m_pendingReplayStartState;
         private PhysicSimulator m_simulator;
+        private bool m_hasLastSimulationState;
         private bool m_isReplayRunning;
         private bool m_ballReplayStarted;
         private bool m_ballReplayEnded;
         private bool m_deskReplayStarted;
         private bool m_deskReplayEnded;
-        private SimulationState m_pendingReplayStartState;
         private bool m_hasPendingReplayStartState;
         private Coroutine m_deskReplayAlignmentRoutine;
+        private GameCamera m_camera;
 
-        private EventBind<ECameraFocusEnd> m_cameraFocusEndBind;
+        public static HFSM.StateMachine StateMachine;
 
         #region Unity Callbacks
 
@@ -59,6 +64,7 @@ namespace Project.Scripts.Roulette.Game
         {
             StopDeskReplayAlignmentRoutine();
             Unregister();
+            Dispose();
         }
 
         private void OnDestroy()
@@ -91,6 +97,11 @@ namespace Project.Scripts.Roulette.Game
 
         private void Initialize()
         {
+            m_camera = FindFirstObjectByType<GameCamera>();
+            m_camera.Initialize();
+            
+            CreateStateMachine();
+
             m_ball.Initialize();
             m_desk.Initialize();
 
@@ -98,19 +109,36 @@ namespace Project.Scripts.Roulette.Game
             m_desk.ChangeSimulationMode(SimulationMode.Replay);
 
             m_simulator = new PhysicSimulator(m_predictionDeskSettings, m_predictionBallSettings.Prefab, m_predictionDeskSettings.Prefab, m_predictionMaxIterations);
-            m_cameraFocusEndBind = new EventBind<ECameraFocusEnd>(StartGame);
+        }
+
+        private void CreateStateMachine()
+        {
+            StateMachine = new HFSM.StateMachine(new ManualMode(), true);
+            GameStateContext context = new(m_camera);
+            Bet bet = new(context);
+            StateMachine.States.Simulation simulation = new(context);
+            Prepare prepare = new(context);
+            Replay replay = new(context);
+            Result result = new(context);
+
+            StateMachine.AddState(bet);
+            StateMachine.AddState(simulation);
+            StateMachine.AddState(prepare);
+            StateMachine.AddState(replay);
+            StateMachine.AddState(result);
+
+            StateMachine.SetDefaultState(bet);
+            StateMachine.ChangeState<Bet>();
         }
 
         private void Register()
         {
-            EventBus<ECameraFocusEnd>.Register(m_cameraFocusEndBind);
             SubscribeReplayCallbacks(m_ball);
             SubscribeReplayCallbacks(m_desk);
         }
 
         private void Unregister()
         {
-            EventBus<ECameraFocusEnd>.Unregister(m_cameraFocusEndBind);
             UnsubscribeReplayCallbacks(m_ball);
             UnsubscribeReplayCallbacks(m_desk);
         }
@@ -256,11 +284,11 @@ namespace Project.Scripts.Roulette.Game
 
         private void OnSimulationObjectReplayStarted(ISimulationObject simulationObject)
         {
-            if (simulationObject == m_ball)
+            if (ReferenceEquals(simulationObject, m_ball))
             {
                 m_ballReplayStarted = true;
             }
-            else if (simulationObject == m_desk)
+            else if (ReferenceEquals(simulationObject, m_desk))
             {
                 m_deskReplayStarted = true;
             }
@@ -275,11 +303,11 @@ namespace Project.Scripts.Roulette.Game
 
         private void OnSimulationObjectReplayEnded(ISimulationObject simulationObject)
         {
-            if (simulationObject == m_ball)
+            if (ReferenceEquals(simulationObject, m_ball))
             {
                 m_ballReplayEnded = true;
             }
-            else if (simulationObject == m_desk)
+            else if (ReferenceEquals(simulationObject, m_desk))
             {
                 m_deskReplayEnded = true;
             }
@@ -372,6 +400,11 @@ namespace Project.Scripts.Roulette.Game
 
             StopCoroutine(m_deskReplayAlignmentRoutine);
             m_deskReplayAlignmentRoutine = null;
+        }
+
+        public void Dispose()
+        {
+            StateMachine = null;
         }
     }
 }
