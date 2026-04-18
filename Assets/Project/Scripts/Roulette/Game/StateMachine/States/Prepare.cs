@@ -7,22 +7,26 @@ namespace Project.Scripts.Roulette.Game.StateMachine.States
     {
         public Prepare(GameStateContext context) : base(context)
         {
-            Context.Camera.CameraFocusController.FocusComplete += OnFocusCompleted;
-        }
-
-        private void OnFocusCompleted(FocusType obj)
-        {
-            if (obj == FocusType.Roulette)
-            {
-            }
-            else
-            {
-            }
         }
 
         protected override void OnEnter()
         {
+            Context.Camera.CameraFocusController.FocusComplete += OnFocusCompleted;
             Context.Camera.CameraFocusController.FocusTo(FocusType.Roulette);
+        }
+
+        protected override void OnExit()
+        {
+            Context.Camera.CameraFocusController.FocusComplete -= OnFocusCompleted;
+            Context.Game.StopDeskReplayAlignmentRoutine();
+        }
+
+        private void OnFocusCompleted(FocusType focusType)
+        {
+            if (focusType != FocusType.Roulette) return;
+            Context.Game.StopDeskReplayAlignmentRoutine();
+            Context.Game.ResetReplayLifecycleTracking();
+            Context.Game.StartAlignToReplay();
         }
     }
 }

@@ -73,21 +73,10 @@ namespace Project.Scripts.Roulette.RouletteBall
 
             m_ballVisualSystem.ChangeVisualState(mode == SimulationMode.Replay);
         }
-
-
+        
         public void ResetSimulationObject()
         {
             m_ballPhysicSystem.Reset();
-        }
-
-        public void Replay(SimulationState simulationState)
-        {
-            Replay(simulationState, simulationState.TickDuration);
-        }
-
-        public void Replay(SimulationState simulationState, float replayTickDuration)
-        {
-            Replay(simulationState, replayTickDuration, 1f);
         }
 
         public void Replay(SimulationState simulationState, float replayTickDuration, float replayInterpolationFactor)

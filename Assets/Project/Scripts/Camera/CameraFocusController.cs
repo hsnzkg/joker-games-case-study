@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using Project.Scripts.EventBus;
 using Project.Scripts.EventBus.Events.GUI;
 using Project.Scripts.EventBus.Events.Replay;

@@ -126,16 +126,18 @@ namespace Project.Scripts.Roulette.Simulation
                 EnsureSimulationSceneCreated();
 
                 ResetBall(ref simulationData);
-                ResetDesk();
+                m_deskInstance.ResetSimulationObject();
 
                 m_deskInstance.Enable();
+                m_ballInstance.Enable();
+
                 m_deskInstance.OnSpinEaseInCompleted += HandleDeskSpinEaseCompleted;
                 m_deskInstance.StartSpin(deskRotationSpeed, deskDrag, deskStartAngle);
                 bool isBallLaunchReady = hasDeskSpinEaseCompleted;
 
                 if (isBallLaunchReady)
                 {
-                    LaunchBall(ballForceDirection, ballForce);
+                    m_ballInstance.Launch(m_deskInstance.LaunchTransform.position, m_deskInstance.LaunchTransform.rotation, ballForceDirection, ballForce);
                 }
                 else
                 {
@@ -153,7 +155,7 @@ namespace Project.Scripts.Roulette.Simulation
                     {
                         if (hasDeskSpinEaseCompleted)
                         {
-                            LaunchBall(ballForceDirection, ballForce);
+                            m_ballInstance.Launch(m_deskInstance.LaunchTransform.position, m_deskInstance.LaunchTransform.rotation, ballForceDirection, ballForce);
                             isBallLaunchReady = true;
                         }
                         else
@@ -271,11 +273,6 @@ namespace Project.Scripts.Roulette.Simulation
             simulationState.FrameCount = 0;
         }
 
-        private void ResetDesk()
-        {
-            m_deskInstance.ResetSimulationObject();
-        }
-
         private void HoldBallAtLaunchPose()
         {
             Transform launchTransform = m_deskInstance.LaunchTransform;
@@ -283,12 +280,6 @@ namespace Project.Scripts.Roulette.Simulation
             m_ballRb.rotation = launchTransform.rotation;
             m_ballRb.linearVelocity = Vector3.zero;
             m_ballRb.angularVelocity = Vector3.zero;
-        }
-
-        private void LaunchBall(Vector3 ballForceDirection, float ballForce)
-        {
-            m_ballInstance.Enable();
-            m_ballInstance.Launch(m_deskInstance.LaunchTransform.position, m_deskInstance.LaunchTransform.rotation, ballForceDirection, ballForce);
         }
 
         private bool IsBallStopped()
@@ -379,11 +370,7 @@ namespace Project.Scripts.Roulette.Simulation
 
         private SimulationState CreateVisualReplayState(in SimulationState physicalState, int slotIndexDifference, float visualDeskOffset)
         {
-            SimulationState visualReplayState = new(physicalState.Buffer, physicalState.TickDuration)
-            {
-                FrameCount = physicalState.FrameCount,
-                FinalSlotInfo = physicalState.FinalSlotInfo
-            };
+            SimulationState visualReplayState = new(physicalState.Buffer, physicalState.TickDuration) { FrameCount = physicalState.FrameCount, FinalSlotInfo = physicalState.FinalSlotInfo };
 
             Quaternion deskRotationOffset = Quaternion.Euler(0f, visualDeskOffset, 0f);
 

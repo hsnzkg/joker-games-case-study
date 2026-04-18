@@ -1,4 +1,5 @@
-﻿using Project.Scripts.Roulette.Data;
+﻿using System;
+using Project.Scripts.Roulette.Data;
 using Project.Scripts.Roulette.Simulation;
 using Project.Scripts.Roulette.Simulation.Replay;
 using Project.Scripts.Roulette.Simulation.Replay.Core;
@@ -17,9 +18,9 @@ namespace Project.Scripts.Roulette.RouletteDesk
         private SimulationReplayPlayer<DeskState> m_replayPlayer;
         private DeskPhysicSystem m_deskPhysicSystem;
         private DeskVisualSystem m_deskVisualSystem;
-        public event System.Action<ISimulationObject> OnReplayStarted;
-        public event System.Action<ISimulationObject> OnReplayEnded;
-        public event System.Action OnSpinEaseInCompleted;
+        public event Action<ISimulationObject> OnReplayStarted;
+        public event Action<ISimulationObject> OnReplayEnded;
+        public event Action OnSpinEaseInCompleted;
         public Transform LaunchTransform => m_launchTransform;
         public Transform SpinTransform => m_spinTransform;
         public bool IsSpinning => m_deskPhysicSystem.IsEnabled;
@@ -89,16 +90,6 @@ namespace Project.Scripts.Roulette.RouletteDesk
             }
             
             m_deskVisualSystem.ChangeVisualState(mode == SimulationMode.Replay);
-        }
-
-        public void Replay(SimulationState simulationState)
-        {
-            Replay(simulationState, simulationState.TickDuration);
-        }
-
-        public void Replay(SimulationState simulationState, float replayTickDuration)
-        {
-            Replay(simulationState, replayTickDuration, 1f);
         }
 
         public void Replay(SimulationState simulationState, float replayTickDuration, float replayInterpolationFactor)

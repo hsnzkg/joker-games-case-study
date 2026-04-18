@@ -7,8 +7,6 @@ using Project.Scripts.Roulette.Simulation.State;
 using Project.Scripts.Utility.Easing;
 using System.Collections;
 using Project.Scripts.Camera;
-using Project.Scripts.EventBus;
-using Project.Scripts.EventBus.Events.Replay;
 using Project.Scripts.HFSM.RuntimeMode;
 using Project.Scripts.Roulette.Game.StateMachine.Core;
 using Project.Scripts.Roulette.Game.StateMachine.States;
@@ -20,21 +18,24 @@ namespace Project.Scripts.Roulette.Game
 {
     public partial class RouletteGame : MonoBehaviour, IDisposable
     {
-        [Header("Game")] [Range(0f, 1f)] [SerializeField] private float m_replayInterpolationFactor = 1f;
+        [Header("Game")] [Range(0f, 1f)] 
+        [SerializeField] private float m_replayInterpolationFactor = 1f;
         [SerializeField] private float m_deskStartAlignmentDuration = 0.35f;
 
-        [Header("Mode")] [SerializeField] private GameMode m_gameMode = GameMode.Game;
+        [Header("Mode")] 
+        [SerializeField] private GameMode m_gameMode = GameMode.Game;
         [SerializeField] private int m_startDesiredSlotIndex;
 
-        [Header("Runtime References")] [SerializeField] private Ball m_ball;
+        [Header("Runtime References")] 
+        [SerializeField] private Ball m_ball;
         [SerializeField] private Desk m_desk;
 
-        [Header("Simulation")] [SerializeField] private DeskSettings m_predictionDeskSettings;
+        [Header("Simulation")] 
+        [SerializeField] private DeskSettings m_predictionDeskSettings;
         [SerializeField] private BallSettings m_predictionBallSettings;
         [SerializeField] private int m_predictionMaxIterations = 5000;
 
         private SimulationState m_lastSimulationState;
-        private SimulationState m_pendingReplayStartState;
         private PhysicSimulator m_simulator;
         private bool m_hasLastSimulationState;
         private bool m_isReplayRunning;
@@ -42,9 +43,11 @@ namespace Project.Scripts.Roulette.Game
         private bool m_ballReplayEnded;
         private bool m_deskReplayStarted;
         private bool m_deskReplayEnded;
-        private bool m_hasPendingReplayStartState;
+        private int? m_pendingDesiredSlotIndex;
         private Coroutine m_deskReplayAlignmentRoutine;
         private GameCamera m_camera;
+
+        private GameStateContext m_context;
 
         public static HFSM.StateMachine StateMachine;
 
@@ -99,7 +102,7 @@ namespace Project.Scripts.Roulette.Game
         {
             m_camera = FindFirstObjectByType<GameCamera>();
             m_camera.Initialize();
-            
+
             CreateStateMachine();
 
             m_ball.Initialize();
@@ -114,12 +117,12 @@ namespace Project.Scripts.Roulette.Game
         private void CreateStateMachine()
         {
             StateMachine = new HFSM.StateMachine(new ManualMode(), true);
-            GameStateContext context = new(m_camera);
-            Bet bet = new(context);
-            StateMachine.States.Simulation simulation = new(context);
-            Prepare prepare = new(context);
-            Replay replay = new(context);
-            Result result = new(context);
+            m_context = new GameStateContext(this, m_camera);
+            Bet bet = new(m_context);
+            StateMachine.States.Simulation simulation = new(m_context);
+            Prepare prepare = new(m_context);
+            Replay replay = new(m_context);
+            Result result = new(m_context);
 
             StateMachine.AddState(bet);
             StateMachine.AddState(simulation);
@@ -145,55 +148,36 @@ namespace Project.Scripts.Roulette.Game
 
         public void StartGame()
         {
-            GenerateRandomStart(out Vector3 ballDir, out float ballForce, out float spinSpeed, out float spinDrag, out float spinStartAngle);
-
-            if (TrySimulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, out SimulationState simulationState))
-            {
-                SetLastSimulationState(simulationState);
-            }
-            else
-            {
-                ClearLastSimulationState();
-                return;
-            }
-
-            PlaySimulation(simulationState);
+            m_pendingDesiredSlotIndex = null;
+            StateMachine.ChangeState<Project.Scripts.Roulette.Game.StateMachine.States.Simulation>();
         }
 
         public void StartDeterministicGame(int slotIndex)
         {
-            GenerateRandomStart(out Vector3 ballDir, out float ballForce, out float spinSpeed, out float spinDrag, out float spinStartAngle);
-
-            if (!TrySimulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, out SimulationState simulationState, slotIndex))
-            {
-                Debug.LogWarning("StartDeterministicGame failed to calculate a simulation state. Falling back to StartGame().");
-                StartGame();
-                return;
-            }
-
-            SetLastSimulationState(simulationState);
-            PlaySimulation(simulationState);
+            m_pendingDesiredSlotIndex = slotIndex;
+            StateMachine.ChangeState<Project.Scripts.Roulette.Game.StateMachine.States.Simulation>();
         }
 
-        private void PlaySimulation(in SimulationState simulationState)
+        public bool TryCreateSimulationState(out SimulationState simulationState)
         {
-            StopDeskReplayAlignmentRoutine();
-            StopActiveReplayIfNeeded();
-            ResetReplayLifecycleTracking(simulationState);
+            int? desiredSlotIndex = m_pendingDesiredSlotIndex;
+            m_pendingDesiredSlotIndex = null;
 
-            m_ball.Disable();
-            m_desk.Disable();
-            m_ball.ChangeSimulationMode(SimulationMode.Simulation);
-            m_ball.ResetSimulationObject();
+            GenerateRandomStart(out Vector3 ballDir, out float ballForce, out float spinSpeed, out float spinDrag, out float spinStartAngle);
 
-            if (ShouldAlignDeskBeforeReplay(simulationState))
+            if (!desiredSlotIndex.HasValue)
             {
-                m_desk.ChangeSimulationMode(SimulationMode.Replay);
-                m_deskReplayAlignmentRoutine = StartCoroutine(AlignDeskToReplayStartAndPlay(simulationState));
-                return;
+                return TrySimulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, out simulationState);
             }
 
-            StartReplay(simulationState);
+            if (TrySimulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, out simulationState, desiredSlotIndex.Value))
+            {
+                return true;
+            }
+
+            Debug.LogWarning("Game failed to calculate a simulation state. Falling back to StartGame().");
+            GenerateRandomStart(out ballDir, out ballForce, out spinSpeed, out spinDrag, out spinStartAngle);
+            return TrySimulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, out simulationState);
         }
 
         private bool TrySimulate(Vector3 ballDir, float ballForce, float spinSpeed, float spinDrag, float spinStartAngle, out SimulationState simulationState, int? desiredSlotIndex = null)
@@ -203,15 +187,13 @@ namespace Project.Scripts.Roulette.Game
             return simulationState is { BallStates: not null, FrameCount: > 0 };
         }
 
-        private void SetLastSimulationState(SimulationState simulationState)
+        public void SetLastSimulationState(SimulationState simulationState)
         {
             m_lastSimulationState = simulationState;
             m_hasLastSimulationState = simulationState is { BallStates: not null, FrameCount: > 0 };
-            SlotInfo finalSlotInfo = simulationState.FinalSlotInfo;
-            Debug.Log($"Simulation completed. FrameCount: [{simulationState.FrameCount}], final slot index: [{finalSlotInfo.Index}], final slot number: [{finalSlotInfo.Number}], final slot color: [{finalSlotInfo.Color}].");
         }
 
-        private void ClearLastSimulationState()
+        public void ClearLastSimulationState()
         {
             m_lastSimulationState = default;
             m_hasLastSimulationState = false;
@@ -250,74 +232,31 @@ namespace Project.Scripts.Roulette.Game
 
         private void SubscribeReplayCallbacks(ISimulationObject simulationObject)
         {
-            simulationObject.OnReplayStarted += OnSimulationObjectReplayStarted;
             simulationObject.OnReplayEnded += OnSimulationObjectReplayEnded;
         }
 
         private void UnsubscribeReplayCallbacks(ISimulationObject simulationObject)
         {
-            simulationObject.OnReplayStarted -= OnSimulationObjectReplayStarted;
             simulationObject.OnReplayEnded -= OnSimulationObjectReplayEnded;
         }
 
-        private void ResetReplayLifecycleTracking(in SimulationState simulationState)
+        public void ResetReplayLifecycleTracking()
         {
             m_ballReplayStarted = false;
             m_ballReplayEnded = false;
+
             m_deskReplayStarted = false;
             m_deskReplayEnded = false;
-            m_pendingReplayStartState = simulationState;
-            m_hasPendingReplayStartState = true;
+
             m_isReplayRunning = false;
-        }
-
-        private void StopActiveReplayIfNeeded()
-        {
-            if (!m_isReplayRunning)
-            {
-                return;
-            }
-
-            m_ball?.ChangeSimulationMode(SimulationMode.Simulation);
-            m_desk?.ChangeSimulationMode(SimulationMode.Simulation);
-        }
-
-        private void OnSimulationObjectReplayStarted(ISimulationObject simulationObject)
-        {
-            if (ReferenceEquals(simulationObject, m_ball))
-            {
-                m_ballReplayStarted = true;
-            }
-            else if (ReferenceEquals(simulationObject, m_desk))
-            {
-                m_deskReplayStarted = true;
-            }
-
-            if (!m_hasPendingReplayStartState || m_isReplayRunning || !HaveAllReplayObjectsStarted())
-            {
-                return;
-            }
-
-            NotifyReplayStarted(m_pendingReplayStartState);
         }
 
         private void OnSimulationObjectReplayEnded(ISimulationObject simulationObject)
         {
-            if (ReferenceEquals(simulationObject, m_ball))
+            if (!m_ball.IsReplaying && !m_desk.IsReplaying)
             {
-                m_ballReplayEnded = true;
+                OnReplayEnded();
             }
-            else if (ReferenceEquals(simulationObject, m_desk))
-            {
-                m_deskReplayEnded = true;
-            }
-
-            if (!m_isReplayRunning || !HaveAllReplayObjectsEnded())
-            {
-                return;
-            }
-
-            NotifyReplayEnded();
         }
 
         private bool HaveAllReplayObjectsStarted()
@@ -334,30 +273,23 @@ namespace Project.Scripts.Roulette.Game
             return ballEnded && deskEnded;
         }
 
-        private void NotifyReplayStarted(in SimulationState simulationState)
-        {
-            m_isReplayRunning = true;
-            m_hasPendingReplayStartState = false;
-            EventBus<EReplayStart>.Raise(new EReplayStart(simulationState));
-        }
-
-        private void NotifyReplayEnded()
+        private void OnReplayEnded()
         {
             if (!m_isReplayRunning) return;
             m_isReplayRunning = false;
-            m_hasPendingReplayStartState = false;
-            EventBus<EReplayEnd>.Raise(new EReplayEnd());
+            m_context.GameData.LastSlotInfo = m_lastSimulationState.FinalSlotInfo;
+            StateMachine.ChangeState<Result>();
         }
 
-        private bool ShouldAlignDeskBeforeReplay(in SimulationState simulationState)
+        public void StartAlignToReplay()
         {
-            return m_deskStartAlignmentDuration > 0f && simulationState.FrameCount > 0;
+            m_deskReplayAlignmentRoutine = StartCoroutine(AlignDeskToReplayStart(StateMachine.ChangeState<Replay>));
         }
 
-        private IEnumerator AlignDeskToReplayStartAndPlay(SimulationState simulationState)
+        private IEnumerator AlignDeskToReplayStart(Action onCompleted)
         {
             Transform deskTransform = m_desk.SpinTransform;
-            DeskState replayStartDeskState = simulationState.DeskStates[0];
+            DeskState replayStartDeskState = m_lastSimulationState.DeskStates[0];
             Vector3 startPosition = deskTransform.position;
             Vector3 startEuler = deskTransform.rotation.eulerAngles;
             Vector3 targetEuler = replayStartDeskState.Rotation.eulerAngles;
@@ -377,7 +309,7 @@ namespace Project.Scripts.Roulette.Game
 
             deskTransform.SetPositionAndRotation(replayStartDeskState.Position, replayStartDeskState.Rotation);
             m_deskReplayAlignmentRoutine = null;
-            StartReplay(simulationState);
+            onCompleted?.Invoke();
         }
 
         private static float GetLeftRotationDelta(float startAngle, float targetAngle)
@@ -385,19 +317,23 @@ namespace Project.Scripts.Roulette.Game
             return -Mathf.Repeat(startAngle - targetAngle, 360f);
         }
 
-        private void StartReplay(in SimulationState simulationState)
+        public void StartReplay()
         {
-            m_desk.Replay(simulationState, simulationState.TickDuration, m_replayInterpolationFactor);
-            m_ball.Replay(simulationState, simulationState.TickDuration, m_replayInterpolationFactor);
+            float tickDuration = m_lastSimulationState.TickDuration;
+
+            m_ballReplayStarted = true;
+            m_deskReplayStarted = true;
+            m_isReplayRunning = true;
+
+            m_context.GameData.LastSlotInfo = default;
+
+            m_desk.Replay(m_lastSimulationState, tickDuration, m_replayInterpolationFactor);
+            m_ball.Replay(m_lastSimulationState, tickDuration, m_replayInterpolationFactor);
         }
 
-        private void StopDeskReplayAlignmentRoutine()
+        public void StopDeskReplayAlignmentRoutine()
         {
-            if (m_deskReplayAlignmentRoutine == null)
-            {
-                return;
-            }
-
+            if (m_deskReplayAlignmentRoutine == null) return;
             StopCoroutine(m_deskReplayAlignmentRoutine);
             m_deskReplayAlignmentRoutine = null;
         }
