@@ -73,7 +73,14 @@ namespace Project.Scripts.Roulette.RouletteDesk
 
         public void Disable()
         {
-            m_deskPhysicSystem.Stop();
+            if(m_simulationMode == SimulationMode.Simulation)
+            {
+                m_deskPhysicSystem.Stop();
+            }
+            else
+            {
+                m_replayPlayer.Stop();
+            }
         }
 
         public void ChangeSimulationMode(SimulationMode mode)

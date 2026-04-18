@@ -286,6 +286,15 @@ namespace Project.Scripts.Roulette.Game
             m_deskReplayAlignmentRoutine = StartCoroutine(AlignDeskToReplayStart(StateMachine.ChangeState<Replay>));
         }
 
+        public void StopReplayIfRunning()
+        {
+            bool isReplayActive = m_isReplayRunning;
+            if (!isReplayActive) return;
+            m_ball.Disable();
+            m_desk.Disable();
+            ResetReplayLifecycleTracking();
+        }
+
         public void ResetBallToLaunchTransform()
         {
             Transform launchTransform = m_desk.LaunchTransform;

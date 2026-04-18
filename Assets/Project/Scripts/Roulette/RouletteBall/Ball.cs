@@ -48,7 +48,14 @@ namespace Project.Scripts.Roulette.RouletteBall
 
         public void Disable()
         {
-            m_ballPhysicSystem.Stop();
+            if(m_simulationMode == SimulationMode.Simulation)
+            {
+                m_ballPhysicSystem.Stop();
+            }
+            else
+            {
+                m_replayPlayer.Stop();
+            }
         }
 
         public void Tick(float delta)

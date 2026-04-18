@@ -11,6 +11,7 @@ namespace Project.Scripts.Roulette.Game.StateMachine.States
 
         protected override void OnEnter()
         {
+            Context.Game.StopReplayIfRunning();
             Context.Game.ResetBallToLaunchTransform();
             Context.Camera.CameraFocusController.FocusComplete += OnFocusCompleted;
             Context.Camera.CameraFocusController.FocusTo(FocusType.Roulette);
