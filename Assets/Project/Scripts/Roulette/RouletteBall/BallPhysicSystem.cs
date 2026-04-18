@@ -34,9 +34,14 @@ namespace Project.Scripts.Roulette.RouletteBall
 
         public void Reset()
         {
+            Reset(Vector3.zero, Quaternion.identity);
+        }
+
+        public void Reset(Vector3 position, Quaternion rotation)
+        {
             Stop();
-            m_rigidbody.position = Vector3.zero;
-            m_rigidbody.rotation = Quaternion.identity;
+            m_rigidbody.position = position;
+            m_rigidbody.rotation = rotation;
         }
 
         public void Launch(Vector3 fromPos, Quaternion fromRot, Vector3 dir, float force)

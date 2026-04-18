@@ -24,7 +24,7 @@ namespace Project.Scripts.Roulette.RouletteDesk
         public Transform LaunchTransform => m_launchTransform;
         public Transform SpinTransform => m_spinTransform;
         public bool IsSpinning => m_deskPhysicSystem.IsEnabled;
-        public bool IsReplaying => m_replayPlayer != null && m_replayPlayer.IsPlaying;
+        public bool IsReplaying => m_replayPlayer is { IsPlaying: true };
         public SimulationMode SimulationMode => m_simulationMode;
 
         #region Unity Callbacks

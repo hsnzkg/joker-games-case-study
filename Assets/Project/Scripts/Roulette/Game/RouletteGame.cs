@@ -286,6 +286,12 @@ namespace Project.Scripts.Roulette.Game
             m_deskReplayAlignmentRoutine = StartCoroutine(AlignDeskToReplayStart(StateMachine.ChangeState<Replay>));
         }
 
+        public void ResetBallToLaunchTransform()
+        {
+            Transform launchTransform = m_desk.LaunchTransform;
+            m_ball.ResetToPose(launchTransform.position, launchTransform.rotation);
+        }
+
         private IEnumerator AlignDeskToReplayStart(Action onCompleted)
         {
             Transform deskTransform = m_desk.SpinTransform;
@@ -304,10 +310,12 @@ namespace Project.Scripts.Roulette.Game
                 float currentYAngle = Mathf.Repeat(startEuler.y + (leftRotationDelta * easedT), 360f);
                 Quaternion currentRotation = Quaternion.Euler(targetEuler.x, currentYAngle, targetEuler.z);
                 deskTransform.SetPositionAndRotation(Vector3.Lerp(startPosition, replayStartDeskState.Position, easedT), currentRotation);
+                ResetBallToLaunchTransform();
                 yield return null;
             }
 
             deskTransform.SetPositionAndRotation(replayStartDeskState.Position, replayStartDeskState.Rotation);
+            ResetBallToLaunchTransform();
             m_deskReplayAlignmentRoutine = null;
             onCompleted?.Invoke();
         }

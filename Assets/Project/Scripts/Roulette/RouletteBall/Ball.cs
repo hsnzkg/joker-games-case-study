@@ -15,7 +15,7 @@ namespace Project.Scripts.Roulette.RouletteBall
         private SimulationMode m_simulationMode;
         public event System.Action<ISimulationObject> OnReplayStarted;
         public event System.Action<ISimulationObject> OnReplayEnded;
-        public bool IsReplaying => m_replayPlayer != null && m_replayPlayer.IsPlaying;
+        public bool IsReplaying => m_replayPlayer is { IsPlaying: true };
 
         #region Unity Callbacks
 
@@ -91,6 +91,11 @@ namespace Project.Scripts.Roulette.RouletteBall
         {
             ChangeSimulationMode(SimulationMode.Simulation);
             m_ballPhysicSystem.Launch(fromPos, fromRot, dir, force);
+        }
+        
+        public void ResetToPose(Vector3 position, Quaternion rotation)
+        {
+            m_ballPhysicSystem.Reset(position, rotation);
         }
 
         private void RegisterReplayPlayerCallbacks()
