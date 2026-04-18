@@ -1,8 +1,8 @@
 ﻿using Project.Scripts.Roulette.Simulation.State;
 
-namespace Project.Scripts.Event.Events.Replay
+namespace Project.Scripts.EventBus.Events.Replay
 {
-    public readonly struct EReplayStart
+    public struct EReplayStart : IEvent
     {
         public readonly SimulationState SimulationState;
 

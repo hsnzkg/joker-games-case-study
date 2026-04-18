@@ -1,6 +1,3 @@
-using Project.Scripts.Event;
-using Project.Scripts.Event.Events.Camera;
-using Project.Scripts.Event.Events.Replay;
 using Project.Scripts.Roulette.Data;
 using Project.Scripts.Roulette.RouletteBall;
 using Project.Scripts.Roulette.RouletteDesk;
@@ -8,6 +5,9 @@ using Project.Scripts.Roulette.Simulation;
 using Project.Scripts.Roulette.Simulation.State;
 using Project.Scripts.Utility.Easing;
 using System.Collections;
+using Project.Scripts.EventBus;
+using Project.Scripts.EventBus.Events.Camera;
+using Project.Scripts.EventBus.Events.Replay;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using SimulationMode = Project.Scripts.Roulette.Simulation.SimulationMode;
@@ -16,21 +16,16 @@ namespace Project.Scripts.Roulette.Game
 {
     public partial class RouletteGame : MonoBehaviour
     {
-        [Header("Game")] 
-        [Range(0f, 1f)]
-        [SerializeField] private float m_replayInterpolationFactor = 1f;
+        [Header("Game")] [Range(0f, 1f)] [SerializeField] private float m_replayInterpolationFactor = 1f;
         [SerializeField] private float m_deskStartAlignmentDuration = 0.35f;
 
-        [Header("Mode")] 
-        [SerializeField] private GameMode m_gameMode = GameMode.Game;
+        [Header("Mode")] [SerializeField] private GameMode m_gameMode = GameMode.Game;
         [SerializeField] private int m_startDesiredSlotIndex;
 
-        [Header("Runtime References")] 
-        [SerializeField] private Ball m_ball;
+        [Header("Runtime References")] [SerializeField] private Ball m_ball;
         [SerializeField] private Desk m_desk;
 
-        [Header("Simulation")] 
-        [SerializeField] private DeskSettings m_predictionDeskSettings;
+        [Header("Simulation")] [SerializeField] private DeskSettings m_predictionDeskSettings;
         [SerializeField] private BallSettings m_predictionBallSettings;
         [SerializeField] private int m_predictionMaxIterations = 5000;
 
@@ -45,6 +40,8 @@ namespace Project.Scripts.Roulette.Game
         private SimulationState m_pendingReplayStartState;
         private bool m_hasPendingReplayStartState;
         private Coroutine m_deskReplayAlignmentRoutine;
+
+        private EventBind<ECameraFocusEnd> m_cameraFocusEndBind;
 
         #region Unity Callbacks
 
@@ -101,18 +98,19 @@ namespace Project.Scripts.Roulette.Game
             m_desk.ChangeSimulationMode(SimulationMode.Replay);
 
             m_simulator = new PhysicSimulator(m_predictionDeskSettings, m_predictionBallSettings.Prefab, m_predictionDeskSettings.Prefab, m_predictionMaxIterations);
+            m_cameraFocusEndBind = new EventBind<ECameraFocusEnd>(StartGame);
         }
 
         private void Register()
         {
-            EventBus.Subscribe<ECameraFocusEnd>(StartGame);
+            EventBus<ECameraFocusEnd>.Register(m_cameraFocusEndBind);
             SubscribeReplayCallbacks(m_ball);
             SubscribeReplayCallbacks(m_desk);
         }
 
         private void Unregister()
         {
-            EventBus.Unsubscribe<ECameraFocusEnd>(StartGame);
+            EventBus<ECameraFocusEnd>.Unregister(m_cameraFocusEndBind);
             UnsubscribeReplayCallbacks(m_ball);
             UnsubscribeReplayCallbacks(m_desk);
         }
@@ -173,9 +171,7 @@ namespace Project.Scripts.Roulette.Game
         private bool TrySimulate(Vector3 ballDir, float ballForce, float spinSpeed, float spinDrag, float spinStartAngle, out SimulationState simulationState, int? desiredSlotIndex = null)
         {
             simulationState = default;
-            simulationState = desiredSlotIndex.HasValue 
-                ? m_simulator.Simulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, desiredSlotIndex.Value) 
-                : m_simulator.Simulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle);
+            simulationState = desiredSlotIndex.HasValue ? m_simulator.Simulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle, desiredSlotIndex.Value) : m_simulator.Simulate(ballDir, ballForce, spinSpeed, spinDrag, spinStartAngle);
             return simulationState is { BallStates: not null, FrameCount: > 0 };
         }
 
@@ -314,7 +310,7 @@ namespace Project.Scripts.Roulette.Game
         {
             m_isReplayRunning = true;
             m_hasPendingReplayStartState = false;
-            EventBus.Publish(new EReplayStart(simulationState));
+            EventBus<EReplayStart>.Raise(new EReplayStart(simulationState));
         }
 
         private void NotifyReplayEnded()
@@ -322,7 +318,7 @@ namespace Project.Scripts.Roulette.Game
             if (!m_isReplayRunning) return;
             m_isReplayRunning = false;
             m_hasPendingReplayStartState = false;
-            EventBus.Publish<EReplayEnd>();
+            EventBus<EReplayEnd>.Raise(new EReplayEnd());
         }
 
         private bool ShouldAlignDeskBeforeReplay(in SimulationState simulationState)

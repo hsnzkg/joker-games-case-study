@@ -1,7 +1,7 @@
-﻿using Project.Scripts.Event;
-using Project.Scripts.Event.Events.Camera;
-using Project.Scripts.Event.Events.GUI;
-using Project.Scripts.Event.Events.Replay;
+﻿using Project.Scripts.EventBus;
+using Project.Scripts.EventBus.Events.Camera;
+using Project.Scripts.EventBus.Events.GUI;
+using Project.Scripts.EventBus.Events.Replay;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -16,6 +16,9 @@ namespace Project.Scripts.Camera
         private readonly float m_cameraFocusDuration;
 
         private Coroutine m_focusRoutine;
+        
+        private EventBind<EPlayPress> m_playPressedBind;
+        private EventBind<EReplayEnd>  m_replayEndedBind;
 
         public CameraFocusController(GameCamera owner, CinemachineCamera camera, Transform betFocusPoint, Transform rouletteFocusPoint, float cameraFocusDuration)
         {
@@ -28,19 +31,21 @@ namespace Project.Scripts.Camera
 
         public void Initialize()
         {
+            m_playPressedBind = new EventBind<EPlayPress>(OnPlayPressed);
+            m_replayEndedBind = new EventBind<EReplayEnd>(OnReplayEnded);
             SnapTo(m_betFocusPoint);
         }
 
         public void Enable()
         {
-            EventBus.Subscribe<EPlayPress>(OnPlayPressed);
-            EventBus.Subscribe<EReplayEnd>(OnReplayEnded);
+            EventBus<EPlayPress>.Register(m_playPressedBind);
+            EventBus<EReplayEnd>.Register(m_replayEndedBind);
         }
 
         public void Disable()
         {
-            EventBus.Unsubscribe<EPlayPress>(OnPlayPressed);
-            EventBus.Unsubscribe<EReplayEnd>(OnReplayEnded);
+            EventBus<EPlayPress>.Unregister(m_playPressedBind);
+            EventBus<EReplayEnd>.Unregister(m_replayEndedBind);
             StopFocusRoutine();
         }
 
@@ -62,7 +67,7 @@ namespace Project.Scripts.Camera
             {
                 if (publishPlayStarted)
                 {
-                    EventBus.Publish<ECameraFocusEnd>();
+                    EventBus<ECameraFocusEnd>.Raise(new ECameraFocusEnd());
                 }
 
                 return;
@@ -74,7 +79,7 @@ namespace Project.Scripts.Camera
 
                 if (publishPlayStarted)
                 {
-                    EventBus.Publish<ECameraFocusEnd>();
+                    EventBus<ECameraFocusEnd>.Raise(new ECameraFocusEnd());
                 }
 
                 return;
@@ -102,7 +107,7 @@ namespace Project.Scripts.Camera
 
             if (publishPlayStarted)
             {
-                EventBus.Publish<ECameraFocusEnd>();
+                EventBus<ECameraFocusEnd>.Raise(new ECameraFocusEnd());
             }
         }
 
