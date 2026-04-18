@@ -1,5 +1,6 @@
 ﻿using Project.Scripts.Roulette.Desk;
 using Project.Scripts.Roulette.Utility;
+using Project.Scripts.StateManagement;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,6 +14,9 @@ namespace Project.Scripts.Roulette.Game
         {
             base.OnInspectorGUI();
             RouletteGame rouletteGame = (RouletteGame)target;
+
+            EditorGUILayout.Space();
+            EditorGUILayout.HelpBox($"Post Game Save Path:\n{DataSerializer.PostGameDataFilePath}", MessageType.Info);
 
             if (GUILayout.Button("Start Random Game"))
             {
@@ -37,6 +41,13 @@ namespace Project.Scripts.Roulette.Game
             if (GUILayout.Button("Start Deterministic Game To Green"))
             {
                 rouletteGame.StartDeterministicGame(SlotColor.GREEN.GetRandomSlotInfoByColor().Index);
+            }
+
+            EditorGUILayout.Space();
+
+            if (GUILayout.Button("Delete Post Game Save"))
+            {
+                DataSerializer.DeletePostGameData();
             }
         }
     }

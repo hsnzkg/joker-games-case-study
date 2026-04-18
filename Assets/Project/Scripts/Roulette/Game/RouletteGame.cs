@@ -18,13 +18,16 @@ namespace Project.Scripts.Roulette.Game
 {
     public class RouletteGame : MonoBehaviour, IDisposable
     {
-        [Header("Game")] [Range(0f, 1f)] [SerializeField] private float m_replayInterpolationFactor = 1f;
+        [Header("Game")] [Range(0f, 1f)] 
+        [SerializeField] private float m_replayInterpolationFactor = 1f;
         [SerializeField] private float m_deskStartAlignmentDuration = 0.35f;
 
-        [Header("Runtime References")] [SerializeField] private Ball.Ball m_ball;
+        [Header("Runtime References")] 
+        [SerializeField] private Ball.Ball m_ball;
         [SerializeField] private Desk.Desk m_desk;
 
-        [Header("Simulation")] [SerializeField] private DeskSettings m_predictionDeskSettings;
+        [Header("Simulation")] 
+        [SerializeField] private DeskSettings m_predictionDeskSettings;
         [SerializeField] private BallSettings m_predictionBallSettings;
         [SerializeField] private int m_predictionMaxIterations = 5000;
 
