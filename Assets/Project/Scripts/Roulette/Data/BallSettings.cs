@@ -1,5 +1,4 @@
-﻿using Project.Scripts.Roulette.RouletteBall;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Project.Scripts.Roulette.Data
 {
@@ -7,7 +6,7 @@ namespace Project.Scripts.Roulette.Data
     public class BallSettings : ScriptableObject
     {
         [Header("Prefab Settings")]
-        public Ball Prefab;
+        public Ball.Ball Prefab;
         
         [Header("Simulation Settings")]
         public Vector3 DirectionMin = new(-1f, 0f, -1f);

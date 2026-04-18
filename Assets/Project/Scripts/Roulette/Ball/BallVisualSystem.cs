@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Project.Scripts.Roulette.RouletteBall
+namespace Project.Scripts.Roulette.Ball
 {
     public class BallVisualSystem
     {

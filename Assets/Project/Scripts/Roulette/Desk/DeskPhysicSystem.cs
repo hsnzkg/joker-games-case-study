@@ -4,7 +4,7 @@ using Project.Scripts.Utility.Easing;
 using UnityEngine;
 using SimulationMode = Project.Scripts.Roulette.Simulation.SimulationMode;
 
-namespace Project.Scripts.Roulette.RouletteDesk
+namespace Project.Scripts.Roulette.Desk
 {
     public class DeskPhysicSystem : IDisposable
     {

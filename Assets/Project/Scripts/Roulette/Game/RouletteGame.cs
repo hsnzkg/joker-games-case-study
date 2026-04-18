@@ -1,7 +1,5 @@
 using System;
 using Project.Scripts.Roulette.Data;
-using Project.Scripts.Roulette.RouletteBall;
-using Project.Scripts.Roulette.RouletteDesk;
 using Project.Scripts.Roulette.Simulation;
 using Project.Scripts.Roulette.Simulation.State;
 using Project.Scripts.Utility.Easing;
@@ -27,8 +25,8 @@ namespace Project.Scripts.Roulette.Game
         [SerializeField] private int m_startDesiredSlotIndex;
 
         [Header("Runtime References")] 
-        [SerializeField] private Ball m_ball;
-        [SerializeField] private Desk m_desk;
+        [SerializeField] private Ball.Ball m_ball;
+        [SerializeField] private Desk.Desk m_desk;
 
         [Header("Simulation")] 
         [SerializeField] private DeskSettings m_predictionDeskSettings;

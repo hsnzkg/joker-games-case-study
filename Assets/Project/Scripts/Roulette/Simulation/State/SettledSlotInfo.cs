@@ -1,4 +1,4 @@
-﻿using Project.Scripts.Roulette.RouletteDesk;
+﻿using Project.Scripts.Roulette.Desk;
 
 namespace Project.Scripts.Roulette.Simulation.State
 {

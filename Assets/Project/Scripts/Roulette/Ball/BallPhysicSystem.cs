@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Project.Scripts.Roulette.RouletteBall
+namespace Project.Scripts.Roulette.Ball
 {
     [Serializable]
     public class BallPhysicSystem

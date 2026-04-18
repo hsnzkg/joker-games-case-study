@@ -1,5 +1,4 @@
-﻿using Project.Scripts.Roulette.RouletteDesk;
-
+﻿using Project.Scripts.Roulette.Desk;
 using Random = UnityEngine.Random;
 
 namespace Project.Scripts.Constants

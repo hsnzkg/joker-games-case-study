@@ -5,7 +5,7 @@ using Project.Scripts.Roulette.Simulation.State;
 using UnityEngine;
 using SimulationMode = Project.Scripts.Roulette.Simulation.SimulationMode;
 
-namespace Project.Scripts.Roulette.RouletteBall
+namespace Project.Scripts.Roulette.Ball
 {
     public class Ball : MonoBehaviour, ISimulationObject
     {

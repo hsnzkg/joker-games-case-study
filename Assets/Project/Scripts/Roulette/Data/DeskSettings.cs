@@ -1,5 +1,4 @@
-﻿using Project.Scripts.Roulette.RouletteDesk;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Project.Scripts.Roulette.Data
 {
@@ -7,7 +6,7 @@ namespace Project.Scripts.Roulette.Data
     public class DeskSettings : ScriptableObject
     {
         [Header("Prefab Settings")]
-        public Desk Prefab;
+        public Desk.Desk Prefab;
         
         [Header("Configuration")]
         [Range(1,37)] public int SlotCount;

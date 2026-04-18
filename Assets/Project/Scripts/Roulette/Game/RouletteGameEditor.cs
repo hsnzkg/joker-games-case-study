@@ -1,4 +1,4 @@
-﻿using Project.Scripts.Roulette.RouletteDesk;
+﻿using Project.Scripts.Roulette.Desk;
 using Project.Scripts.Roulette.Utility;
 using UnityEditor;
 using UnityEngine;

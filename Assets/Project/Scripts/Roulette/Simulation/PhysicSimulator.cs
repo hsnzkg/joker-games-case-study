@@ -1,7 +1,6 @@
 using System;
 using Project.Scripts.Roulette.Data;
-using Project.Scripts.Roulette.RouletteBall;
-using Project.Scripts.Roulette.RouletteDesk;
+using Project.Scripts.Roulette.Desk;
 using Project.Scripts.Roulette.Simulation.State;
 using Project.Scripts.Roulette.Utility;
 using UnityEngine;
@@ -14,19 +13,19 @@ namespace Project.Scripts.Roulette.Simulation
         private int m_simulationIndex;
 
         private readonly DeskSettings m_deskSettings;
-        private readonly Ball m_ballPrefab;
-        private readonly Desk m_deskPrefab;
+        private readonly Ball.Ball m_ballPrefab;
+        private readonly Desk.Desk m_deskPrefab;
         private readonly int m_maxIterations;
 
         private Scene m_simulationScene;
         private PhysicsScene m_physicsScene;
-        private Ball m_ballInstance;
-        private Desk m_deskInstance;
+        private Ball.Ball m_ballInstance;
+        private Desk.Desk m_deskInstance;
         private Rigidbody m_ballRb;
         private readonly Collider[] m_overlapResults;
         private readonly int m_ballLayerMask;
 
-        public PhysicSimulator(DeskSettings deskSettings, Ball ballPrefab, Desk deskPrefab, int maxIterations = 100)
+        public PhysicSimulator(DeskSettings deskSettings, Ball.Ball ballPrefab, Desk.Desk deskPrefab, int maxIterations = 100)
         {
             m_deskSettings = deskSettings;
             m_ballPrefab = ballPrefab;

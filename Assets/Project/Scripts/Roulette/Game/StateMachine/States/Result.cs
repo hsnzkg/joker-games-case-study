@@ -1,5 +1,5 @@
-﻿using Project.Scripts.Roulette.Game.StateMachine.Core;
-using Project.Scripts.Roulette.RouletteDesk;
+﻿using Project.Scripts.Roulette.Desk;
+using Project.Scripts.Roulette.Game.StateMachine.Core;
 
 namespace Project.Scripts.Roulette.Game.StateMachine.States
 {

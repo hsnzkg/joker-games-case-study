@@ -1,4 +1,4 @@
-﻿namespace Project.Scripts.Roulette.RouletteDesk
+﻿namespace Project.Scripts.Roulette.Desk
 {
     public enum SlotColor
     {

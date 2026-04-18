@@ -7,7 +7,7 @@ namespace Project.Scripts.Roulette.Game.StateMachine.Core
         public RouletteGame Game { get; }
         public GameCamera Camera { get; }
 
-        public GameRuntimeData GameData;
+        public readonly GameRuntimeData GameData;
 
         public GameStateContext(RouletteGame game, GameCamera camera)
         {

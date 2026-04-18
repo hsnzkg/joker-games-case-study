@@ -1,5 +1,5 @@
 ﻿using Project.Scripts.Constants;
-using Project.Scripts.Roulette.RouletteDesk;
+using Project.Scripts.Roulette.Desk;
 using UnityEngine;
 
 namespace Project.Scripts.Roulette.Utility

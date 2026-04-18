@@ -7,7 +7,7 @@ using Project.Scripts.Roulette.Simulation.State;
 using UnityEngine;
 using SimulationMode = Project.Scripts.Roulette.Simulation.SimulationMode;
 
-namespace Project.Scripts.Roulette.RouletteDesk
+namespace Project.Scripts.Roulette.Desk
 {
     public class Desk : MonoBehaviour, ISimulationObject
     {
