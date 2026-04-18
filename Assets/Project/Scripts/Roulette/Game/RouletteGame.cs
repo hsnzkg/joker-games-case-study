@@ -18,16 +18,13 @@ namespace Project.Scripts.Roulette.Game
 {
     public class RouletteGame : MonoBehaviour, IDisposable
     {
-        [Header("Game")] [Range(0f, 1f)] 
-        [SerializeField] private float m_replayInterpolationFactor = 1f;
+        [Header("Game")] [Range(0f, 1f)] [SerializeField] private float m_replayInterpolationFactor = 1f;
         [SerializeField] private float m_deskStartAlignmentDuration = 0.35f;
 
-        [Header("Runtime References")] 
-        [SerializeField] private Ball.Ball m_ball;
+        [Header("Runtime References")] [SerializeField] private Ball.Ball m_ball;
         [SerializeField] private Desk.Desk m_desk;
 
-        [Header("Simulation")] 
-        [SerializeField] private DeskSettings m_predictionDeskSettings;
+        [Header("Simulation")] [SerializeField] private DeskSettings m_predictionDeskSettings;
         [SerializeField] private BallSettings m_predictionBallSettings;
         [SerializeField] private int m_predictionMaxIterations = 5000;
 
@@ -217,7 +214,7 @@ namespace Project.Scripts.Roulette.Game
         public bool TryGetLastSimulationState(out SimulationState simulationState)
         {
             simulationState = m_lastSimulationState;
-            return m_hasLastSimulationState && m_lastSimulationState.BallStates != null && m_lastSimulationState.DeskStates != null && m_lastSimulationState.FrameCount > 0;
+            return m_hasLastSimulationState && m_lastSimulationState is { BallStates: not null, DeskStates: not null, FrameCount: > 0 };
         }
 
         public void ClearLastSimulationState()
@@ -387,20 +384,28 @@ namespace Project.Scripts.Roulette.Game
             StateMachine = null;
         }
 
-        public void ClearPersistedPostGameData()
+        private void ClearPersistedPostGameData()
         {
             DataSerializer.DeletePostGameData();
 
             if (m_context != null)
             {
-                m_context.CurrentPostGameData = PostGameData.Empty;
+                m_context.CurrentPostGameData = new PostGameData();
                 m_context.ShouldResumeFromPostGameData = false;
             }
         }
 
+        public void ClearSessionSimulationState(GameSessionStateType stateType)
+        {
+            ClearLastSimulationState();
+            if (m_context == null) return;
+            m_context.CurrentPostGameData = m_context.CurrentPostGameData.WithoutSimulationData(stateType);
+            m_context.ShouldResumeFromPostGameData = false;
+        }
+
         private void SaveCurrentPostGameState()
         {
-            if (StateMachine?.GetActiveState() is GameStateBase gameState && gameState.CanPersistPostGameData)
+            if (StateMachine.GetActiveState() is GameStateBase gameState)
             {
                 gameState.Save();
                 return;
@@ -416,14 +421,14 @@ namespace Project.Scripts.Roulette.Game
                 return false;
             }
 
-            if (!postGameData.TryGetSimulationState(out _))
+            m_context.CurrentPostGameData = postGameData;
+            m_context.ShouldResumeFromPostGameData = postGameData.CanResumeSession;
+
+            if (!postGameData.CanResumeSession)
             {
-                ClearPersistedPostGameData();
                 return false;
             }
 
-            m_context.CurrentPostGameData = postGameData;
-            m_context.ShouldResumeFromPostGameData = true;
             StateMachine.ChangeState<Bet>();
             return true;
         }

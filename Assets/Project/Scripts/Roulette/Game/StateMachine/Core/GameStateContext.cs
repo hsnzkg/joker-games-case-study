@@ -18,7 +18,7 @@ namespace Project.Scripts.Roulette.Game.StateMachine.Core
             Game = game;
             Camera = camera;
             GameData = new GameRuntimeData();
-            CurrentPostGameData = PostGameData.Empty;
+            CurrentPostGameData = new PostGameData();
             ShouldResumeFromPostGameData = false;
         }
     }

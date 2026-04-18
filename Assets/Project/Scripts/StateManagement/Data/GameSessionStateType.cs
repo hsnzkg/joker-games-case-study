@@ -1,10 +1,12 @@
 ﻿namespace Project.Scripts.StateManagement.Data
 {
-    public enum PostGameState
+    public enum GameSessionStateType
     {
         None = 0,
         Simulation = 1,
         Prepare = 2,
-        Replay = 3
+        Replay = 3,
+        Result = 4,
+        Bet = 5
     }
 }

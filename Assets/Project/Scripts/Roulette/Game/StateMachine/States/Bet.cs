@@ -2,12 +2,14 @@
 using Project.Scripts.EventBus.Events.GameState;
 using Project.Scripts.EventBus.Events.GUI;
 using Project.Scripts.Roulette.Game.StateMachine.Core;
+using Project.Scripts.StateManagement.Data;
 
 namespace Project.Scripts.Roulette.Game.StateMachine.States
 {
     public class Bet : GameStateBase
     {
         private readonly EventBind<EPlayPress> m_playPressedBind;
+        protected override GameSessionStateType StateType => GameSessionStateType.Bet;
 
         public Bet(GameStateContext context) : base(context)
         {
@@ -25,7 +27,7 @@ namespace Project.Scripts.Roulette.Game.StateMachine.States
             }
             else
             {
-                Context.Game.ClearPersistedPostGameData();
+                Context.Game.ClearSessionSimulationState(StateType);
             }
         }
 

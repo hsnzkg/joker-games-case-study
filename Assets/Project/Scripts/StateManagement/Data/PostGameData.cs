@@ -6,21 +6,35 @@ namespace Project.Scripts.StateManagement.Data
     [Serializable]
     public struct PostGameData
     {
-        public PostGameState State;
+        public GameSessionStateType StateType;
         public SimulationState SimulationData;
 
-        public static PostGameData Empty => new() { State = PostGameState.None };
-
-        public bool HasSimulationData => State != PostGameState.None && SimulationData.Buffer > 0 && SimulationData.FrameCount > 0 && SimulationData.BallStates != null && SimulationData.DeskStates != null;
-
-        public bool Matches(PostGameState state)
+        public PostGameData(GameSessionStateType stateType)
         {
-            return State == state && HasSimulationData;
+            StateType = stateType;
+            SimulationData = default;
         }
 
-        public static PostGameData Create(PostGameState state, in SimulationState simulationState)
+        public PostGameData(GameSessionStateType stateType, SimulationState simulationState)
         {
-            return new PostGameData { State = state, SimulationData = simulationState };
+            StateType = stateType;
+            SimulationData = simulationState;
+        }
+
+        public bool HasSimulationData => SimulationData is { Buffer: > 0, FrameCount: > 0, BallStates: not null, DeskStates: not null };
+        public bool CanResumeSession => HasSimulationData && StateType is GameSessionStateType.Simulation or GameSessionStateType.Prepare or GameSessionStateType.Replay;
+
+        public bool Matches(GameSessionStateType stateType)
+        {
+            return StateType == stateType;
+        }
+
+        public PostGameData WithoutSimulationData(GameSessionStateType stateType)
+        {
+            PostGameData postGameData = this;
+            postGameData.StateType = stateType;
+            postGameData.SimulationData = default;
+            return postGameData;
         }
 
         public bool TryGetSimulationState(out SimulationState simulationState)

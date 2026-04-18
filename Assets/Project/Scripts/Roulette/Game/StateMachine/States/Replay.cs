@@ -8,7 +8,8 @@ namespace Project.Scripts.Roulette.Game.StateMachine.States
 
     public class Replay : GameStateBase
     {
-        protected override PostGameState? PersistedState => PostGameState.Replay;
+        protected override GameSessionStateType StateType => GameSessionStateType.Replay;
+        protected override bool ShouldPersistSimulationData => true;
 
         public Replay(GameStateContext context) : base(context)
         {

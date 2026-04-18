@@ -8,28 +8,24 @@ namespace Project.Scripts.Roulette.Game.StateMachine.Core
     public class GameStateBase : StateBase
     {
         protected readonly GameStateContext Context;
+        protected virtual GameSessionStateType StateType => GameSessionStateType.None;
+        protected virtual bool ShouldPersistSimulationData => false;
         
         protected GameStateBase(GameStateContext context)
         {
             Context = context;
         }
 
-        protected virtual PostGameState? PersistedState => null;
-        public bool CanPersistPostGameData => PersistedState.HasValue;
 
         public virtual void Save()
         {
-            if (!PersistedState.HasValue)
+            PostGameData postGameData = new(StateType);
+
+            if (ShouldPersistSimulationData && Context.Game.TryGetLastSimulationState(out SimulationState simulationState))
             {
-                return;
+                postGameData = new PostGameData(StateType, simulationState);
             }
 
-            if (!Context.Game.TryGetLastSimulationState(out SimulationState simulationState))
-            {
-                return;
-            }
-
-            PostGameData postGameData = PostGameData.Create(PersistedState.Value, simulationState);
             Context.CurrentPostGameData = postGameData;
             DataSerializer.SavePostGameData(postGameData);
         }
@@ -41,7 +37,7 @@ namespace Project.Scripts.Roulette.Game.StateMachine.Core
 
         protected bool TryLoadPostGameData()
         {
-            if (!Context.CurrentPostGameData.HasSimulationData)
+            if (!Context.CurrentPostGameData.CanResumeSession)
             {
                 return false;
             }

@@ -7,7 +7,8 @@ namespace Project.Scripts.Roulette.Game.StateMachine.States
 
     public class Prepare : GameStateBase
     {
-        protected override PostGameState? PersistedState => PostGameState.Prepare;
+        protected override GameSessionStateType StateType => GameSessionStateType.Prepare;
+        protected override bool ShouldPersistSimulationData => true;
 
         public Prepare(GameStateContext context) : base(context)
         {
