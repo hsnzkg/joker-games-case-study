@@ -9,16 +9,10 @@ using UnityEngine;
 
 namespace Project.Scripts.GUI.Desk
 {
-    public class DeskView : ViewBase
+    public partial class DeskView : ViewBase
     {
-        [Serializable]
-        public struct ChipMaterialBinding
-        {
-            public int Id;
-            public Material Material;
-        }
-
-        [SerializeField] private List<BetArea> m_betData = new();
+        [SerializeField] private List<BetAreaGroup> m_betGroups = new();
+        [SerializeField, HideInInspector] private List<BetArea> m_betData = new();
         [SerializeField] private List<ChipArea> m_chipData = new();
         [SerializeField] private GameObject m_betChipPrefab;
         [SerializeField] private List<ChipMaterialBinding> m_chipMaterialBindings = new();
@@ -37,6 +31,21 @@ namespace Project.Scripts.GUI.Desk
         public float BetChipStackYOffset => m_betChipStackYOffset;
 
 
+        private void OnValidate()
+        {
+            if (m_betGroups != null && m_betGroups.Count > 0)
+            {
+                return;
+            }
+
+            if (m_betData == null || m_betData.Count == 0)
+            {
+                return;
+            }
+
+            m_betGroups = new List<BetAreaGroup> { new() { GroupId = "default", BetData = new List<BetArea>(m_betData) } };
+        }
+
         protected override void OnEnable()
         {
             Register();
@@ -54,9 +63,13 @@ namespace Project.Scripts.GUI.Desk
 
         private void Register()
         {
-            for (int index = 0; index < m_betData.Count; index++)
+            foreach (BetArea betArea in EnumerateBetAreas())
             {
-                BetArea betArea = m_betData[index];
+                if (betArea?.ClickHandler == null)
+                {
+                    continue;
+                }
+
                 betArea.ClickHandler.SetId(betArea.AreaId);
                 betArea.ClickHandler.Clicked += OnBetAreaClicked;
             }
@@ -71,9 +84,13 @@ namespace Project.Scripts.GUI.Desk
 
         private void Unregister()
         {
-            for (int index = 0; index < m_betData.Count; index++)
+            foreach (BetArea betArea in EnumerateBetAreas())
             {
-                BetArea betArea = m_betData[index];
+                if (betArea?.ClickHandler == null)
+                {
+                    continue;
+                }
+
                 betArea.ClickHandler.Clicked -= OnBetAreaClicked;
             }
 
@@ -87,7 +104,7 @@ namespace Project.Scripts.GUI.Desk
         public bool TryGetBetArea(string id, out BetArea betArea)
         {
             betArea = null;
-            foreach (BetArea area in m_betData)
+            foreach (BetArea area in EnumerateBetAreas())
             {
                 if (area.AreaId != id) continue;
                 betArea = area;
@@ -164,6 +181,50 @@ namespace Project.Scripts.GUI.Desk
             }
 
             return false;
+        }
+
+        private IEnumerable<BetArea> EnumerateBetAreas()
+        {
+            if (m_betGroups != null && m_betGroups.Count > 0)
+            {
+                for (int groupIndex = 0; groupIndex < m_betGroups.Count; groupIndex++)
+                {
+                    BetAreaGroup group = m_betGroups[groupIndex];
+                    if (group?.BetData == null)
+                    {
+                        continue;
+                    }
+
+                    for (int betIndex = 0; betIndex < group.BetData.Count; betIndex++)
+                    {
+                        BetArea betArea = group.BetData[betIndex];
+                        if (betArea == null)
+                        {
+                            continue;
+                        }
+
+                        yield return betArea;
+                    }
+                }
+
+                yield break;
+            }
+
+            if (m_betData == null)
+            {
+                yield break;
+            }
+
+            for (int index = 0; index < m_betData.Count; index++)
+            {
+                BetArea betArea = m_betData[index];
+                if (betArea == null)
+                {
+                    continue;
+                }
+
+                yield return betArea;
+            }
         }
 
         private void InitializeChipVisual(ChipArea chipArea)
