@@ -12,7 +12,11 @@ namespace Project.Scripts.Roulette.Game
     [CustomEditor(typeof(RouletteGame))]
     public class RouletteWheelControllerEditor : Editor
     {
+        private const string k_betBoardDirectoryName = "BetBoardData";
+        private const string k_betBoardFileName = "BetBoardData.json";
+
         private SaveFileSelection m_selectedSaveFile = SaveFileSelection.PostGameData;
+        private static string BetBoardDataFilePath => Path.Combine(Application.persistentDataPath, k_betBoardDirectoryName, k_betBoardFileName);
 
         public override void OnInspectorGUI()
         {
@@ -22,6 +26,7 @@ namespace Project.Scripts.Roulette.Game
             EditorGUILayout.Space();
             EditorGUILayout.HelpBox($"Post Game Save Path:\n{DataSerializer.PostGameDataFilePath}", MessageType.Info);
             EditorGUILayout.HelpBox($"Game Data Save Path:\n{DataSerializer.GameDataFilePath}", MessageType.Info);
+            EditorGUILayout.HelpBox($"Bet Board Save Path:\n{BetBoardDataFilePath}", MessageType.Info);
             m_selectedSaveFile = (SaveFileSelection)EditorGUILayout.EnumPopup("Selected Save File", m_selectedSaveFile);
 
             if (GUILayout.Button("Open Selected Save File"))
@@ -56,9 +61,9 @@ namespace Project.Scripts.Roulette.Game
 
             EditorGUILayout.Space();
 
-            if (GUILayout.Button("Delete Post Game Save"))
+            if (GUILayout.Button("Delete All Saved Game Data"))
             {
-                DataSerializer.DeletePostGameData();
+                DeleteAllSavedGameData();
             }
         }
 
@@ -68,6 +73,7 @@ namespace Project.Scripts.Roulette.Game
             {
                 SaveFileSelection.PostGameData => DataSerializer.PostGameDataFilePath,
                 SaveFileSelection.GameData => DataSerializer.GameDataFilePath,
+                SaveFileSelection.BetBoardData => BetBoardDataFilePath,
                 _ => DataSerializer.PostGameDataFilePath
             };
 
@@ -85,10 +91,18 @@ namespace Project.Scripts.Roulette.Game
             CodeEditor.CurrentEditor.OpenProject(filePath, 0, 0);
         }
 
+        private static void DeleteAllSavedGameData()
+        {
+            DataSerializer.DeletePostGameData();
+            DataSerializer.Delete(DataSerializer.GameDataFilePath);
+            DataSerializer.Delete(BetBoardDataFilePath);
+        }
+
         private enum SaveFileSelection
         {
             PostGameData,
-            GameData
+            GameData,
+            BetBoardData
         }
     }
 #endif

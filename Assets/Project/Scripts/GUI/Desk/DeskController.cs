@@ -31,6 +31,7 @@ namespace Project.Scripts.GUI.Desk
         private readonly List<GameObject> m_activeBetChips = new();
         private readonly ObjectPool<GameObject> m_chipPool;
         private readonly Material m_defaultBetChipMaterial;
+        private static DeskController s_activeController;
 
         private string BetBoardDataFilePath => Path.Combine(Application.persistentDataPath, k_betBoardDirectoryName, k_betBoardFileName);
 
@@ -48,6 +49,7 @@ namespace Project.Scripts.GUI.Desk
 
         public override void Enable()
         {
+            s_activeController = this;
             View.BetAreaPressed += OnBetAreaPressed;
             View.ChipAreaPressed += OnChipAreaPressed;
             Model.BoardState.Subscribe(OnBoardStateChanged);
@@ -72,6 +74,11 @@ namespace Project.Scripts.GUI.Desk
             ReleaseAllPooledBetChips();
             Model.ClearBets();
             m_chipPool.Clear();
+
+            if (ReferenceEquals(s_activeController, this))
+            {
+                s_activeController = null;
+            }
         }
 
         private void OnBetAreaPressed(string id)
@@ -320,18 +327,49 @@ namespace Project.Scripts.GUI.Desk
         private void RebuildCommandHistory()
         {
             CommandManager.ForceClear();
-
-            List<Bet> bets = Model.BoardState.Value.Bets;
-            if (bets == null || bets.Count == 0)
+            BoardData boardData = Model.BoardState.Value;
+            if (boardData.Bets == null || boardData.Bets.Count == 0)
             {
                 return;
             }
 
-            for (int index = 0; index < bets.Count; index++)
+            for (int index = 0; index < boardData.Bets.Count; index++)
             {
-                Bet bet = bets[index];
-                CommandManager.Track(new PlaceBetCommand(Model, bet.AreaId, bet.Chip, true));
+                Bet bet = boardData.Bets[index];
+                CommandManager.Track(new PlaceBetCommand(Model, bet.AreaId, bet.Chip));
             }
+        }
+
+        public static bool TryGetCurrentBoardData(out BoardData boardData)
+        {
+            if (s_activeController == null)
+            {
+                boardData = new BoardData(new List<Bet>());
+                return false;
+            }
+
+            boardData = s_activeController.Model.BoardState.Value;
+            return true;
+        }
+
+        public static BetArea ResolveBetArea(string areaId)
+        {
+            if (s_activeController == null || string.IsNullOrWhiteSpace(areaId))
+            {
+                return null;
+            }
+
+            return s_activeController.View.TryGetBetArea(areaId, out BetArea betArea) ? betArea : null;
+        }
+
+        public static void ClearCurrentBoard()
+        {
+            if (s_activeController == null)
+            {
+                return;
+            }
+
+            s_activeController.Model.ClearBets();
         }
     }
 }
