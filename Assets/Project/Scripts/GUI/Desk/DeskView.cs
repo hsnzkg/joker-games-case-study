@@ -11,8 +11,18 @@ namespace Project.Scripts.GUI.Desk
 {
     public class DeskView : ViewBase
     {
+        [Serializable]
+        public struct ChipMaterialBinding
+        {
+            public int Id;
+            public Material Material;
+        }
+
         [SerializeField] private List<BetArea> m_betData = new();
         [SerializeField] private List<ChipArea> m_chipData = new();
+        [SerializeField] private GameObject m_betChipPrefab;
+        [SerializeField] private List<ChipMaterialBinding> m_chipMaterialBindings = new();
+        [SerializeField] private float m_betChipStackYOffset = 0.01f;
 
         [SerializeField] private float m_chipSelectScaleDuration = 0.2f;
         [SerializeField] private float m_chipReleaseScaleDuration = 0.15f;
@@ -22,6 +32,9 @@ namespace Project.Scripts.GUI.Desk
 
         public event Action<string> BetAreaPressed;
         public event Action<string> ChipAreaPressed;
+
+        public GameObject BetChipPrefab => m_betChipPrefab;
+        public float BetChipStackYOffset => m_betChipStackYOffset;
 
 
         protected override void OnEnable()
@@ -84,6 +97,19 @@ namespace Project.Scripts.GUI.Desk
             return false;
         }
 
+        public bool TryGetBetAreaTransform(string id, out Transform areaTransform)
+        {
+            areaTransform = null;
+
+            if (!TryGetBetArea(id, out BetArea betArea) || betArea?.ClickHandler == null)
+            {
+                return false;
+            }
+
+            areaTransform = betArea.ClickHandler.transform;
+            return true;
+        }
+
         public bool TryGetChipArea(string id, out ChipArea chipArea)
         {
             chipArea = null;
@@ -114,6 +140,30 @@ namespace Project.Scripts.GUI.Desk
                 if (chipArea.AreaId != id) continue;
                 AnimateChipScale(chipArea, false);
             }
+        }
+
+        public bool TryGetChipMaterial(Chip chip, out Material material)
+        {
+            material = null;
+
+            if (!int.TryParse(chip.Id, out int chipId))
+            {
+                return false;
+            }
+
+            for (int index = 0; index < m_chipMaterialBindings.Count; index++)
+            {
+                ChipMaterialBinding binding = m_chipMaterialBindings[index];
+                if (binding.Id != chipId)
+                {
+                    continue;
+                }
+
+                material = binding.Material;
+                return material != null;
+            }
+
+            return false;
         }
 
         private void InitializeChipVisual(ChipArea chipArea)

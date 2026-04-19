@@ -1,4 +1,5 @@
-﻿using Project.Scripts.EventBus;
+﻿using Project.Scripts.Command;
+using Project.Scripts.EventBus;
 using Project.Scripts.EventBus.Events.GameState;
 using Project.Scripts.EventBus.Events.GUI;
 using Project.Scripts.EventBus.Events.Replay;
@@ -36,17 +37,18 @@ namespace Project.Scripts.GUI.Operations
 
         private void OnPlayPressed()
         {
-
             EventBus<EPlayPress>.Raise(new EPlayPress());
         }
 
         private void OnUndoPressed()
         {
+            CommandManager.Undo();
             EventBus<EUndoPressed>.Raise(new EUndoPressed());
         }
 
         private void OnResetPressed()
         {
+            CommandManager.Clear();
             EventBus<EResetPress>.Raise(new EResetPress());
         }
 

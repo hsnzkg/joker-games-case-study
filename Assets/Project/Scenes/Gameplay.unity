@@ -893,6 +893,54 @@ PrefabInstance:
       propertyPath: m_Name
       value: Desk_GUI
       objectReference: {fileID: 0}
+    - target: {fileID: 5205122027383871011, guid: 7bc854f42857b436aad9ae0700012095, type: 3}
+      propertyPath: m_betChipPrefab
+      value: 
+      objectReference: {fileID: 820852138524950337, guid: 8739415d790c4ef4ab56d92e607d408d, type: 3}
+    - target: {fileID: 5205122027383871011, guid: 7bc854f42857b436aad9ae0700012095, type: 3}
+      propertyPath: m_betChipStackYOffset
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5205122027383871011, guid: 7bc854f42857b436aad9ae0700012095, type: 3}
+      propertyPath: m_chipMaterialBindings.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5205122027383871011, guid: 7bc854f42857b436aad9ae0700012095, type: 3}
+      propertyPath: m_chipMaterialBindings.Array.data[1].Id
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5205122027383871011, guid: 7bc854f42857b436aad9ae0700012095, type: 3}
+      propertyPath: m_chipMaterialBindings.Array.data[2].Id
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5205122027383871011, guid: 7bc854f42857b436aad9ae0700012095, type: 3}
+      propertyPath: m_chipMaterialBindings.Array.data[3].Id
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5205122027383871011, guid: 7bc854f42857b436aad9ae0700012095, type: 3}
+      propertyPath: m_chipMaterialBindings.Array.data[4].Id
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5205122027383871011, guid: 7bc854f42857b436aad9ae0700012095, type: 3}
+      propertyPath: m_chipMaterialBindings.Array.data[0].Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 1b0e2f1510e052a4ab75b7c426bbad61, type: 2}
+    - target: {fileID: 5205122027383871011, guid: 7bc854f42857b436aad9ae0700012095, type: 3}
+      propertyPath: m_chipMaterialBindings.Array.data[1].Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 67f9e4c9a8d214490ae52f2372b0102f, type: 2}
+    - target: {fileID: 5205122027383871011, guid: 7bc854f42857b436aad9ae0700012095, type: 3}
+      propertyPath: m_chipMaterialBindings.Array.data[2].Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 30abde55da19842dbb0b61211b9920a0, type: 2}
+    - target: {fileID: 5205122027383871011, guid: 7bc854f42857b436aad9ae0700012095, type: 3}
+      propertyPath: m_chipMaterialBindings.Array.data[3].Material
+      value: 
+      objectReference: {fileID: 2100000, guid: 6ab43f51ee1934916a215ac9b72d99aa, type: 2}
+    - target: {fileID: 5205122027383871011, guid: 7bc854f42857b436aad9ae0700012095, type: 3}
+      propertyPath: m_chipMaterialBindings.Array.data[4].Material
+      value: 
+      objectReference: {fileID: 2100000, guid: a6d9832cb4ee74ea9b48246f67b4467e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

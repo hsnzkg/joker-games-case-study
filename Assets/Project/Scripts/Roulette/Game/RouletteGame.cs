@@ -5,6 +5,9 @@ using Project.Scripts.Roulette.Simulation.State;
 using Project.Scripts.Utility.Easing;
 using System.Collections;
 using Project.Scripts.Camera;
+using Project.Scripts.Command;
+using Project.Scripts.EventBus;
+using Project.Scripts.EventBus.Events.GameState;
 using Project.Scripts.HFSM.RuntimeMode;
 using Project.Scripts.Roulette.Game.StateMachine.Core;
 using Project.Scripts.Roulette.Game.StateMachine.States;
@@ -53,6 +56,8 @@ namespace Project.Scripts.Roulette.Game
 
         private void OnEnable()
         {
+            CommandManager.ForceClear();
+            EventBus<EGameOpened>.Raise(new EGameOpened());
             Register();
         }
 
@@ -60,6 +65,8 @@ namespace Project.Scripts.Roulette.Game
         {
             StopDeskReplayAlignmentRoutine();
             Unregister();
+            CommandManager.ForceClear();
+            EventBus<EGameClosed>.Raise(new EGameClosed());
             Dispose();
         }
 
