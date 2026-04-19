@@ -1,6 +1,17 @@
 {
-	"name": "Project",
-	"references": [
-		"Unity.Cinemachine"
-	]
+    "name": "Project",
+    "rootNamespace": "",
+    "references": [
+        "Unity.Cinemachine",
+        "Unity.TextMeshPro"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

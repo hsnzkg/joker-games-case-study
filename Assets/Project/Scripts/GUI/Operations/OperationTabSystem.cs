@@ -2,7 +2,7 @@
 
 namespace Project.Scripts.GUI.Operations
 {
-    public class OperationTabSystem : SystemBase<OperationTabModel,OperationTabView,OperationTabController>
+    public class OperationTabSystem : SystemBase<OperationTabModel, OperationTabView, OperationTabController>
     {
         protected override OperationTabModel CreateModel()
         {

@@ -5,7 +5,9 @@ using Project.Scripts.EventBus;
 using Project.Scripts.EventBus.Events.GameState;
 using Project.Scripts.EventBus.Events.GUI;
 using Project.Scripts.GUI.Desk;
+using Project.Scripts.Roulette.Desk;
 using Project.Scripts.Roulette.Game.StateMachine.Core;
+using Project.Scripts.Roulette.Utility;
 using Project.Scripts.SessionManagement.Data;
 using UnityEngine;
 
@@ -42,7 +44,7 @@ namespace Project.Scripts.Roulette.Game.StateMachine.States
             EventBus<EBetExit>.Raise(new EBetExit());
         }
 
-        private void OnPlayPressed()
+        private void OnPlayPressed(EPlayPress playPress)
         {
             if (!DeskController.TryGetCurrentBoardData(out BoardData boardData))
             {
@@ -57,7 +59,33 @@ namespace Project.Scripts.Roulette.Game.StateMachine.States
             }
 
             Context.GameData.CurrentRoundBoardData = boardData;
+            if (TryGetDeterministicSlotIndex(playPress, out int deterministicSlotIndex))
+            {
+                Context.Game.StartDeterministicGame(deterministicSlotIndex);
+                return;
+            }
+
             Context.Game.StartGame();
+        }
+
+        private static bool TryGetDeterministicSlotIndex(EPlayPress playPress, out int deterministicSlotIndex)
+        {
+            deterministicSlotIndex = default;
+            if (!playPress.DeterministicNumber.HasValue)
+            {
+                return false;
+            }
+
+            int deterministicNumber = playPress.DeterministicNumber.Value;
+            SlotInfo deterministicSlotInfo = deterministicNumber.GetSlotInfoBySlotNumber();
+            if (deterministicSlotInfo.Number != deterministicNumber)
+            {
+                UnityEngine.Debug.LogWarning($"Deterministic number [{deterministicNumber}] is invalid. Falling back to StartGame().");
+                return false;
+            }
+
+            deterministicSlotIndex = deterministicSlotInfo.Index;
+            return true;
         }
     }
 }

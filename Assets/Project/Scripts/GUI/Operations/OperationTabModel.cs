@@ -5,11 +5,11 @@ namespace Project.Scripts.GUI.Operations
 {
     public class OperationTabModel : IModel
     {
-        public Observable<bool> IsGameRunning;
+        public readonly Observable<string> DeterministicNumberText;
 
         public OperationTabModel()
         {
-            IsGameRunning = new Observable<bool>();
+            DeterministicNumberText = new Observable<string>(string.Empty);
         }
     }
 }
