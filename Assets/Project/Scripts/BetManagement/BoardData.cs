@@ -7,10 +7,11 @@ namespace Project.Scripts.BetManagement
     [Serializable]
     public struct BoardData
     {
-        public List<BetArea> Areas;
-        public BoardData(List<BetArea> areas)
+        public List<Bet.Bet> Bets;
+
+        public BoardData(List<Bet.Bet> bets)
         {
-            Areas = areas ?? new List<BetArea>();
+            Bets = bets != null ? new List<Bet.Bet>(bets) : new List<Bet.Bet>();
         }
     }
 }

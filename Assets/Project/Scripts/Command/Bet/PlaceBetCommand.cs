@@ -2,29 +2,27 @@ using Project.Scripts.BetManagement.Bet;
 using Project.Scripts.BetManagement.Chip;
 using Project.Scripts.Currency;
 using Project.Scripts.GUI.Desk;
-using UnityEngine;
 
 namespace Project.Scripts.Command.Bet
 {
     public sealed class PlaceBetCommand : ICommand
     {
         private readonly DeskModel m_model;
-        private readonly DeskController m_controller;
-        private readonly BetArea m_betArea;
+        private readonly string m_areaId;
         private readonly Chip m_chip;
-        private GameObject m_spawnedChipObject;
+        private readonly bool m_skipCurrencyRemoval;
 
-        public PlaceBetCommand(DeskModel model, DeskController controller, BetArea betArea, Chip chip)
+        public PlaceBetCommand(DeskModel model, string areaId, Chip chip, bool skipCurrencyRemoval = false)
         {
             m_model = model;
-            m_controller = controller;
-            m_betArea = betArea;
+            m_areaId = areaId;
             m_chip = chip;
+            m_skipCurrencyRemoval = skipCurrencyRemoval;
         }
 
         public bool Execute()
         {
-            if (m_model == null || m_betArea == null || string.IsNullOrWhiteSpace(m_betArea.AreaId))
+            if (m_model == null || string.IsNullOrWhiteSpace(m_areaId))
             {
                 return false;
             }
@@ -34,39 +32,25 @@ namespace Project.Scripts.Command.Bet
                 return false;
             }
 
-            if (!CurrencyManager.Instance.TryRemove(m_chip.Value, out _))
+            if (!m_skipCurrencyRemoval && !CurrencyManager.Instance.TryRemove(m_chip.Value, out _))
             {
                 return false;
             }
 
-            m_model.AddChipToBet(m_betArea.AreaId, m_chip);
-
-            if (!m_controller.TrySpawnPooledBetChip(m_betArea.AreaId, m_chip, out m_spawnedChipObject))
-            {
-                m_model.RemoveLastChipFromBet(m_betArea.AreaId);
-                CurrencyManager.Instance.Add(m_chip.Value);
-                return false;
-            }
-
+            m_model.AddBet(m_areaId, m_chip);
             return true;
         }
 
         public void Undo()
         {
-            if (m_model == null || m_betArea == null || string.IsNullOrWhiteSpace(m_betArea.AreaId))
+            if (m_model == null || string.IsNullOrWhiteSpace(m_areaId))
             {
                 return;
             }
 
-            if (!m_model.RemoveLastChipFromBet(m_betArea.AreaId))
+            if (!m_model.RemoveLastBet(m_areaId, m_chip))
             {
                 return;
-            }
-
-            if (m_spawnedChipObject != null)
-            {
-                m_controller.ReleasePooledBetChip(m_betArea.AreaId, m_spawnedChipObject);
-                m_spawnedChipObject = null;
             }
 
             CurrencyManager.Instance.Add(m_chip.Value);

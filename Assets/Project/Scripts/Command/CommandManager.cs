@@ -25,6 +25,17 @@ namespace Project.Scripts.Command
             return true;
         }
 
+        public static bool Track(ICommand command)
+        {
+            if (command == null)
+            {
+                return false;
+            }
+
+            s_history.Push(command);
+            return true;
+        }
+
         public static bool Undo()
         {
             if (!CanUndo)

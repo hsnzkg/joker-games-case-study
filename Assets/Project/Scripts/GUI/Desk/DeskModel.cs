@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Project.Scripts.BetManagement;
 using Project.Scripts.BetManagement.Bet;
 using Project.Scripts.BetManagement.Chip;
 using Project.Scripts.GUI.Core;
@@ -9,54 +10,54 @@ namespace Project.Scripts.GUI.Desk
     public class DeskModel : IModel
     {
         public readonly Observable<Chip> SelectedChip;
-        public readonly Dictionary<string, Bet> Bets;
+        public readonly Observable<BoardData> BoardState;
 
         public DeskModel()
         {
             SelectedChip = new Observable<Chip>();
-            Bets = new Dictionary<string, Bet>();
+            BoardState = new Observable<BoardData>(new BoardData(new List<Bet>()));
         }
 
-        public void AddChipToBet(string areaId, Chip chip)
+        public void AddBet(string areaId, Chip chip)
         {
-            if (!Bets.TryGetValue(areaId, out Bet bet))
+            List<Bet> bets = GetBetsCopy();
+            bets.Add(new Bet(areaId, chip));
+            BoardState.Value = new BoardData(bets);
+        }
+
+        public bool RemoveLastBet(string areaId, Chip chip)
+        {
+            List<Bet> bets = GetBetsCopy();
+
+            for (int index = bets.Count - 1; index >= 0; index--)
             {
-                bet = new Bet
+                Bet bet = bets[index];
+                if (bet.AreaId != areaId || !bet.Chip.Equals(chip))
                 {
-                    Chips = new List<Chip>()
-                };
-            }
-            else if (bet.Chips == null)
-            {
-                bet.Chips = new List<Chip>();
-            }
-            bet.Chips.Add(chip);
-            Bets[areaId] = bet;
-        }
+                    continue;
+                }
 
-        public bool RemoveLastChipFromBet(string areaId)
-        {
-            if (!Bets.TryGetValue(areaId, out Bet bet) || bet.Chips == null || bet.Chips.Count == 0)
-            {
-                return false;
-            }
-
-            int lastChipIndex = bet.Chips.Count - 1;
-            bet.Chips.RemoveAt(lastChipIndex);
-
-            if (bet.Chips.Count == 0)
-            {
-                Bets.Remove(areaId);
+                bets.RemoveAt(index);
+                BoardState.Value = new BoardData(bets);
                 return true;
             }
 
-            Bets[areaId] = bet;
-            return true;
+            return false;
+        }
+
+        public void SetBoardData(BoardData boardData)
+        {
+            BoardState.Value = new BoardData(boardData.Bets);
         }
 
         public void ClearBets()
         {
-            Bets.Clear();
+            BoardState.Value = new BoardData(new List<Bet>());
+        }
+
+        private List<Bet> GetBetsCopy()
+        {
+            return BoardState.Value.Bets != null ? new List<Bet>(BoardState.Value.Bets) : new List<Bet>();
         }
     }
 }
