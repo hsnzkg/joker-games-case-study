@@ -1,4 +1,4 @@
-# Joker Games Roulette Case Study
+# Joker Games Deterministic Roulette Case Study
 
 A Unity 6 roulette prototype built around a deterministic simulation and replay pipeline. The core idea is to separate hidden physics simulation from visible presentation, so the round can be simulated first, recorded frame-by-frame, and then replayed smoothly with interpolation. When deterministic mode is requested, the system does not try to "cheat" the live physics mid-spin. Instead, it predicts the landing slot before the visible round begins, adjusts the visual desk start offset, and replays the same recorded simulation so the representation reaches the requested result.
 
