@@ -11,6 +11,7 @@ using Project.Scripts.EventBus.Events.GameState;
 using Project.Scripts.HFSM.RuntimeMode;
 using Project.Scripts.Roulette.Game.StateMachine.Core;
 using Project.Scripts.Roulette.Game.StateMachine.States;
+using Project.Scripts.Currency;
 using Project.Scripts.SessionManagement;
 using Project.Scripts.SessionManagement.Data;
 using UnityEngine;
@@ -51,12 +52,14 @@ namespace Project.Scripts.Roulette.Game
 
         private void Awake()
         {
+            EventBusCenter.Initialize();
             Initialize();
         }
 
         private void OnEnable()
         {
             CommandManager.ForceClear();
+            CurrencyManager.Instance.ReloadFromStorage();
             EventBus<EGameOpened>.Raise(new EGameOpened());
             Register();
         }
@@ -76,6 +79,7 @@ namespace Project.Scripts.Roulette.Game
             m_isReplayRunning = false;
             m_simulator?.Dispose();
             m_simulator = null;
+            EventBusCenter.DisposeAllBuses();
         }
 
         private void OnApplicationQuit()

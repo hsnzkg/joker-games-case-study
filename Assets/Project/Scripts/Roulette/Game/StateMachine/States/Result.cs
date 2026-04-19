@@ -3,9 +3,12 @@ using Project.Scripts.BetManagement;
 using Project.Scripts.BetManagement.Bet;
 using Project.Scripts.Command;
 using Project.Scripts.Currency;
+using Project.Scripts.EventBus;
+using Project.Scripts.EventBus.Events.GameState;
 using Project.Scripts.GUI.Desk;
 using Project.Scripts.Roulette.Desk;
 using Project.Scripts.Roulette.Game.StateMachine.Core;
+using Project.Scripts.SessionManagement;
 using Project.Scripts.SessionManagement.Data;
 
 namespace Project.Scripts.Roulette.Game.StateMachine.States
@@ -23,10 +26,11 @@ namespace Project.Scripts.Roulette.Game.StateMachine.States
             SlotInfo finalSlotInfo = Context.GameData.LastSlotInfo;
             BoardData roundBoardData = GetRoundBoardData();
             BetRoundResult roundResult = BetResultCalculator.Calculate(roundBoardData, finalSlotInfo, DeskController.ResolveBetArea);
+            bool isWin = roundResult.TotalReturned > 0;
 
             Context.GameData.LastBetRoundResult = roundResult;
 
-            if (roundResult.TotalReturned > 0)
+            if (isWin)
             {
                 CurrencyManager.Instance.Add(roundResult.TotalReturned);
                 OnWin(finalSlotInfo, roundResult);
@@ -36,6 +40,7 @@ namespace Project.Scripts.Roulette.Game.StateMachine.States
                 OnLose(finalSlotInfo, roundResult);
             }
 
+            UpdateStatistics(finalSlotInfo, roundResult, isWin);
             DeskController.ClearCurrentBoard();
             CommandManager.ForceClear();
             Context.GameData.CurrentRoundBoardData = new BoardData(new List<BetManagement.Bet.Bet>());
@@ -63,6 +68,29 @@ namespace Project.Scripts.Roulette.Game.StateMachine.States
         {
             // TODO: Add lose-specific UI, VFX, SFX, and result presentation here.
             UnityEngine.Debug.Log($"Lose. Slot: [{finalSlotInfo.Number}], invested: [{roundResult.TotalInvested}], returned: [{roundResult.TotalReturned}].");
+        }
+
+        private void UpdateStatistics(SlotInfo finalSlotInfo, BetRoundResult roundResult, bool isWin)
+        {
+            Context.GameData.Statistics ??= new StatisticsData();
+            Context.GameData.Statistics.RegisterSpin(finalSlotInfo, isWin, roundResult.NetProfit);
+            SaveStatisticsData(Context.GameData.Statistics);
+            EventBus<EStatisticsChanged>.Raise(new EStatisticsChanged(Context.GameData.Statistics));
+        }
+
+        private static void SaveStatisticsData(StatisticsData statisticsData)
+        {
+            GameData gameData = null;
+
+            if (DataSerializer.TryLoadGameData(out GameData loadedGameData) && loadedGameData != null)
+            {
+                gameData = loadedGameData;
+            }
+
+            gameData ??= new GameData(CurrencyManager.Instance.GetAmount());
+            gameData.CurrencyAmount = CurrencyManager.Instance.GetAmount();
+            gameData.Statistics = statisticsData ?? new StatisticsData();
+            DataSerializer.SaveGameData(gameData);
         }
     }
 }

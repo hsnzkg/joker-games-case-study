@@ -6,7 +6,7 @@
     {
         protected TView View { get; }
         protected TModel Model { get; }
-
+        
         protected ControllerBase(TView view, TModel model)
         {
             View = view;

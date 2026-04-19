@@ -59,7 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -235,7 +235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -323,7 +323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -411,7 +411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -499,7 +499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.36493137, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.36493137, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -587,7 +587,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -675,7 +675,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -800,7 +800,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -888,7 +888,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -976,7 +976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.36493137, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.36493137, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1064,7 +1064,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1152,7 +1152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.36493137, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.36493137, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1240,7 +1240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1328,7 +1328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1416,7 +1416,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1504,7 +1504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1592,7 +1592,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1727,7 +1727,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.36493137, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.36493137, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1815,7 +1815,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.7591526, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.7591526, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1903,7 +1903,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1991,7 +1991,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.16037738, g: 0.16037738, b: 0.16037738, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2079,7 +2079,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.36493137, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.36493137, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2167,7 +2167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.28773582, g: 1, b: 0.9930973, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2323,7 +2323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2411,7 +2411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2499,7 +2499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2587,7 +2587,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2675,7 +2675,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2763,7 +2763,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2851,7 +2851,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.28627455, g: 1, b: 0.48427546, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2939,7 +2939,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.36493137, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.36493137, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3027,7 +3027,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3120,12 +3120,663 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Project::Project.Scripts.GUI.Bet.BetView
   Root: {fileID: 7048172815058509331}
-  m_betData:
-  - ClickHandler: {fileID: 0}
-    AreaId: 34
-    Type: 0
-    PayoutMultiplier: 1
-    CoveredNumbers: 22000000
+  m_betGroups:
+  - GroupId: Straight
+    BetData:
+    - ClickHandler: {fileID: 6161984241953933515}
+      AreaId: Straight_0
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 00000000
+    - ClickHandler: {fileID: 8295287448100271524}
+      AreaId: Straight_1
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 01000000
+    - ClickHandler: {fileID: 7128770141675808918}
+      AreaId: Straight_2
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 02000000
+    - ClickHandler: {fileID: 9182624391153434994}
+      AreaId: Straight_3
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 03000000
+    - ClickHandler: {fileID: 4469619172080493347}
+      AreaId: Straight_4
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 04000000
+    - ClickHandler: {fileID: 1074248960120442243}
+      AreaId: Straight_5
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 05000000
+    - ClickHandler: {fileID: 2572491839666731494}
+      AreaId: Straight_6
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 06000000
+    - ClickHandler: {fileID: 8569827587077578813}
+      AreaId: Straight_7
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 07000000
+    - ClickHandler: {fileID: 4343709478807757770}
+      AreaId: Straight_8
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 08000000
+    - ClickHandler: {fileID: 4024151100129437908}
+      AreaId: Straight_0
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 09000000
+    - ClickHandler: {fileID: 2314329157074010495}
+      AreaId: Straight_10
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 0a000000
+    - ClickHandler: {fileID: 7900221410112997157}
+      AreaId: Straight_11
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 0b000000
+    - ClickHandler: {fileID: 7409861021784181679}
+      AreaId: Straight_12
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 0c000000
+    - ClickHandler: {fileID: 6634743715119684713}
+      AreaId: Straight_13
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 0d000000
+    - ClickHandler: {fileID: 209060738531067745}
+      AreaId: Straight_14
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 0e000000
+    - ClickHandler: {fileID: 7136024308162553163}
+      AreaId: Straight_15
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 0f000000
+    - ClickHandler: {fileID: 7286202388551189544}
+      AreaId: Straight_16
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 10000000
+    - ClickHandler: {fileID: 7096202602100443882}
+      AreaId: Straight_17
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 11000000
+    - ClickHandler: {fileID: 1640256179720194599}
+      AreaId: Straight_18
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 12000000
+    - ClickHandler: {fileID: 1354055957061683721}
+      AreaId: Straight_19
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 13000000
+    - ClickHandler: {fileID: 4423167060450780399}
+      AreaId: Straight_20
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 14000000
+    - ClickHandler: {fileID: 9114061458499130962}
+      AreaId: Straight_21
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 15000000
+    - ClickHandler: {fileID: 7162964535767547300}
+      AreaId: Straight_22
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 16000000
+    - ClickHandler: {fileID: 9206555362411483966}
+      AreaId: Straight_23
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 17000000
+    - ClickHandler: {fileID: 7489595036956563485}
+      AreaId: Straight_24
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 18000000
+    - ClickHandler: {fileID: 8462299456189076202}
+      AreaId: Straight_25
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 19000000
+    - ClickHandler: {fileID: 2188700057471997122}
+      AreaId: Straight_26
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 1a000000
+    - ClickHandler: {fileID: 753961662146670766}
+      AreaId: Straight_27
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 1b000000
+    - ClickHandler: {fileID: 5376053073072036001}
+      AreaId: Straight_28
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 1c000000
+    - ClickHandler: {fileID: 212922314989172341}
+      AreaId: Straight_29
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 1d000000
+    - ClickHandler: {fileID: 5302119009497885059}
+      AreaId: Straight_30
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 1e000000
+    - ClickHandler: {fileID: 4545375601379855938}
+      AreaId: Straight_31
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 1f000000
+    - ClickHandler: {fileID: 8285968070193173238}
+      AreaId: Straight_32
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 20000000
+    - ClickHandler: {fileID: 4803461135537697812}
+      AreaId: Straight_33
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 21000000
+    - ClickHandler: {fileID: 5619880958884977446}
+      AreaId: Straight_34
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 22000000
+    - ClickHandler: {fileID: 5890938644747216423}
+      AreaId: Straight_35
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 23000000
+    - ClickHandler: {fileID: 7031973561182249163}
+      AreaId: Straight_36
+      Type: 0
+      PayoutMultiplier: 35
+      CoveredNumbers: 24000000
+  - GroupId: Split
+    BetData:
+    - ClickHandler: {fileID: 8042641315122935894}
+      AreaId: Split_1
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 0100000004000000
+    - ClickHandler: {fileID: 562040611236011384}
+      AreaId: Split_2
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 0200000005000000
+    - ClickHandler: {fileID: 436568352429403137}
+      AreaId: Split_3
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 0300000006000000
+    - ClickHandler: {fileID: 3625885413013794552}
+      AreaId: Split_4
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 0400000007000000
+    - ClickHandler: {fileID: 4767453862210549246}
+      AreaId: Split_5
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 0500000008000000
+    - ClickHandler: {fileID: 8468148715478700561}
+      AreaId: Split_6
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 0600000009000000
+    - ClickHandler: {fileID: 126513897940492775}
+      AreaId: Split_7
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 070000000a000000
+    - ClickHandler: {fileID: 6952201674657221707}
+      AreaId: Split_8
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 080000000b000000
+    - ClickHandler: {fileID: 8522037720913434701}
+      AreaId: Split_9
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 090000000c000000
+    - ClickHandler: {fileID: 6327184095971680707}
+      AreaId: Split_10
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 0a0000000d000000
+    - ClickHandler: {fileID: 5496511073131452786}
+      AreaId: Split_11
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 0b0000000e000000
+    - ClickHandler: {fileID: 2258235870884271140}
+      AreaId: Split_12
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 0c0000000f000000
+    - ClickHandler: {fileID: 3592741631200049049}
+      AreaId: Split_13
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 0d00000010000000
+    - ClickHandler: {fileID: 2701793198559058649}
+      AreaId: Split_14
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 0e00000011000000
+    - ClickHandler: {fileID: 3563767020053164944}
+      AreaId: Split_15
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 0f00000012000000
+    - ClickHandler: {fileID: 7887034800123384154}
+      AreaId: Split_16
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 1000000013000000
+    - ClickHandler: {fileID: 1018405765082751}
+      AreaId: Split_17
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 1100000014000000
+    - ClickHandler: {fileID: 4408157983175540946}
+      AreaId: Split_18
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 1200000015000000
+    - ClickHandler: {fileID: 5923811971317202392}
+      AreaId: Split_19
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 1300000016000000
+    - ClickHandler: {fileID: 4642102939414563596}
+      AreaId: Split_20
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 1400000017000000
+    - ClickHandler: {fileID: 5329672614859332010}
+      AreaId: Split_21
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 1500000018000000
+    - ClickHandler: {fileID: 521672954141730518}
+      AreaId: Split_22
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 1600000019000000
+    - ClickHandler: {fileID: 905144681993508103}
+      AreaId: Split_23
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 170000001a000000
+    - ClickHandler: {fileID: 8561490004125576310}
+      AreaId: Split_24
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 180000001b000000
+    - ClickHandler: {fileID: 1070961082176069332}
+      AreaId: Split_25
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 190000001c000000
+    - ClickHandler: {fileID: 8333576958942753831}
+      AreaId: Split_26
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 1a0000001d000000
+    - ClickHandler: {fileID: 8422639416042734721}
+      AreaId: Split_27
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 1b0000001e000000
+    - ClickHandler: {fileID: 8238648279582106445}
+      AreaId: Split_28
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 1c0000001f000000
+    - ClickHandler: {fileID: 2706097376417489243}
+      AreaId: Split_29
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 1d00000020000000
+    - ClickHandler: {fileID: 273703991197705120}
+      AreaId: Split_30
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 1e00000021000000
+    - ClickHandler: {fileID: 1503767521328290171}
+      AreaId: Split_31
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 1f00000022000000
+    - ClickHandler: {fileID: 5870074715173173842}
+      AreaId: Split_32
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 2000000023000000
+    - ClickHandler: {fileID: 158044493119874467}
+      AreaId: Split_33
+      Type: 1
+      PayoutMultiplier: 17
+      CoveredNumbers: 2100000024000000
+  - GroupId: Corner
+    BetData:
+    - ClickHandler: {fileID: 4075528833786547651}
+      AreaId: Corner_1
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 01000000040000000200000005000000
+    - ClickHandler: {fileID: 2798101729327537242}
+      AreaId: Corner_2
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 02000000050000000300000006000000
+    - ClickHandler: {fileID: 6603156511852996270}
+      AreaId: Corner_3
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 04000000070000000500000008000000
+    - ClickHandler: {fileID: 3237131487220126684}
+      AreaId: Corner_4
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 05000000080000000600000009000000
+    - ClickHandler: {fileID: 532839379246429651}
+      AreaId: Corner_5
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 070000000a000000080000000b000000
+    - ClickHandler: {fileID: 199683535290919643}
+      AreaId: Corner_6
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 080000000b000000090000000c000000
+    - ClickHandler: {fileID: 6698573044698953579}
+      AreaId: Corner_7
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 0a0000000d0000000b0000000e000000
+    - ClickHandler: {fileID: 7474211811908788131}
+      AreaId: Corner_8
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 0b0000000e0000000c0000000f000000
+    - ClickHandler: {fileID: 8095702254683216781}
+      AreaId: Corner_9
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 0d000000100000000e00000011000000
+    - ClickHandler: {fileID: 7406548108641728835}
+      AreaId: Corner_10
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 0e000000110000000f00000012000000
+    - ClickHandler: {fileID: 8733463720504873800}
+      AreaId: Corner_11
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 10000000130000001100000014000000
+    - ClickHandler: {fileID: 1060000317159431271}
+      AreaId: Corner_12
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 11000000140000001200000015000000
+    - ClickHandler: {fileID: 2906058338734709382}
+      AreaId: Corner_13
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 13000000160000001400000017000000
+    - ClickHandler: {fileID: 5070704745219087507}
+      AreaId: Corner_14
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 14000000170000001500000018000000
+    - ClickHandler: {fileID: 1156483295143161833}
+      AreaId: Corner_15
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 1600000019000000170000001a000000
+    - ClickHandler: {fileID: 5238730254925500724}
+      AreaId: Corner_16
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 170000001a000000180000001b000000
+    - ClickHandler: {fileID: 2608282184165988146}
+      AreaId: Corner_17
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 190000001c0000001a0000001d000000
+    - ClickHandler: {fileID: 4799935131934601739}
+      AreaId: Corner_18
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 1a0000001d0000001b0000001e000000
+    - ClickHandler: {fileID: 7889156175866765318}
+      AreaId: Corner_19
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 1c0000001f0000001d00000020000000
+    - ClickHandler: {fileID: 1425661336480485259}
+      AreaId: Corner_20
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 1d000000200000001e00000021000000
+    - ClickHandler: {fileID: 818794360244183024}
+      AreaId: Corner_21
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 1f000000220000002000000023000000
+    - ClickHandler: {fileID: 5033954675264061372}
+      AreaId: Corner_22
+      Type: 3
+      PayoutMultiplier: 8
+      CoveredNumbers: 20000000230000002100000024000000
+  - GroupId: Street
+    BetData:
+    - ClickHandler: {fileID: 4075528833786547651}
+      AreaId: Street_1
+      Type: 2
+      PayoutMultiplier: 11
+      CoveredNumbers: 010000000200000003000000
+    - ClickHandler: {fileID: 2743007427110865755}
+      AreaId: Street_2
+      Type: 2
+      PayoutMultiplier: 11
+      CoveredNumbers: 040000000500000006000000
+    - ClickHandler: {fileID: 4006641967545856291}
+      AreaId: Street_3
+      Type: 2
+      PayoutMultiplier: 11
+      CoveredNumbers: 070000000800000009000000
+    - ClickHandler: {fileID: 8871797076307163877}
+      AreaId: Street_4
+      Type: 2
+      PayoutMultiplier: 11
+      CoveredNumbers: 0a0000000b0000000c000000
+    - ClickHandler: {fileID: 7765544825395117700}
+      AreaId: Street_5
+      Type: 2
+      PayoutMultiplier: 11
+      CoveredNumbers: 0d0000000e0000000f000000
+    - ClickHandler: {fileID: 3171806121596823392}
+      AreaId: Street_6
+      Type: 2
+      PayoutMultiplier: 11
+      CoveredNumbers: 100000001100000012000000
+    - ClickHandler: {fileID: 5033993036268167236}
+      AreaId: Street_7
+      Type: 2
+      PayoutMultiplier: 11
+      CoveredNumbers: 130000001400000015000000
+    - ClickHandler: {fileID: 6572003414473569267}
+      AreaId: Street_8
+      Type: 2
+      PayoutMultiplier: 11
+      CoveredNumbers: 160000001700000018000000
+    - ClickHandler: {fileID: 1377834676071480739}
+      AreaId: Street_9
+      Type: 2
+      PayoutMultiplier: 11
+      CoveredNumbers: 190000001a0000001b000000
+    - ClickHandler: {fileID: 5854216660915312339}
+      AreaId: Street_10
+      Type: 2
+      PayoutMultiplier: 11
+      CoveredNumbers: 1c0000001d0000001e000000
+    - ClickHandler: {fileID: 2986534722331096543}
+      AreaId: Street_11
+      Type: 2
+      PayoutMultiplier: 11
+      CoveredNumbers: 1f0000002000000021000000
+    - ClickHandler: {fileID: 7004226099604379070}
+      AreaId: Street_12
+      Type: 2
+      PayoutMultiplier: 11
+      CoveredNumbers: 220000002300000024000000
+  - GroupId: SixLine
+    BetData:
+    - ClickHandler: {fileID: 4075528833786547651}
+      AreaId: Six_Line_1
+      Type: 4
+      PayoutMultiplier: 5
+      CoveredNumbers: 010000000200000003000000040000000500000006000000
+    - ClickHandler: {fileID: 2841706229289117340}
+      AreaId: Six_Line_2
+      Type: 4
+      PayoutMultiplier: 5
+      CoveredNumbers: 040000000500000006000000070000000800000009000000
+    - ClickHandler: {fileID: 3513981393999889271}
+      AreaId: Six_Line_3
+      Type: 4
+      PayoutMultiplier: 5
+      CoveredNumbers: 0700000008000000090000000a0000000b0000000c000000
+    - ClickHandler: {fileID: 6431998488541097058}
+      AreaId: Six_Line_4
+      Type: 4
+      PayoutMultiplier: 5
+      CoveredNumbers: 0a0000000b0000000c0000000d0000000e0000000f000000
+    - ClickHandler: {fileID: 8619702195836746937}
+      AreaId: Six_Line_5
+      Type: 4
+      PayoutMultiplier: 5
+      CoveredNumbers: 0d0000000e0000000f000000100000001100000012000000
+    - ClickHandler: {fileID: 4070611276147648118}
+      AreaId: Six_Line_6
+      Type: 4
+      PayoutMultiplier: 5
+      CoveredNumbers: 100000001100000012000000130000001400000015000000
+    - ClickHandler: {fileID: 8201331430868400578}
+      AreaId: Six_Line_7
+      Type: 4
+      PayoutMultiplier: 5
+      CoveredNumbers: 130000001400000015000000160000001700000018000000
+    - ClickHandler: {fileID: 8543681875383306218}
+      AreaId: Six_Line_8
+      Type: 4
+      PayoutMultiplier: 5
+      CoveredNumbers: 160000001700000018000000190000001a0000001b000000
+    - ClickHandler: {fileID: 8355559023689378681}
+      AreaId: Six_Line_9
+      Type: 4
+      PayoutMultiplier: 5
+      CoveredNumbers: 190000001a0000001b0000001c0000001d0000001e000000
+    - ClickHandler: {fileID: 8135984059510512728}
+      AreaId: Six_Line_10
+      Type: 4
+      PayoutMultiplier: 5
+      CoveredNumbers: 1c0000001d0000001e0000001f0000002000000021000000
+    - ClickHandler: {fileID: 277714772845846300}
+      AreaId: Six_Line_11
+      Type: 4
+      PayoutMultiplier: 5
+      CoveredNumbers: 1f0000002000000021000000220000002300000024000000
+  - GroupId: RedBlack
+    BetData:
+    - ClickHandler: {fileID: 3281862834914472997}
+      AreaId: Red
+      Type: 5
+      PayoutMultiplier: 1
+      CoveredNumbers: 01000000030000000500000007000000090000000c0000000e0000001000000012000000130000001500000017000000190000001b0000001e000000220000002400000000000000
+    - ClickHandler: {fileID: 8582460818916848991}
+      AreaId: Black
+      Type: 5
+      PayoutMultiplier: 1
+      CoveredNumbers: 020000000400000006000000080000000a0000000b0000000d0000000f000000110000001400000016000000180000001a0000001c0000001d0000001f0000002100000023000000
+  - GroupId: EvenOdd
+    BetData:
+    - ClickHandler: {fileID: 3212003709630176249}
+      AreaId: Even
+      Type: 6
+      PayoutMultiplier: 1
+      CoveredNumbers: 020000000400000006000000080000000a0000000c0000000e00000010000000120000001400000016000000180000001a0000001c0000001e000000200000002200000024000000
+    - ClickHandler: {fileID: 5279444025087345921}
+      AreaId: Odd
+      Type: 6
+      PayoutMultiplier: 1
+      CoveredNumbers: 01000000030000000500000007000000090000000b0000000d0000000f00000011000000130000001500000017000000190000001b0000001d0000001f0000002100000023000000
+  - GroupId: HighLow
+    BetData:
+    - ClickHandler: {fileID: 5120244221310086027}
+      AreaId: Low
+      Type: 7
+      PayoutMultiplier: 1
+      CoveredNumbers: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f000000100000001100000012000000
+    - ClickHandler: {fileID: 8868094516609321097}
+      AreaId: High
+      Type: 7
+      PayoutMultiplier: 1
+      CoveredNumbers: 130000001400000015000000160000001700000018000000190000001a0000001b0000001c0000001d0000001e0000001f0000002000000021000000220000002300000024000000
+  - GroupId: Dozens
+    BetData:
+    - ClickHandler: {fileID: 1508298105772743271}
+      AreaId: Dozens_1
+      Type: 8
+      PayoutMultiplier: 2
+      CoveredNumbers: 0100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c000000
+    - ClickHandler: {fileID: 6434368657621970813}
+      AreaId: Dozens_2
+      Type: 8
+      PayoutMultiplier: 2
+      CoveredNumbers: 0d0000000e0000000f000000100000001100000012000000130000001400000015000000160000001700000018000000
+    - ClickHandler: {fileID: 577849526691290862}
+      AreaId: Dozens_3
+      Type: 8
+      PayoutMultiplier: 2
+      CoveredNumbers: 190000001a0000001b0000001c0000001d0000001e0000001f0000002000000021000000220000002300000024000000
+  - GroupId: Columns
+    BetData:
+    - ClickHandler: {fileID: 8019299633576110398}
+      AreaId: Column_1
+      Type: 9
+      PayoutMultiplier: 2
+      CoveredNumbers: 0100000004000000070000000a0000000d000000100000001300000016000000190000001c0000001f00000022000000
+    - ClickHandler: {fileID: 7054964942104167422}
+      AreaId: Column_2
+      Type: 9
+      PayoutMultiplier: 2
+      CoveredNumbers: 0200000005000000080000000b0000000e0000001100000014000000170000001a0000001d0000002000000023000000
+    - ClickHandler: {fileID: 2334500020188641585}
+      AreaId: Column_3
+      Type: 9
+      PayoutMultiplier: 2
+      CoveredNumbers: 0300000006000000090000000c0000000f0000001200000015000000180000001b0000001e0000002100000024000000
+  m_betData: []
   m_chipData:
   - ClickHandler: {fileID: 2717847475705965185}
     AreaId: 0
@@ -3231,7 +3882,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.28627455, g: 1, b: 0.48427546, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3319,7 +3970,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3407,7 +4058,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.36493137, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.36493137, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3495,7 +4146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3583,7 +4234,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3717,7 +4368,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3845,7 +4496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.36493137, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.36493137, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3933,7 +4584,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4021,7 +4672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.7591526, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.7591526, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4109,7 +4760,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4237,7 +4888,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4325,7 +4976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4413,7 +5064,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.36493137, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.36493137, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4501,7 +5152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4626,7 +5277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4714,7 +5365,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4802,7 +5453,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4997,7 +5648,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5085,7 +5736,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5173,7 +5824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5261,7 +5912,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5349,7 +6000,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5437,7 +6088,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5525,7 +6176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5613,7 +6264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5701,7 +6352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5789,7 +6440,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.28627455, b: 0.84901565, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5877,7 +6528,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5965,7 +6616,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6053,7 +6704,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6141,7 +6792,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.36493137, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.36493137, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6229,7 +6880,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6317,7 +6968,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6405,7 +7056,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6493,7 +7144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6581,7 +7232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6669,7 +7320,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6757,7 +7408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6845,7 +7496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6933,7 +7584,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.7591526, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.7591526, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7021,7 +7672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7109,7 +7760,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7329,7 +7980,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7417,7 +8068,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7505,7 +8156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.7591526, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.7591526, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7593,7 +8244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7681,7 +8332,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7769,7 +8420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7857,7 +8508,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7945,7 +8596,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8033,7 +8684,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.7591526, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.7591526, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8121,7 +8772,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8281,7 +8932,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.7591526, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.7591526, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8369,7 +9020,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8457,7 +9108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8545,7 +9196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8633,7 +9284,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8721,7 +9372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.7591526, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.7591526, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8809,7 +9460,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.36493137, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.36493137, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8897,7 +9548,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8985,7 +9636,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9073,7 +9724,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9161,7 +9812,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9249,7 +9900,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9337,7 +9988,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.28627455, b: 0.84901565, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9425,7 +10076,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9513,7 +10164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9601,7 +10252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9689,7 +10340,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9777,7 +10428,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.28773582, g: 1, b: 0.9930973, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9865,7 +10516,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9953,7 +10604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10041,7 +10692,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10129,7 +10780,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10217,7 +10868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10305,7 +10956,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10393,7 +11044,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.07900343, g: 0.5471698, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10481,7 +11132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.7591526, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.7591526, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10569,7 +11220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.7591526, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.7591526, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10657,7 +11308,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10745,7 +11396,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10833,7 +11484,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.28627455, b: 0.35806733, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10921,7 +11572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.7591526, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.7591526, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11009,7 +11660,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11097,7 +11748,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11185,7 +11836,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.28627455, b: 0.84901565, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11273,7 +11924,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.7591526, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.7591526, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11399,7 +12050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11487,7 +12138,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.7591526, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.7591526, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11575,7 +12226,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.28627455, g: 1, b: 0.48427546, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11700,7 +12351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.28627455, g: 1, b: 0.48427546, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11788,7 +12439,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.96739495, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.96739495, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11876,7 +12527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -11964,7 +12615,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.10924828, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.10924828, g: 1, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

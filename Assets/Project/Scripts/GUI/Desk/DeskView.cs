@@ -71,13 +71,20 @@ namespace Project.Scripts.GUI.Desk
                 }
 
                 betArea.ClickHandler.SetId(betArea.AreaId);
+                betArea.ClickHandler.Clicked -= OnBetAreaClicked;
                 betArea.ClickHandler.Clicked += OnBetAreaClicked;
             }
 
             for (int index = 0; index < m_chipData.Count; index++)
             {
                 ChipArea chipData = m_chipData[index];
+                if (chipData?.ClickHandler == null)
+                {
+                    continue;
+                }
+
                 chipData.ClickHandler.SetId(chipData.AreaId);
+                chipData.ClickHandler.Clicked -= OnChipAreaClicked;
                 chipData.ClickHandler.Clicked += OnChipAreaClicked;
             }
         }
@@ -97,6 +104,11 @@ namespace Project.Scripts.GUI.Desk
             for (int index = 0; index < m_chipData.Count; index++)
             {
                 ChipArea chipArea = m_chipData[index];
+                if (chipArea?.ClickHandler == null)
+                {
+                    continue;
+                }
+
                 chipArea.ClickHandler.Clicked -= OnChipAreaClicked;
             }
         }

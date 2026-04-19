@@ -50,8 +50,11 @@ namespace Project.Scripts.GUI.Desk
         public override void Enable()
         {
             s_activeController = this;
+            View.BetAreaPressed -= OnBetAreaPressed;
             View.BetAreaPressed += OnBetAreaPressed;
+            View.ChipAreaPressed -= OnChipAreaPressed;
             View.ChipAreaPressed += OnChipAreaPressed;
+            Model.BoardState.Unsubscribe(OnBoardStateChanged);
             Model.BoardState.Subscribe(OnBoardStateChanged);
             EventBus<EBetExit>.Register(m_betExitBind);
             EventBus<EUndoPressed>.Register(m_undoPressedBind);

@@ -63,13 +63,17 @@ namespace Project.Scripts.EventBus
                 s_bindings.Add(bind);
             }
 
-            s_count++;
+            s_count = s_bindings.Count;
         }
 
         private static void UnregisterImmediate(EventBind<T> bind)
         {
-            s_bindings.Remove(bind);
-            s_count--;
+            if (!s_bindings.Remove(bind))
+            {
+                return;
+            }
+
+            s_count = s_bindings.Count;
         }
 
         public static void Raise(T @event)
@@ -81,15 +85,17 @@ namespace Project.Scripts.EventBus
             }
 
             s_raiseDepth++;
-            for (int i = 0; i < s_count; i++)
+            int bindingCount = s_bindings.Count;
+            for (int i = 0; i < bindingCount; i++)
             {
+                EventBind<T> bind = s_bindings[i];
                 try
                 {
-                    s_bindings[i].Invoke(@event);
+                    bind.Invoke(@event);
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"Error invoking event handler -> Bind : {s_bindings[i].GetType().Name}\n{e}");
+                    Debug.LogError($"Error invoking event handler -> Bind : {bind.GetType().Name}\n{e}");
                 }
             }
 
@@ -131,6 +137,7 @@ namespace Project.Scripts.EventBus
             s_bindings.Clear();
             s_pendingAdds.Clear();
             s_pendingRemovals.Clear();
+            s_count = 0;
             s_raiseDepth = 0;
             s_pendingFlags = PendingFlags.NONE;
 

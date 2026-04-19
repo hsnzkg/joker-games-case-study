@@ -1,7 +1,10 @@
-﻿using System.IO;
+using System.IO;
+using Project.Scripts.Currency;
+using Project.Scripts.GUI.Desk;
 using Project.Scripts.Roulette.Desk;
 using Project.Scripts.Roulette.Utility;
 using Project.Scripts.SessionManagement;
+using Project.Scripts.SessionManagement.Data;
 using Unity.CodeEditor;
 using UnityEditor;
 using UnityEngine;
@@ -38,22 +41,22 @@ namespace Project.Scripts.Roulette.Game
             {
                 rouletteGame.StartGame();
             }
-            
+
             if (GUILayout.Button("Start Deterministic Game To Number 13"))
             {
                 rouletteGame.StartDeterministicGame(13.GetSlotInfoBySlotNumber().Index);
             }
-            
+
             if (GUILayout.Button("Start Deterministic Game To Black"))
             {
                 rouletteGame.StartDeterministicGame(SlotColor.BLACK.GetRandomSlotInfoByColor().Index);
             }
-            
+
             if (GUILayout.Button("Start Deterministic Game To Red"))
             {
                 rouletteGame.StartDeterministicGame(SlotColor.RED.GetRandomSlotInfoByColor().Index);
             }
-            
+
             if (GUILayout.Button("Start Deterministic Game To Green"))
             {
                 rouletteGame.StartDeterministicGame(SlotColor.GREEN.GetRandomSlotInfoByColor().Index);
@@ -96,6 +99,14 @@ namespace Project.Scripts.Roulette.Game
             DataSerializer.DeletePostGameData();
             DataSerializer.Delete(DataSerializer.GameDataFilePath);
             DataSerializer.Delete(BetBoardDataFilePath);
+
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+
+            DeskController.ClearCurrentBoard();
+            CurrencyManager.Instance.ReloadFromStorage();
         }
 
         private enum SaveFileSelection

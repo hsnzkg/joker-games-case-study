@@ -94,6 +94,18 @@ namespace Project.Scripts.Currency
             SetAmountInternal(0);
         }
 
+        public void ReloadFromStorage()
+        {
+            int reloadedAmount = LoadInitialAmount();
+
+            if (Amount.Value == reloadedAmount)
+            {
+                return;
+            }
+
+            SetAmountInternal(reloadedAmount);
+        }
+
         private void SetAmountInternal(int newAmount)
         {
             int previousAmount = Amount.Value;
@@ -110,19 +122,34 @@ namespace Project.Scripts.Currency
         private static int LoadInitialAmount()
         {
             int amount = defaultStartingAmount;
+            GameData gameData = null;
 
-            if (DataSerializer.TryLoadGameData(out GameData gameData) && gameData != null)
+            if (DataSerializer.TryLoadGameData(out GameData loadedGameData) && loadedGameData != null)
             {
+                gameData = loadedGameData;
                 amount = gameData.GetCurrencyAmountOrDefault(defaultStartingAmount);
             }
 
-            DataSerializer.SaveGameData(new GameData(amount));
+            gameData ??= new GameData(amount);
+            gameData.CurrencyAmount = amount;
+            gameData.GetStatisticsOrDefault();
+            DataSerializer.SaveGameData(gameData);
             return amount;
         }
 
         private void SaveCurrentAmount()
         {
-            DataSerializer.SaveGameData(new GameData(Amount.Value));
+            GameData gameData = null;
+
+            if (DataSerializer.TryLoadGameData(out GameData loadedGameData) && loadedGameData != null)
+            {
+                gameData = loadedGameData;
+                gameData.GetStatisticsOrDefault();
+            }
+
+            gameData ??= new GameData(Amount.Value);
+            gameData.CurrencyAmount = Amount.Value;
+            DataSerializer.SaveGameData(gameData);
         }
     }
 }

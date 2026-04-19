@@ -1,4 +1,5 @@
-﻿using Project.Scripts.Camera;
+using Project.Scripts.Camera;
+using Project.Scripts.SessionManagement;
 using Project.Scripts.SessionManagement.Data;
 
 namespace Project.Scripts.Roulette.Game.StateMachine.Core
@@ -19,6 +20,11 @@ namespace Project.Scripts.Roulette.Game.StateMachine.Core
             GameData = new GameRuntimeData();
             CurrentPostGameData = new PostGameData();
             ShouldResumeFromPostGameData = false;
+
+            if (DataSerializer.TryLoadGameData(out GameData persistedGameData) && persistedGameData != null)
+            {
+                GameData.Statistics = persistedGameData.GetStatisticsOrDefault();
+            }
         }
     }
 }

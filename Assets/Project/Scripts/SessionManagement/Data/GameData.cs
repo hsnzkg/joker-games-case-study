@@ -6,10 +6,22 @@ namespace Project.Scripts.SessionManagement.Data
     public sealed class GameData
     {
         public int? CurrencyAmount;
+        public StatisticsData Statistics;
+
+        public GameData()
+        {
+            Statistics = new StatisticsData();
+        }
 
         public GameData(int currencyAmount)
+            : this(currencyAmount, new StatisticsData())
+        {
+        }
+
+        public GameData(int currencyAmount, StatisticsData statistics)
         {
             CurrencyAmount = currencyAmount;
+            Statistics = statistics ?? new StatisticsData();
         }
 
         public int GetCurrencyAmountOrDefault(int defaultValue)
@@ -20,6 +32,13 @@ namespace Project.Scripts.SessionManagement.Data
             }
 
             return CurrencyAmount.Value;
+        }
+
+        public StatisticsData GetStatisticsOrDefault()
+        {
+            Statistics ??= new StatisticsData();
+            Statistics.EnsureInitialized();
+            return Statistics;
         }
     }
 }
