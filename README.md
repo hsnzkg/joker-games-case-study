@@ -4,7 +4,6 @@ A Unity 6 roulette prototype built around a deterministic simulation and replay 
 
 ## Demo Video
 
-The repository currently does not include a shareable video asset or external demo URL.
 [![Watch the demo](./demo-thumbnail.png)](https://drive.google.com/file/d/1FT4A_5Fy2aEA2T8H001NCEhckGYmMKuY/view?usp=sharing)
 
 ## Project Summary  
